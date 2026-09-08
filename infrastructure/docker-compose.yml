@@ -1,0 +1,154 @@
+version: '3.8'
+
+services:
+  # ---------------------------------------------------------------------------------------
+  # Spatial Database: PostgreSQL 16 + PostGIS 3.4
+  # ---------------------------------------------------------------------------------------
+  postgres-postgis:
+    image: postgis/postgis:16-3.4
+    container_name: ner-postgres-postgis
+    environment:
+      POSTGRES_DB: ner_spatial_lake
+      POSTGRES_USER: mdoner_admin
+      POSTGRES_PASSWORD: ews_secure_password_2026
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgis_data:/var/lib/postgresql/data
+      - ./database/postgres_postgis.sql:/docker-entrypoint-initdb.d/01_spatial.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mdoner_admin -d ner_spatial_lake"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---------------------------------------------------------------------------------------
+  # Time-Series Database: TimescaleDB for IoT Telemetry
+  # ---------------------------------------------------------------------------------------
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: ner-timescaledb
+    environment:
+      POSTGRES_DB: ner_sensor_timeseries
+      POSTGRES_USER: sensor_telemetry_admin
+      POSTGRES_PASSWORD: ews_sensor_secure_2026
+    ports:
+      - "5433:5432"
+    volumes:
+      - timescale_data:/var/lib/postgresql/data
+      - ./database/timescaledb_sensors.sql:/docker-entrypoint-initdb.d/01_timescale.sql
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------------------
+  # Graph Database: Neo4j 5.x for Road Network & Village Isolation Index
+  # ---------------------------------------------------------------------------------------
+  neo4j:
+    image: neo4j:5.18.0
+    container_name: ner-neo4j-graph
+    environment:
+      NEO4J_AUTH: neo4j/ews_graph_secure_2026
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
+    ports:
+      - "7474:7474" # HTTP Browser
+      - "7687:7687" # Bolt Protocol
+    volumes:
+      - neo4j_data:/data
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------------------
+  # In-Memory Cache & BullMQ Queue Backend: Redis Sentinel
+  # ---------------------------------------------------------------------------------------
+  redis:
+    image: redis:7.2-alpine
+    container_name: ner-redis-queue
+    command: redis-server --appendonly yes --requirepass ews_redis_secure_2026
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------------------
+  # IoT Sensor MQTT Broker: EMQX Enterprise Cluster
+  # ---------------------------------------------------------------------------------------
+  emqx:
+    image: emqx/emqx:5.5.0
+    container_name: ner-emqx-mqtt
+    ports:
+      - "1883:1883" # MQTT
+      - "8883:8883" # MQTT over TLS
+      - "18083:18083" # Dashboard
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------------------
+  # Streaming Ingestion Bus: Apache Kafka (Kraft Mode)
+  # ---------------------------------------------------------------------------------------
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: ner-kafka-broker
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092'
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:29093'
+      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:29092,CONTROLLER://0.0.0.0:29093,PLAINTEXT_HOST://0.0.0.0:9092'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_LOG_DIRS: '/tmp/kraft-combined-logs'
+      CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------------------
+  # AI Engine: Python FastAPI ML Serving Service
+  # ---------------------------------------------------------------------------------------
+  ai-engine:
+    build:
+      context: ../backend/ai-engine
+      dockerfile: Dockerfile
+    container_name: ner-ai-engine
+    ports:
+      - "8000:8000"
+    environment:
+      POSTGRES_HOST: postgres-postgis
+      TIMESCALE_HOST: timescaledb
+      REDIS_HOST: redis
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - postgres-postgis
+      - timescaledb
+      - redis
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------------------
+  # Alert Dispatcher: NestJS Node.js / TypeScript Microservice
+  # ---------------------------------------------------------------------------------------
+  alert-dispatcher:
+    build:
+      context: ../backend/alert-dispatcher
+      dockerfile: Dockerfile
+    container_name: ner-alert-dispatcher
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ews_redis_secure_2026
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ews_graph_secure_2026
+    depends_on:
+      - redis
+      - neo4j
+    restart: unless-stopped
+
+volumes:
+  postgis_data:
+  timescale_data:
+  neo4j_data:
+  redis_data:

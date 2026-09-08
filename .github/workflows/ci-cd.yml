@@ -1,0 +1,58 @@
+name: Build, Test & Deploy Landslide EWS Platform
+
+on:
+  push:
+    branches: [ main, staging ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test-ai-engine:
+    name: Test Python AI & Physics Engine
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/ai-engine/requirements.txt
+    - name: Execute PINN & Physics Slope Stability Tests
+      run: |
+        python backend/graph-isolation/test_isolation.py
+        python ml-training/pipelines/train_xgboost.py
+
+  test-alert-dispatcher:
+    name: Test NestJS Alert Dispatcher & CAP v1.2
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Node.js v20
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    - name: Install Node Modules
+      run: |
+        cd backend/alert-dispatcher
+        npm install
+    - name: Build TypeScript
+      run: |
+        cd backend/alert-dispatcher
+        npm run build
+
+  build-and-push-docker:
+    name: Build & Push Production Docker Images
+    needs: [test-ai-engine, test-alert-dispatcher]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build AI Engine Docker Image
+      run: |
+        docker build -t mdoner-ews/ai-engine:v2.4.0 backend/ai-engine
+    - name: Build Alert Dispatcher Docker Image
+      run: |
+        docker build -t mdoner-ews/alert-dispatcher:v2.4.0 backend/alert-dispatcher

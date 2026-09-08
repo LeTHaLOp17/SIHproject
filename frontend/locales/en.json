@@ -1,0 +1,113 @@
+{
+  "app": {
+    "title": "MDoNER EWS COMMAND",
+    "subtitle": "AI-Based Early Warning & Landslide Risk Monitoring Platform • North Eastern Region",
+    "portal_citizen": "Citizen Safety Portal",
+    "portal_admin": "DEOC Admin Portal",
+    "admin_badge": "RESTRICTED ACCESS",
+    "passcode_prompt": "Enter DEOC Security PIN (Default: 26001)",
+    "offline_online": "Live Sync Active",
+    "offline_offline": "Offline Mode (Queued)",
+    "mobile_map_view": "Map View",
+    "mobile_list_view": "Alerts & Actions"
+  },
+  "nav": {
+    "citizen_portal": "Citizen Safety View",
+    "admin_portal": "DEOC Admin Command",
+    "listen_audio": "Listen Advisory",
+    "stop_audio": "Stop Audio",
+    "emergency_helpline": "Emergency Helpline: 1077",
+    "large_text": "Large Text Mode"
+  },
+  "citizen_tabs": {
+    "safety": "Safety & Weather",
+    "report": "Report Hazard",
+    "roads": "Roads & Hazards",
+    "shelters": "Relief Shelters"
+  },
+  "regions": {
+    "all": "All NER",
+    "sikkim": "Sikkim (NH-10)",
+    "assam": "Assam (Haflong)",
+    "meghalaya": "Meghalaya (NH-6)",
+    "arunachal": "Arunachal (Sela)",
+    "manipur": "Manipur (Noney)",
+    "mizoram": "Mizoram (Hunthar)",
+    "nagaland": "Nagaland (NH-29)",
+    "tripura": "Tripura (Jampui)"
+  },
+  "citizen": {
+    "banner_safe_title": "Your Area Status: All Nearby Mountain Slopes Normal",
+    "banner_safe_desc": "Continuous satellite and sensor monitoring active. No immediate evacuation required.",
+    "banner_alert_title": "URGENT SAFETY ALERT: Severe Landslide Hazard Detected",
+    "banner_alert_desc": "Ground movement detected. Stay away from steep mountain cut-slopes and proceed to safe relief shelters.",
+    "weather_card_title": "Today's Regional Rainfall & Saturation",
+    "weather_status_normal": "Moderate Monsoon Rain",
+    "weather_status_danger": "Heavy Downpour / Cloudburst Risk",
+    "safe_shelters_title": "Safe Emergency Relief Shelters Nearby",
+    "shelter_school": "Govt Senior Secondary School Rongli",
+    "shelter_community": "Dolepchep Community Relief Centre",
+    "shelter_college": "Rhenock College Emergency Auditorium",
+    "shelter_directions": "Get Route Directions",
+    "shelter_beds": "Beds Available",
+    "active_landslides_title": "Active Landslides & Road Closures Near You",
+    "call_helpline_btn": "Call 24x7 DEOC Helpline (1077)"
+  },
+  "field_report": {
+    "title": "Citizen & Field Official Hazard Reporting",
+    "subtitle": "Upload geo-tagged photos/videos of cracks, slope movements or blocked roads. Works 100% offline.",
+    "photo_label": "Attach Field Photo / Video",
+    "gps_label": "GPS Coordinates",
+    "gps_btn": "Auto Detect GPS",
+    "hazard_type_label": "Hazard Classification",
+    "severity_label": "Severity Level",
+    "desc_label": "Observation Details / Location Landmarks",
+    "desc_placeholder": "Describe what you observed (e.g. 15mm tension crack widening across NH-10 road cut, water seeping from slope)...",
+    "ai_btn": "Test AI Optical Flow Crack Scan",
+    "submit_btn": "SUBMIT GEO-TAGGED REPORT",
+    "offline_notice": "Zero-network active: Report will be queued locally in SQLite and synchronized automatically when internet is restored."
+  },
+  "roads": {
+    "matrix_title": "Arterial Road Connectivity Status Matrix",
+    "subtitle": "Real-time passability across critical North Eastern highways and rail corridors",
+    "status_open": "OPEN / PASSABLE",
+    "status_restricted": "RESTRICTED / CONVOY",
+    "status_blocked": "BLOCKED / IMPASSABLE",
+    "focus_road": "Focus Corridor"
+  },
+  "forecast": {
+    "title": "IMD 72-Hour Weather-Linked Risk Forecast",
+    "subtitle": "Forecast precipitation accumulation linking to slope factor of safety degradation"
+  },
+  "admin": {
+    "title": "DEOC Incident Command & Alert Dispatcher",
+    "subtitle": "Section 30, Disaster Management Act (2005) • NDMA SACHET Gateway",
+    "target_area": "Target Geographical Corridor",
+    "severity": "Disaster Severity Level",
+    "scope": "Message Scope",
+    "channels": "Multi-Channel Broadcast Gateways",
+    "dispatch_btn": "AUTHORIZE & DISPATCH EMERGENCY BROADCAST",
+    "calib_title": "IoT Sensor Threshold Calibration",
+    "calib_pore": "Critical Pore Pressure Trigger (kPa)",
+    "calib_rain": "24h Rainfall Accumulation Alarm (mm)",
+    "xml_preview": "OASIS CAP-IN v1.2 XML Live Payload",
+    "copy_xml": "Copy XML",
+    "logout": "Log Out Admin Session",
+    "historical_title": "GSI Historical Landslides Catalog (1968 - 2024)",
+    "reports_title": "Incoming Citizen Field Reports & Verified Queue"
+  },
+  "vedas": {
+    "title": "ISRO VEDAS Earth Observation System",
+    "subtitle": "Space Applications Centre (SAC), Ahmedabad • Key: I4xCNidC6IcDUuhnFi69PQ",
+    "swi_label": "Soil Wetness Index (SWI)",
+    "insar_label": "InSAR Downslope Velocity",
+    "ndvi_label": "Sentinel-2 Canopy Vigour",
+    "cartodem_label": "CartoDEM 30m Elevation",
+    "sync_btn": "SYNC VEDAS SATELLITE FEED",
+    "sync_success": "VEDAS satellite feed successfully synced for region!"
+  },
+  "speech": {
+    "safe": "North Eastern Disaster Management Advisory: Regional mountain slopes are currently stable and monitored in real time via ISRO satellite and ground sensors. No immediate evacuation is required at this hour.",
+    "alert": "Emergency Warning from North Eastern Disaster Management. Critical landslide risk detected along National Highway 10. Residents near steep slopes are advised to evacuate to designated relief shelters immediately. Dial 1077 for emergency assistance."
+  }
+}

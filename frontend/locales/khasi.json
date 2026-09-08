@@ -1,0 +1,113 @@
+{
+  "app": {
+    "title": "Ka Komandi EWS Twap Khyndew (NER)",
+    "subtitle": "Ka jingtip lypa na ka bynta ka jingtwap khyndew ha NE Region",
+    "portal_citizen": "Ka Portal Shngain u Paidbah",
+    "portal_admin": "DEOC Admin Portal",
+    "admin_badge": "Jaka Ba Kyntang",
+    "passcode_prompt": "DEOC PIN (26001)",
+    "offline_online": "Live Sync Kam",
+    "offline_offline": "Offline Mode (Kynshew)",
+    "mobile_map_view": "Map",
+    "mobile_list_view": "Ki Jingpyntip"
+  },
+  "nav": {
+    "citizen_portal": "Ka Portal u Paidbah",
+    "admin_portal": "DEOC Admin Command",
+    "listen_audio": "Sngap ia ka Advisory",
+    "stop_audio": "Sangeh ka Ktien",
+    "emergency_helpline": "Emergency: 1077",
+    "large_text": "Dak Heh"
+  },
+  "citizen_tabs": {
+    "safety": "Jingshngain & Ka Suinbneng",
+    "report": "Ai Report Twap Khyndew",
+    "roads": "Ki Surok & Ka Jingma",
+    "shelters": "Ki Jaka Rieh"
+  },
+  "regions": {
+    "all": "Baroh ka NER",
+    "sikkim": "Sikkim (NH-10)",
+    "assam": "Assam (Haflong)",
+    "meghalaya": "Meghalaya (NH-6)",
+    "arunachal": "Arunachal (Sela)",
+    "manipur": "Manipur (Noney)",
+    "mizoram": "Mizoram (Hunthar)",
+    "nagaland": "Nagaland (NH-29)",
+    "tripura": "Tripura (Jampui)"
+  },
+  "citizen": {
+    "banner_safe_title": "Baroh ki Lum ki long kiba shngain mynta ka por",
+    "banner_safe_desc": "Ki ISRO satellite bad sensor ki dang peit bniah. Ki surok ki plie bad ym donkam ban pynkynrih.",
+    "banner_alert_title": "KA JINGMA BA KHLUID: Lah ban twap khyndew harud NH-10",
+    "banner_alert_desc": "Khit sha ki jaka ba shngain kloi katba lah. Ki jaka rieh ha Rongli ki la plied.",
+    "weather_card_title": "Ka Jinghap slap bad ka jingkhluit ka khyndew mynta",
+    "weather_status_normal": "Slap ba tynneng",
+    "weather_status_danger": "Slap ba jur palat",
+    "safe_shelters_title": "Ki jaka rieh ba shngain kiba marjan",
+    "shelter_school": "Govt Senior Secondary School Rongli",
+    "shelter_community": "Dolepchep Community Centre",
+    "shelter_college": "Rhenock College Auditorium",
+    "shelter_directions": "Peit ia ka lynti",
+    "shelter_beds": "Ki jingthiah ba don",
+    "active_landslides_title": "Ki jaka ba twap khyndew bad surok ba khang",
+    "call_helpline_btn": "Khnang sha 1077"
+  },
+  "field_report": {
+    "title": "Ka Report na ka Madan da u Paidbah & Officer",
+    "subtitle": "Phah dur/video jong ki jaka ba pait khyndew ne surok ba khang da ka GPS. Trei 100% wat lada ym don internet.",
+    "photo_label": "Phah Dur / Video",
+    "gps_label": "GPS Coordinates",
+    "gps_btn": "Wad GPS Mar-ia-kynrup",
+    "hazard_type_label": "Jait jingma",
+    "severity_label": "Ka kyrdan jingma",
+    "desc_label": "Ka jingbatai",
+    "desc_placeholder": "Batai ia kaei kaba phi iohi...",
+    "ai_btn": "AI Crack Scan",
+    "submit_btn": "PHAH IA KA REPORT",
+    "offline_notice": "Lada ym don internet, ka report kan sah ha ka phone bad kan leit hi ynda ioh internet."
+  },
+  "roads": {
+    "matrix_title": "Ka jinglong jong ki Surok Bah (Road Matrix)",
+    "subtitle": "Ka jingtip halor ki surok bah bad railway ha NE Region",
+    "status_open": "PLIE / LAH BAN LEIT",
+    "status_restricted": "DON JINGKHAHANG",
+    "status_blocked": "KHANG / YM LAH LEIT",
+    "focus_road": "Peit ia ka Surok"
+  },
+  "forecast": {
+    "title": "IMD 72 Kynta ka Jinglap Slap & Jingma",
+    "subtitle": "Ka jinghap slap kaban wan bad ka jingktah ia ki lum"
+  },
+  "admin": {
+    "title": "DEOC Incident Command & Alert Dispatcher",
+    "subtitle": "Section 30, Disaster Management Act (2005) • NDMA SACHET",
+    "target_area": "Ka jaka",
+    "severity": "Jingma",
+    "scope": "Scope",
+    "channels": "Ki lad pynbna",
+    "dispatch_btn": "PYNBNA IA KA JINGMA",
+    "calib_title": "IoT Sensor Threshold",
+    "calib_pore": "Pore Pressure (kPa)",
+    "calib_rain": "24h Slap (mm)",
+    "xml_preview": "OASIS CAP-IN v1.2 XML",
+    "copy_xml": "Copy XML",
+    "logout": "Log Out",
+    "historical_title": "GSI Historical Landslides (1968 - 2024)",
+    "reports_title": "Ki Report na u Paidbah"
+  },
+  "vedas": {
+    "title": "ISRO VEDAS Earth Observation System",
+    "subtitle": "Space Applications Centre (SAC), Ahmedabad • Key: I4xCNidC6IcDUuhnFi69PQ",
+    "swi_label": "Soil Wetness Index (SWI)",
+    "insar_label": "InSAR Ground Velocity",
+    "ndvi_label": "Sentinel-2 NDVI",
+    "cartodem_label": "CartoDEM 30m Elevation",
+    "sync_btn": "SYNC VEDAS FEED",
+    "sync_success": "VEDAS satellite feed la sync!"
+  },
+  "speech": {
+    "safe": "Ka jingpynbna: Baroh ki jaka ki long kiba shngain mynta ka por bad ki ISRO satellite ki dang peit bniah.",
+    "alert": "Ka jingpynbna ba kyrkieh na ka Disaster Management. Don ka jingma ba khraw ban twap khyndew ha surok NH-10 Mile 44. Sngewbha leit kloi sha ki jaka rieh ha Rongli. Khnang sha 1077."
+  }
+}
