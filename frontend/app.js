@@ -382,6 +382,16 @@ document.addEventListener("DOMContentLoaded", () => {
   updateAllTimestamps();
   setInterval(updateAllTimestamps, 30000);
 
+  // Load AI Hazard Alerts & Start Evacuation Mandate Polling
+  fetchAiHazardAlerts('all');
+  checkActiveEvacuations();
+  if (!evacPollingInterval) {
+    evacPollingInterval = setInterval(() => {
+      checkActiveEvacuations();
+      fetchAiHazardAlerts(currentRegion);
+    }, 8000);
+  }
+
   // Mobile initial view configuration
   if (window.innerWidth < 1024) {
     toggleMobileView('map');
@@ -1879,6 +1889,8 @@ function setRegion(regionCode) {
   fetchWeatherBroadcast(regionCode);
   syncVedasTelemetry(regionCode);
   updateAllTimestamps();
+  fetchAiHazardAlerts(regionCode);
+  checkActiveEvacuations();
 }
 
 // =========================================================================================
