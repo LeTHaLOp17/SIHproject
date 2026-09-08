@@ -419,7 +419,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 0.84,
         "status": "CRITICAL",
         "hazard_description": "Active translational rockslide and mud slump cutting primary arterial link.",
-        "recommended_action": "Evacuate Rongli valley settlements; suspend NH-10 heavy vehicular transit."
+        "recommended_action": "Evacuate Rongli valley settlements; suspend NH-10 heavy vehicular transit.",
+        "updated_time_human": "8 mins ago",
+        "updated_by": "Er. T. Norbu (GSI Geologist) & BRO Project Swastik",
+        "source": "IoT Piezometer Node #091 + Visual Field Reconnaissance"
     },
     {
         "id": "LS-AS-01",
@@ -437,7 +440,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 0.91,
         "status": "CRITICAL",
         "hazard_description": "Railway embankment saturation and debris slide threatening Dima Hasao connectivity.",
-        "recommended_action": "Halt passenger train operations; deploy SDRF rescue boats along river plain."
+        "recommended_action": "Halt passenger train operations; deploy SDRF rescue boats along river plain.",
+        "updated_time_human": "14 mins ago",
+        "updated_by": "Northeast Frontier Railway (NFR) Disaster Cell",
+        "source": "Track Embankment Accelerometers & Dima Hasao DEOC"
     },
     {
         "id": "LS-ML-01",
@@ -455,7 +461,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 0.79,
         "status": "CRITICAL",
         "hazard_description": "Massive mudflow slurry washing across tunnel portal with boulder debris.",
-        "recommended_action": "Total vehicular stoppage at Lumshnong; establish safe truck parking zones."
+        "recommended_action": "Total vehicular stoppage at Lumshnong; establish safe truck parking zones.",
+        "updated_time_human": "5 mins ago",
+        "updated_by": "Meghalaya State Disaster Management Authority (SDMA)",
+        "source": "CCTV Portal Camera & Jaintia Hills DEOC Sensor"
     },
     {
         "id": "LS-AR-01",
@@ -473,7 +482,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 1.15,
         "status": "WATCH",
         "hazard_description": "Permafrost freeze-thaw wedge dislocation triggering intermittent rockfall.",
-        "recommended_action": "BRO Project Vartak deployed with JCBs; mandatory anti-skid chain advisory."
+        "recommended_action": "BRO Project Vartak deployed with JCBs; mandatory anti-skid chain advisory.",
+        "updated_time_human": "22 mins ago",
+        "updated_by": "BRO Project Vartak Task Force",
+        "source": "High-Altitude Sela Weather Station & BRO Patrol Unit"
     },
     {
         "id": "LS-MN-01",
@@ -491,7 +503,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 1.04,
         "status": "WATCH",
         "hazard_description": "Terraced railway slope showing deep creep deformation in shale strata.",
-        "recommended_action": "Clear camp sites within 500m of Ijei riverbed; radar tilt continuous alert."
+        "recommended_action": "Clear camp sites within 500m of Ijei riverbed; radar tilt continuous alert.",
+        "updated_time_human": "18 mins ago",
+        "updated_by": "Manipur Relief & Disaster Management Department",
+        "source": "Noney District Administration Ground Team"
     },
     {
         "id": "LS-MZ-01",
@@ -509,7 +524,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 1.02,
         "status": "WATCH",
         "hazard_description": "Slow regolith creeping downslope, cracking retaining walls and road shoulder.",
-        "recommended_action": "One-way traffic rationing; shift vulnerable houses in Hunthar lower tier."
+        "recommended_action": "One-way traffic rationing; shift vulnerable houses in Hunthar lower tier.",
+        "updated_time_human": "25 mins ago",
+        "updated_by": "Aizawl District Disaster Management Authority (DDMA)",
+        "source": "Public Works Department (PWD) Slope Monitoring Geophones"
     },
     {
         "id": "LS-NL-01",
@@ -527,7 +545,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 1.18,
         "status": "WATCH",
         "hazard_description": "Loose boulder scree detachment along vertical fractured gorge cut.",
-        "recommended_action": "Maintain safety spotters at both ends; divert light vehicles via Niuland."
+        "recommended_action": "Maintain safety spotters at both ends; divert light vehicles via Niuland.",
+        "updated_time_human": "30 mins ago",
+        "updated_by": "Nagaland State Disaster Management Authority (NSDMA)",
+        "source": "Dimapur Traffic Control & Geotechnical Survey Unit"
     },
     {
         "id": "LS-TR-01",
@@ -545,7 +566,10 @@ REALTIME_LANDSLIDE_INVENTORY = [
         "factor_of_safety": 1.35,
         "status": "ADVISORY",
         "hazard_description": "Superficial topsoil washout along orange orchard terrace boundaries.",
-        "recommended_action": "Routine road clearance; maintain ditch drainage free of fallen bamboo."
+        "recommended_action": "Routine road clearance; maintain ditch drainage free of fallen bamboo.",
+        "updated_time_human": "45 mins ago",
+        "updated_by": "Tripura Disaster Management Authority (TDMA)",
+        "source": "Kanchanpur Sub-Division Emergency Operations Centre"
     }
 ]
 
@@ -753,9 +777,14 @@ ROAD_CONNECTIVITY_NETWORK = [
         "status": "RESTRICTED",
         "passable": "PARTIAL",
         "choke_point": "Mile 44 / Singtam - Rangpo Stretch",
+        "choke_lat": 27.2344,
+        "choke_lon": 88.5002,
         "criticality": "HIGH_VULNERABILITY",
         "delay_minutes": 180,
         "current_condition": "Active translational slope creep and mud slurry. Light vehicles only via Lava-Algarah diversion.",
+        "updated_time_human": "8 mins ago",
+        "updated_by": "Border Roads Organisation (BRO) Project Swastik",
+        "source": "Mile 44 Checkpost & CCTV Portal",
         "coordinates": [[27.1767, 88.5303], [27.2344, 88.5002], [27.3314, 88.6138]]
     },
     {
@@ -767,9 +796,14 @@ ROAD_CONNECTIVITY_NETWORK = [
         "status": "BLOCKED",
         "passable": "NO",
         "choke_point": "Sonapur Tunnel Portal",
+        "choke_lat": 25.0740,
+        "choke_lon": 92.3610,
         "criticality": "SINGLE_POINT_OF_FAILURE",
         "delay_minutes": 600,
         "current_condition": "Massive mudflow slurry and falling boulders blocking tunnel ingress. Border Roads Organisation (BRO) bulldozers deployed.",
+        "updated_time_human": "5 mins ago",
+        "updated_by": "Meghalaya State Disaster Management Authority (SDMA)",
+        "source": "Sonapur Tunnel Traffic Control Post",
         "coordinates": [[25.4000, 91.9000], [25.0740, 92.3610], [24.8300, 92.8000]]
     },
     {
@@ -781,9 +815,14 @@ ROAD_CONNECTIVITY_NETWORK = [
         "status": "WATCH",
         "passable": "PARTIAL",
         "choke_point": "Paglapahar Gorge Stretch",
+        "choke_lat": 25.7890,
+        "choke_lon": 93.7420,
         "criticality": "HIGH_VULNERABILITY",
         "delay_minutes": 75,
         "current_condition": "Loose rockfall screen active. Controlled convoy escort deployed by Nagaland State Disaster Management Authority (NSDMA).",
+        "updated_time_human": "12 mins ago",
+        "updated_by": "Nagaland PWD & Traffic Control Police",
+        "source": "Paglapahar Highway Checkpost",
         "coordinates": [[25.9000, 93.7300], [25.7890, 93.7420], [25.6700, 94.1000]]
     },
     {
@@ -795,9 +834,14 @@ ROAD_CONNECTIVITY_NETWORK = [
         "status": "SUSPENDED",
         "passable": "NO",
         "choke_point": "Jatinga - New Haflong Embankment",
+        "choke_lat": 25.1325,
+        "choke_lon": 92.9860,
         "criticality": "SINGLE_POINT_OF_FAILURE",
         "delay_minutes": 1440,
         "current_condition": "Track ballast subsidence caused by saturated Disang shale collapse. Restoration works underway by Northeast Frontier Railway.",
+        "updated_time_human": "15 mins ago",
+        "updated_by": "Northeast Frontier Railway (NFR) Disaster Cell",
+        "source": "Track Embankment Accelerometers & Dima Hasao DEOC",
         "coordinates": [[25.7500, 93.1500], [25.1325, 92.9860], [24.8800, 92.6500]]
     },
     {
@@ -809,9 +853,14 @@ ROAD_CONNECTIVITY_NETWORK = [
         "status": "OPEN",
         "passable": "YES",
         "choke_point": "Mao Gate / Noney Approach",
+        "choke_lat": 24.8150,
+        "choke_lon": 93.6120,
         "criticality": "MODERATE",
         "delay_minutes": 15,
         "current_condition": "Passable for all traffic. Slope drainage culverts functioning smoothly.",
+        "updated_time_human": "10 mins ago",
+        "updated_by": "Manipur PWD (Highways) & Traffic Control",
+        "source": "Mao Highway Patrol Post Checkpoint",
         "coordinates": [[25.6700, 94.1000], [24.8150, 93.6120], [24.8170, 93.9368]]
     },
     {
@@ -823,24 +872,504 @@ ROAD_CONNECTIVITY_NETWORK = [
         "status": "RESTRICTED",
         "passable": "PARTIAL",
         "choke_point": "Sela Tunnel / Jaswant Garh Approach",
+        "choke_lat": 27.5020,
+        "choke_lon": 92.1030,
         "criticality": "STRATEGIC_DEFENSE",
         "delay_minutes": 120,
         "current_condition": "Permafrost freeze-thaw dislodgement. Heavy 4x4 convoys prioritized with tire chains.",
+        "updated_time_human": "15 mins ago",
+        "updated_by": "BRO Project Vartak Task Force",
+        "source": "Sela Pass High-Altitude Road Camp Telemetry",
         "coordinates": [[26.8500, 92.7500], [27.5020, 92.1030], [27.5800, 91.8600]]
+    },
+    {
+        "road_id": "ROAD-NER-NH54",
+        "name": "NH-54 Aizawl - Lengpui Airport Highway",
+        "state": "Mizoram",
+        "region": "mizoram",
+        "length_km": 32,
+        "status": "WATCH",
+        "passable": "PARTIAL",
+        "choke_point": "Hunthar Sinking Zone Cut",
+        "choke_lat": 23.7360,
+        "choke_lon": 92.7170,
+        "criticality": "HIGH_VULNERABILITY",
+        "delay_minutes": 45,
+        "current_condition": "Slow regolith creeping downslope, cracking retaining walls. One-way convoy escort deployed.",
+        "updated_time_human": "20 mins ago",
+        "updated_by": "Aizawl District Disaster Management Authority (DDMA)",
+        "source": "Hunthar Slope Geophones & PWD Patrol",
+        "coordinates": [[23.7120, 92.7480], [23.7360, 92.7170], [23.8400, 92.6200]]
+    },
+    {
+        "road_id": "ROAD-NER-NH08",
+        "name": "NH-08 Agartala - Sabroom Arterial Corridor",
+        "state": "Tripura",
+        "region": "tripura",
+        "length_km": 135,
+        "status": "OPEN",
+        "passable": "YES",
+        "choke_point": "Baramura Ridge Stretch",
+        "choke_lat": 23.8600,
+        "choke_lon": 91.5400,
+        "criticality": "MODERATE",
+        "delay_minutes": 10,
+        "current_condition": "Clear and passable. Routine bamboo clearing and culvert maintenance active.",
+        "updated_time_human": "25 mins ago",
+        "updated_by": "Tripura PWD & State Disaster Management Authority",
+        "source": "Baramura Toll Checkpoint",
+        "coordinates": [[23.8315, 91.2868], [23.8600, 91.5400], [23.1600, 91.7300]]
     }
 ]
 
 
 @app.get("/roads/connectivity", tags=["Road Connectivity & Infrastructure"])
-def get_road_connectivity():
+def get_road_connectivity(region: Optional[str] = None):
     """
-    Returns real-time road connectivity status for critical North Eastern Region arterial lifelines.
+    Returns real-time road connectivity status for critical North Eastern Region arterial lifelines,
+    optionally filtered by region.
     """
+    filtered = ROAD_CONNECTIVITY_NETWORK
+    if region and region.lower() != "all":
+        filtered = [item for item in ROAD_CONNECTIVITY_NETWORK if item.get("region") == region.lower()]
+
     return {
         "status": "SUCCESS",
+        "filter_region": region,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "total_arteries": len(ROAD_CONNECTIVITY_NETWORK),
-        "arteries": ROAD_CONNECTIVITY_NETWORK
+        "total_arteries": len(filtered),
+        "arteries": filtered
+    }
+
+
+# -----------------------------------------------------------------------------------------
+# Verified Relief Shelters Directory with Exact GPS Navigation
+# -----------------------------------------------------------------------------------------
+
+EMERGENCY_SHELTERS_NETWORK = [
+    {
+        "shelter_id": "SHELTER-SK-01",
+        "name": "Govt Senior Secondary School Rongli",
+        "village_name": "Rongli Upper Basti",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.2025,
+        "longitude": 88.6210,
+        "capacity_persons": 3450,
+        "medical_stock_days": 2.5,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "10 mins ago",
+        "updated_by": "Pakyong District Emergency Operations Centre (DEOC)",
+        "source": "District Administration Field Inspection"
+    },
+    {
+        "shelter_id": "SHELTER-SK-02",
+        "name": "Dolepchep Community Relief Centre",
+        "village_name": "Dolepchep Hamlet",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.2150,
+        "longitude": 88.6410,
+        "capacity_persons": 1820,
+        "medical_stock_days": 1.5,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "12 mins ago",
+        "updated_by": "Pakyong DEOC Relief Unit",
+        "source": "Rongli Sub-Division DEOC"
+    },
+    {
+        "shelter_id": "SHELTER-SK-03",
+        "name": "Rhenock College Emergency Auditorium",
+        "village_name": "Rhenock Valley",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.1850,
+        "longitude": 88.6430,
+        "capacity_persons": 5900,
+        "medical_stock_days": 5.0,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "15 mins ago",
+        "updated_by": "Sikkim State Disaster Management Authority (SSDMA)",
+        "source": "Rhenock Sub-Divisional Magistrate"
+    },
+    {
+        "shelter_id": "SHELTER-AS-01",
+        "name": "Haflong Higher Secondary School Auditorium",
+        "village_name": "Haflong Town",
+        "region": "assam",
+        "state_name": "Assam",
+        "latitude": 25.1650,
+        "longitude": 93.0180,
+        "capacity_persons": 4200,
+        "medical_stock_days": 4.0,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "15 mins ago",
+        "updated_by": "Dima Hasao District Administration (DEOC)",
+        "source": "Haflong Civil Hospital Emergency Response"
+    },
+    {
+        "shelter_id": "SHELTER-ML-01",
+        "name": "Khliehriat Govt Multi-Purpose Relief Complex",
+        "village_name": "Khliehriat",
+        "region": "meghalaya",
+        "state_name": "Meghalaya",
+        "latitude": 25.3500,
+        "longitude": 92.3700,
+        "capacity_persons": 3100,
+        "medical_stock_days": 3.5,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "18 mins ago",
+        "updated_by": "East Jaintia Hills District Disaster Management Authority",
+        "source": "DEOC Khliehriat Ground Team"
+    },
+    {
+        "shelter_id": "SHELTER-AR-01",
+        "name": "Dirang Community Disaster Shelter",
+        "village_name": "Dirang Valley",
+        "region": "arunachal",
+        "state_name": "Arunachal Pradesh",
+        "latitude": 27.3580,
+        "longitude": 92.2350,
+        "capacity_persons": 2800,
+        "medical_stock_days": 6.0,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "20 mins ago",
+        "updated_by": "West Kameng District Disaster Management Authority",
+        "source": "BRO Project Vartak Medical Officer"
+    },
+    {
+        "shelter_id": "SHELTER-MN-01",
+        "name": "Noney District Indoor Sports Complex",
+        "village_name": "Noney Headquarters",
+        "region": "manipur",
+        "state_name": "Manipur",
+        "latitude": 24.8150,
+        "longitude": 93.6120,
+        "capacity_persons": 2500,
+        "medical_stock_days": 3.0,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "22 mins ago",
+        "updated_by": "Noney District Relief & Rehabilitation Committee",
+        "source": "Manipur Fire & Emergency Services"
+    },
+    {
+        "shelter_id": "SHELTER-MZ-01",
+        "name": "Hunthar Community Disaster Hall",
+        "village_name": "Hunthar Upper",
+        "region": "mizoram",
+        "state_name": "Mizoram",
+        "latitude": 23.7360,
+        "longitude": 92.7170,
+        "capacity_persons": 2100,
+        "medical_stock_days": 4.5,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "25 mins ago",
+        "updated_by": "Aizawl District Disaster Management Authority",
+        "source": "Aizawl Municipal Corporation (AMC)"
+    },
+    {
+        "shelter_id": "SHELTER-NL-01",
+        "name": "Chumukedima Town Relief Hub",
+        "village_name": "Chumukedima",
+        "region": "nagaland",
+        "state_name": "Nagaland",
+        "latitude": 25.8100,
+        "longitude": 93.7700,
+        "capacity_persons": 3600,
+        "medical_stock_days": 5.0,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "30 mins ago",
+        "updated_by": "Nagaland State Disaster Management Authority (NSDMA)",
+        "source": "Dimapur District Administration"
+    },
+    {
+        "shelter_id": "SHELTER-TR-01",
+        "name": "Vanghmun Community Relief Auditorium",
+        "village_name": "Jampui Hills (Vanghmun)",
+        "region": "tripura",
+        "state_name": "Tripura",
+        "latitude": 23.9800,
+        "longitude": 92.2850,
+        "capacity_persons": 1900,
+        "medical_stock_days": 4.0,
+        "trauma_team_status": "Active 24x7",
+        "updated_time_human": "35 mins ago",
+        "updated_by": "North Tripura District Disaster Management Authority",
+        "source": "Kanchanpur Sub-Divisional DEOC"
+    }
+]
+
+
+@app.get("/shelters/list", tags=["Citizen Relief & Safety"])
+def get_relief_shelters(region: Optional[str] = None):
+    """
+    Returns safe emergency relief shelters with exact GPS coordinates,
+    capacity, and stock buffers, optionally filtered by region.
+    """
+    filtered = EMERGENCY_SHELTERS_NETWORK
+    if region and region.lower() != "all":
+        filtered = [item for item in EMERGENCY_SHELTERS_NETWORK if item.get("region") == region.lower()]
+
+    return {
+        "status": "SUCCESS",
+        "filter_region": region,
+        "total_shelters": len(filtered),
+        "shelters": filtered
+    }
+
+
+# -----------------------------------------------------------------------------------------
+# Critical Infrastructure Mapping (Hospitals, Lifeline Bridges, Emergency Helipads)
+# -----------------------------------------------------------------------------------------
+
+CRITICAL_INFRASTRUCTURE_NETWORK = [
+    # Hospitals & Trauma Response
+    {
+        "id": "INFRA-HOSP-01",
+        "name": "STNM Multi-Speciality Trauma Hospital",
+        "category": "HOSPITAL",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.3314,
+        "longitude": 88.6138,
+        "operational_status": "FUNCTIONAL_CRITICAL_HUB",
+        "beds_available": 450,
+        "trauma_teams": 6,
+        "blood_stock_days": 12.0,
+        "updated_time_human": "5 mins ago",
+        "updated_by": "Health Department, Govt of Sikkim"
+    },
+    {
+        "id": "INFRA-HOSP-02",
+        "name": "Haflong Civil Hospital & Emergency Wing",
+        "category": "HOSPITAL",
+        "region": "assam",
+        "state_name": "Assam",
+        "latitude": 25.1650,
+        "longitude": 93.0180,
+        "operational_status": "FUNCTIONAL_MONITORING",
+        "beds_available": 180,
+        "trauma_teams": 3,
+        "blood_stock_days": 8.0,
+        "updated_time_human": "15 mins ago",
+        "updated_by": "Dima Hasao Health Services"
+    },
+    {
+        "id": "INFRA-HOSP-03",
+        "name": "NEIGRIHMS Super-Speciality Hospital",
+        "category": "HOSPITAL",
+        "region": "meghalaya",
+        "state_name": "Meghalaya",
+        "latitude": 25.5920,
+        "longitude": 91.9360,
+        "operational_status": "REGIONAL_REFERRAL_BASE",
+        "beds_available": 550,
+        "trauma_teams": 8,
+        "blood_stock_days": 15.0,
+        "updated_time_human": "10 mins ago",
+        "updated_by": "Meghalaya Health Directorate"
+    },
+    {
+        "id": "INFRA-HOSP-04",
+        "name": "Regional Institute of Medical Sciences (RIMS)",
+        "category": "HOSPITAL",
+        "region": "manipur",
+        "state_name": "Manipur",
+        "latitude": 24.8170,
+        "longitude": 93.9368,
+        "operational_status": "FUNCTIONAL_ACTIVE",
+        "beds_available": 420,
+        "trauma_teams": 5,
+        "blood_stock_days": 10.0,
+        "updated_time_human": "12 mins ago",
+        "updated_by": "Manipur Disaster Response Cell"
+    },
+    # Mountain Bridges (Vulnerable Cut-Vertices)
+    {
+        "id": "INFRA-BDG-01",
+        "name": "Singtam Teesta Suspension Bridge",
+        "category": "BRIDGE",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.2344,
+        "longitude": 88.5002,
+        "operational_status": "HIGH_SCOUR_WATCH",
+        "bridge_type": "Suspension Steel Truss",
+        "load_capacity_tons": 24.0,
+        "updated_time_human": "8 mins ago",
+        "updated_by": "BRO Project Swastik Bridge Inspection Cell"
+    },
+    {
+        "id": "INFRA-BDG-02",
+        "name": "Sonapur Tunnel Ingress Bridge",
+        "category": "BRIDGE",
+        "region": "meghalaya",
+        "state_name": "Meghalaya",
+        "latitude": 25.0740,
+        "longitude": 92.3610,
+        "operational_status": "BLOCKED_DEBRIS_CLEARANCE",
+        "bridge_type": "Reinforced Concrete Overpass",
+        "load_capacity_tons": 40.0,
+        "updated_time_human": "6 mins ago",
+        "updated_by": "Border Roads Organisation (BRO)"
+    },
+    {
+        "id": "INFRA-BDG-03",
+        "name": "Jatinga River Rail Bridge #42",
+        "category": "BRIDGE",
+        "region": "assam",
+        "state_name": "Assam",
+        "latitude": 25.1325,
+        "longitude": 92.9860,
+        "operational_status": "TRACK_BALLAST_RESTRICTED",
+        "bridge_type": "Plate Girder Railway Bridge",
+        "load_capacity_tons": 70.0,
+        "updated_time_human": "14 mins ago",
+        "updated_by": "Northeast Frontier Railway Bridge Cell"
+    },
+    {
+        "id": "INFRA-BDG-04",
+        "name": "Sela Pass High-Altitude Military Bridge",
+        "category": "BRIDGE",
+        "region": "arunachal",
+        "state_name": "Arunachal Pradesh",
+        "latitude": 27.5020,
+        "longitude": 92.1030,
+        "operational_status": "PERMAFROST_WATCH",
+        "bridge_type": "Modular Steel Bailey Bridge",
+        "load_capacity_tons": 30.0,
+        "updated_time_human": "20 mins ago",
+        "updated_by": "BRO Project Vartak Task Force"
+    },
+    # Emergency Helipads / Airdrop Zones
+    {
+        "id": "INFRA-HELI-01",
+        "name": "Rongli Emergency Helipad (IAF/NDRF)",
+        "category": "HELIPAD",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.2025,
+        "longitude": 88.6210,
+        "operational_status": "CLEAR_FOR_AIRDROP",
+        "helicopter_rating": "Mi-17V5 / ALH Dhruv",
+        "updated_time_human": "10 mins ago",
+        "updated_by": "Eastern Air Command (IAF) Liaison Officer"
+    },
+    {
+        "id": "INFRA-HELI-02",
+        "name": "Shillong Peak Advanced Helicopter Landing Base",
+        "category": "HELIPAD",
+        "region": "meghalaya",
+        "state_name": "Meghalaya",
+        "latitude": 25.5450,
+        "longitude": 91.8820,
+        "operational_status": "STANDBY_ALL_WEATHER",
+        "helicopter_rating": "Heavy Transport & Medevac",
+        "updated_time_human": "12 mins ago",
+        "updated_by": "IAF Eastern Air Command"
+    }
+]
+
+
+@app.get("/infrastructure/critical", tags=["Road Connectivity & Infrastructure"])
+def get_critical_infrastructure(region: Optional[str] = None):
+    """
+    Returns critical infrastructure GIS objects (trauma hospitals, strategic bridges, and helipads),
+    optionally filtered by region.
+    """
+    filtered = CRITICAL_INFRASTRUCTURE_NETWORK
+    if region and region.lower() != "all":
+        filtered = [item for item in CRITICAL_INFRASTRUCTURE_NETWORK if item.get("region") == region.lower()]
+
+    return {
+        "status": "SUCCESS",
+        "filter_region": region,
+        "total_facilities": len(filtered),
+        "infrastructure": filtered
+    }
+
+
+# -----------------------------------------------------------------------------------------
+# Community Early Warning SMS Alert Subscription Engine (NDMA SACHET Gateway)
+# -----------------------------------------------------------------------------------------
+
+class AlertSubscriptionRequest(BaseModel):
+    phone_number: str = Field(..., example="+91 98765 43210")
+    subscriber_name: Optional[str] = Field(default="Local Community Member", example="K. Lepcha")
+    region: str = Field(default="sikkim", example="sikkim")
+    district: Optional[str] = Field(default="Local Village / NH Corridor", example="Pakyong")
+    language: str = Field(default="en", example="en")
+
+
+ALERT_SUBSCRIBERS_DATABASE = [
+    {
+        "subscription_id": "SUB-SACHET-001",
+        "phone_number": "+91 98320 44102",
+        "subscriber_name": "Tenzing Lepcha",
+        "region": "sikkim",
+        "district": "Pakyong",
+        "language": "as",
+        "registered_at": "2026-09-08T04:00:00Z"
+    },
+    {
+        "subscription_id": "SUB-SACHET-002",
+        "phone_number": "+91 94350 88219",
+        "subscriber_name": "Pranab Gogoi",
+        "region": "assam",
+        "district": "Dima Hasao",
+        "language": "as",
+        "registered_at": "2026-09-08T05:30:00Z"
+    }
+]
+
+
+@app.post("/alerts/subscribe", tags=["Real-Time Alerts & Warning"])
+def subscribe_to_early_warnings(sub: AlertSubscriptionRequest):
+    """
+    Registers citizens and rural village authorities to receive automated,
+    multi-lingual SMS early warnings from the NDMA SACHET gateway.
+    """
+    clean_phone = sub.phone_number.strip()
+    if len(clean_phone) < 10:
+        raise HTTPException(status_code=400, detail="Invalid mobile phone number format.")
+
+    sub_id = f"SUB-SACHET-{len(ALERT_SUBSCRIBERS_DATABASE) + 1:03d}"
+    record = {
+        "subscription_id": sub_id,
+        "phone_number": clean_phone,
+        "subscriber_name": sub.subscriber_name or "Local Community Member",
+        "region": sub.region.lower(),
+        "district": sub.district or "Local Hill Corridor",
+        "language": sub.language,
+        "registered_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+    ALERT_SUBSCRIBERS_DATABASE.insert(0, record)
+
+    return {
+        "status": "SUCCESS",
+        "message": f"Mobile number {clean_phone} successfully registered for automated NDMA SACHET early warning SMS broadcasts.",
+        "subscription_id": sub_id,
+        "confirmation_code": f"SACHET-{int(time.time()) % 100000:05d}",
+        "alert_channels": ["SMS via C-DAC Gateway", "NDMA SACHET Cell Broadcast", "Automated Voice IVR"],
+        "record": record
+    }
+
+
+@app.get("/alerts/subscribers", tags=["Real-Time Alerts & Warning"])
+def list_alert_subscribers(region: Optional[str] = "all"):
+    if region and region.lower() != "all":
+        filtered = [s for s in ALERT_SUBSCRIBERS_DATABASE if s["region"] == region.lower()]
+        return {
+            "status": "SUCCESS",
+            "region": region,
+            "total_subscribers": len(filtered),
+            "subscribers": filtered
+        }
+    return {
+        "status": "SUCCESS",
+        "region": "all",
+        "total_subscribers": len(ALERT_SUBSCRIBERS_DATABASE),
+        "subscribers": ALERT_SUBSCRIBERS_DATABASE
     }
 
 
@@ -876,7 +1405,9 @@ def get_weather_risk_forecast(region: Optional[str] = "sikkim"):
             "soil_saturation_pct": min(98.0, base_rain * 0.58),
             "factor_of_safety": max(0.65, 1.45 - (base_rain * 0.0042)),
             "risk_tier": "CRITICAL" if base_rain > 140 else "WATCH",
-            "condition": "Heavy Monsoonal Precipitation"
+            "condition": "Heavy Monsoonal Precipitation",
+            "updated_time_human": "5 mins ago",
+            "source": "IMD Regional Meteorological Centre (RMC), Guwahati"
         },
         {
             "horizon": "+24 Hours Forecast",
@@ -885,7 +1416,9 @@ def get_weather_risk_forecast(region: Optional[str] = "sikkim"):
             "soil_saturation_pct": min(98.0, base_rain * 0.64),
             "factor_of_safety": max(0.58, 1.35 - (base_rain * 0.0045)),
             "risk_tier": "CRITICAL" if base_rain * 0.85 > 110 else "WATCH",
-            "condition": "Scattered Cloudburst Squalls"
+            "condition": "Scattered Cloudburst Squalls",
+            "updated_time_human": "5 mins ago",
+            "source": "IMD NWP Ensemble Model"
         },
         {
             "horizon": "+48 Hours Forecast",
@@ -894,7 +1427,9 @@ def get_weather_risk_forecast(region: Optional[str] = "sikkim"):
             "soil_saturation_pct": min(95.0, base_rain * 0.60),
             "factor_of_safety": max(0.70, 1.40 - (base_rain * 0.0040)),
             "risk_tier": "WATCH",
-            "condition": "Intermittent Orographic Rain"
+            "condition": "Intermittent Orographic Rain",
+            "updated_time_human": "5 mins ago",
+            "source": "IMD NWP Ensemble Model"
         },
         {
             "horizon": "+72 Hours Forecast",
@@ -903,7 +1438,9 @@ def get_weather_risk_forecast(region: Optional[str] = "sikkim"):
             "soil_saturation_pct": min(85.0, base_rain * 0.50),
             "factor_of_safety": max(0.95, 1.50 - (base_rain * 0.0035)),
             "risk_tier": "ADVISORY",
-            "condition": "Easing Monsoon Inflow"
+            "condition": "Easing Monsoon Inflow",
+            "updated_time_human": "5 mins ago",
+            "source": "IMD NWP Ensemble Model"
         }
     ]
 
@@ -911,25 +1448,186 @@ def get_weather_risk_forecast(region: Optional[str] = "sikkim"):
         "status": "SUCCESS",
         "region": reg,
         "data_source": "India Meteorological Department (IMD) / Doppler Weather Radar",
+        "updated_time_human": "5 mins ago",
+        "updated_by": "IMD Gangtok / RMC Guwahati Doppler Radar Station",
         "forecast_timeline": forecast_timeline
     }
 
 
+
 # -----------------------------------------------------------------------------------------
-# Citizen & Field Official Geo-Tagged Hazard Report Ingestion & Offline Sync
+# IMD Weather Broadcast & Severe Weather Alert Bulletin
+# -----------------------------------------------------------------------------------------
+
+class WeatherBroadcastPayload(BaseModel):
+    region: Optional[str] = "all"
+    state_name: Optional[str] = "All North Eastern States (NER)"
+    alert_level: str = "RED"  # RED, ORANGE, YELLOW, GREEN
+    title: str = "IMD Flash Weather & Landslide Warning Bulletin"
+    bulletin_text: str = (
+        "Special Weather Advisory for North Eastern Region: Active Western Disturbance coupled with Bay of Bengal moisture "
+        "incursion is inducing extremely heavy precipitation across Sikkim, Meghalaya, and Assam hills. Total 24-hour rainfall "
+        "is projected to exceed 180mm along NH-10 and NH-6 corridors. Slopes exhibit critical saturation with severe landslide "
+        "hazard. Citizens are urged to suspend non-essential hill travel and observe official evacuation advisories."
+    )
+    bulletin_text_hi: Optional[str] = (
+        "पूर्वोत्तर क्षेत्र के लिए विशेष मौसम बुलेटिन: बंगाल की खाड़ी से आ रही तीव्र नमी के कारण सिक्किम, मेघालय और असम के "
+        "पहाड़ी क्षेत्रों में भारी से अत्यधिक भारी बारिश जारी है। NH-10 और NH-6 मार्गों पर भूस्खलन का गंभीर खतरा है। "
+        "नागरिक घाट मार्गों पर यात्रा टालें और सुरक्षित स्थानों पर रहें।"
+    )
+    bulletin_text_as: Optional[str] = (
+        "উত্তৰ-পূব অঞ্চলৰ বাবে বিশেষ বতৰ বুলেটিন: ছিকিম, মেঘালয় আৰু অসমৰ পাহাৰীয়া জিলাসমূহত ধাৰাসাৰ বৰষুণ আৰু ভূমিস্খলনৰ "
+        "ৰঙা সতৰ্কবাণী জাৰি কৰা হৈছে। NH-10 আৰু NH-6 পথত ভূমিস্খলনৰ সম্ভাৱনা অতি প্ৰৱল। অপ্ৰয়োজনীয় ভ্ৰমণ নকৰিব।"
+    )
+    bulletin_text_bn: Optional[str] = (
+        "উত্তর-পূর্ব ভারতের জন্য জরুরি আবহাওয়া বার্তা: সিকিম ও মেঘালয় পাহাড়ে অতি ভারী বৃষ্টির কারণে ব্যাপক ভূমিধসের লাল "
+        "সতর্কতা জারি করা হয়েছে। জাতীয় সড়ক ১০ ও ৬ নম্বরে বিপজ্জনক ধস নামার সম্ভাবনা রয়েছে। সকলে সতর্ক থাকুন।"
+    )
+    bulletin_text_bodo: Optional[str] = (
+        "गोजाव बथ'र खौरां: आसाम, मेघालय आरो सिक्किम हालामाव जोबोद गोख्रों अखा हानायनि खौरां होदों। हाग्रा लामाफोराव हा सोमावनायनि "
+        "गिखांथि दं। अननानै रैखाथि जायगायाव था।"
+    )
+    bulletin_text_kha: Optional[str] = (
+        "Khubor Ka Suinbneng: Ka jingther u lapbah ha ryngkat ka jingjyllei um ha ki lum Meghalaya bad Sikkim. "
+        "Phim dei ban leit jngoh shuh sha ki surok ba ma kum ka NH-6 bad NH-10."
+    )
+    expected_rainfall_24h: Optional[str] = "165 - 220 mm"
+    flash_flood_risk: Optional[str] = "HIGH"
+    high_risk_corridors: Optional[List[str]] = ["NH-10 (Sevoke-Gangtok)", "NH-6 (Jowai-Ratacherra)", "NH-29 (Kohima-Dimapur)"]
+    dispatcher_officer: Optional[str] = "Duty Synoptic Meteorologist, RMC Guwahati / DEOC"
+
+
+ACTIVE_WEATHER_BROADCAST: Dict[str, Any] = {
+    "broadcast_id": "IMD-NER-WX-2026-0908",
+    "issued_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    "issued_time_human": "10 mins ago",
+    "source": "India Meteorological Department (IMD) - Regional Meteorological Centre, Guwahati & Gangtok",
+    "region": "all",
+    "state_name": "All North Eastern States (NER)",
+    "alert_level": "RED",
+    "title": "Severe Rainfall & Landslide Warning Bulletin for NER",
+    "bulletin_text": (
+        "Special Weather Advisory for North Eastern Region: Active Western Disturbance coupled with Bay of Bengal moisture "
+        "incursion is inducing extremely heavy precipitation across Sikkim, Meghalaya, and Assam hills. Total 24-hour rainfall "
+        "is projected to exceed 180mm along NH-10 and NH-6 corridors. Slopes exhibit critical saturation with severe landslide "
+        "hazard. Citizens are urged to suspend non-essential hill travel and observe official evacuation advisories."
+    ),
+    "bulletin_text_hi": (
+        "पूर्वोत्तर क्षेत्र के लिए विशेष मौसम बुलेटिन: बंगाल की खाड़ी से आ रही तीव्र नमी के कारण सिक्किम, मेघालय और असम के "
+        "पहाड़ी क्षेत्रों में भारी से अत्यधिक भारी बारिश जारी है। NH-10 और NH-6 मार्गों पर भूस्खलन का गंभीर खतरा है। "
+        "नागरिक घाट मार्गों पर यात्रा टालें और सुरक्षित स्थानों पर रहें।"
+    ),
+    "bulletin_text_as": (
+        "উত্তৰ-পূব অঞ্চলৰ বাবে বিশেষ বতৰ বুলেটিন: ছিকিম, মেঘালয় আৰু অসমৰ পাহাৰীয়া জিলাসমূহত ধাৰাসাৰ বৰষুণ আৰু ভূমিস্খলনৰ "
+        "ৰঙা সতৰ্কবাণী জাৰি কৰা হৈছে। NH-10 আৰু NH-6 পথত ভূমিস্খলনৰ সম্ভাৱনা অতি প্ৰৱল। অপ্ৰয়োজনীয় ভ্ৰমণ নকৰিব।"
+    ),
+    "bulletin_text_bn": (
+        "উত্তর-পূর্ব ভারতের জন্য জরুরি আবহাওয়া বার্তা: সিকিম ও মেঘালয় পাহাড়ে অতি ভারী বৃষ্টির কারণে ব্যাপক ভূমিধসের লাল "
+        "সতর্কতা জারি করা হয়েছে। জাতীয় সড়ক ১০ ও ৬ নম্বরে বিপজ্জনক ধস নামার সম্ভাবনা রয়েছে। সকলে সতর্ক থাকুন।"
+    ),
+    "bulletin_text_bodo": (
+        "गोजाव बथ'र खौरां: आसाम, मेघालय आरो सिक्किम हालामाव जोबोद गोख्रों अखा हानायनि खौरां होदों। हाग्रा लामाफोराव हा सोमावनायनि "
+        "गिखांथि दं। अननानै रैखाथि जायगायाव था।"
+    ),
+    "bulletin_text_kha": (
+        "Khubor Ka Suinbneng: Ka jingther u lapbah ha ryngkat ka jingjyllei um ha ki lum Meghalaya bad Sikkim. "
+        "Phim dei ban leit jngoh shuh sha ki surok ba ma kum ka NH-6 bad NH-10."
+    ),
+    "doppler_station": "Doppler Weather Radar (DWR) Cherrapunji / Mohanbari / Agartala",
+    "expected_rainfall_24h": "165 - 220 mm",
+    "flash_flood_risk": "HIGH",
+    "high_risk_corridors": ["NH-10 (Sevoke-Gangtok)", "NH-6 (Jowai-Ratacherra)", "NH-29 (Kohima-Dimapur)"],
+    "dispatcher_officer": "Duty Synoptic Meteorologist, RMC Guwahati / DEOC"
+}
+
+
+@app.get("/weather/broadcast", tags=["Meteorological Intelligence"])
+def get_active_weather_broadcast(region: Optional[str] = "all"):
+    """
+    Returns the latest IMD & Disaster Management severe weather broadcast bulletin
+    for spoken audio playback and visual broadcast card across all devices.
+    """
+    return {
+        "status": "SUCCESS",
+        "broadcast": ACTIVE_WEATHER_BROADCAST,
+        "region": region or "all",
+        "server_time": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    }
+
+
+@app.post("/weather/broadcast", tags=["Meteorological Intelligence"])
+def dispatch_weather_broadcast(payload: WeatherBroadcastPayload):
+    """
+    Admin endpoint to compose and dispatch urgent weather broadcast bulletins to all citizens.
+    """
+    global ACTIVE_WEATHER_BROADCAST
+    ACTIVE_WEATHER_BROADCAST = {
+        "broadcast_id": f"IMD-NER-WX-{int(time.time())}",
+        "issued_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "issued_time_human": "Just now",
+        "source": "India Meteorological Department (IMD) / State Disaster Management Authority",
+        "region": payload.region or "all",
+        "state_name": payload.state_name or "All North Eastern States (NER)",
+        "alert_level": payload.alert_level.upper(),
+        "title": payload.title,
+        "bulletin_text": payload.bulletin_text,
+        "bulletin_text_hi": payload.bulletin_text_hi or payload.bulletin_text,
+        "bulletin_text_as": payload.bulletin_text_as or payload.bulletin_text,
+        "bulletin_text_bn": payload.bulletin_text_bn or payload.bulletin_text,
+        "bulletin_text_bodo": payload.bulletin_text_bodo or payload.bulletin_text,
+        "bulletin_text_kha": payload.bulletin_text_kha or payload.bulletin_text,
+        "doppler_station": "Doppler Weather Radar (DWR) Cherrapunji / Mohanbari / Agartala",
+        "expected_rainfall_24h": payload.expected_rainfall_24h or "150 - 200 mm",
+        "flash_flood_risk": payload.flash_flood_risk or "HIGH",
+        "high_risk_corridors": payload.high_risk_corridors or ["NH-10 (Sevoke-Gangtok)", "NH-6 (Jowai-Ratacherra)"],
+        "dispatcher_officer": payload.dispatcher_officer or "DEOC Senior Duty Controller"
+    }
+
+    return {
+        "status": "SUCCESS",
+        "message": "Severe weather broadcast dispatched successfully across all regional public channels.",
+        "broadcast": ACTIVE_WEATHER_BROADCAST
+    }
+
+
+# -----------------------------------------------------------------------------------------
+# Citizen & Field Official Geo-Tagged Hazard Report Ingestion & Admin Approval
 # -----------------------------------------------------------------------------------------
 
 class FieldReportSubmission(BaseModel):
     reporter_name: Optional[str] = "Anonymous Citizen"
     phone_number: Optional[str] = "Not provided"
-    latitude: float
-    longitude: float
+    location_name: Optional[str] = "Near Mountain Corridor"
+    region: Optional[str] = "sikkim"
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
     hazard_type: str = "Tension Crack Widening"
     severity: str = "CRITICAL"
     description: str = "Observed slope movement and tension cracks along road cut."
     photo_filename: Optional[str] = None
+    photo_data_url: Optional[str] = None
     crack_width_estimate_mm: Optional[float] = 14.5
     is_offline_sync: bool = False
+
+
+class FieldReportReviewRequest(BaseModel):
+    report_id: str
+    action: str  # "APPROVE", "REJECT", "DISPATCH_QRT"
+    admin_notes: Optional[str] = ""
+    reviewer_name: Optional[str] = "DEOC Incident Commander (Pakyong/Gangtok)"
+
+
+# Regional Default GIS Coordinates for Landmark Mapping Fallback
+REGION_DEFAULT_COORDS = {
+    "sikkim": (27.3389, 88.6065, "Sikkim"),
+    "assam": (25.5000, 92.8000, "Assam"),
+    "meghalaya": (25.4000, 91.9000, "Meghalaya"),
+    "arunachal": (27.8000, 93.5000, "Arunachal Pradesh"),
+    "manipur": (24.8170, 93.9368, "Manipur"),
+    "mizoram": (23.7271, 92.7176, "Mizoram"),
+    "nagaland": (25.6751, 94.1086, "Nagaland"),
+    "tripura": (23.8315, 91.2868, "Tripura"),
+}
 
 
 # In-memory storage for field reports
@@ -938,31 +1636,40 @@ FIELD_REPORTS_DATABASE = [
         "report_id": "REP-NER-2026-001",
         "timestamp": "2026-09-08T05:30:00Z",
         "reporter_name": "Tenzing Lepcha (Gaon Bura)",
-        "phone_number": "+91 98320 XXXXX",
+        "phone_number": "+91 98320 44102",
         "latitude": 27.2344,
         "longitude": 88.5002,
         "location_name": "NH-10 Mile 44 (Singtam)",
+        "region": "sikkim",
         "hazard_type": "Tension Crack Widening",
         "severity": "CRITICAL",
-        "description": "Crack widening observed along road shoulder near mile marker 44. Approximately 18mm gap.",
+        "description": "Crack widening observed along road shoulder near mile marker 44. Approximately 18mm gap with water bubbling.",
+        "photo_filename": "nh10_crack_mile44.jpg",
+        "photo_data_url": "https://images.unsplash.com/photo-1542385151-efd9000785a0?w=300&auto=format&fit=crop&q=60",
         "crack_width_estimate_mm": 18.2,
-        "status": "VERIFIED_DEOC",
-        "offline_sync": False
+        "status": "PENDING_ADMIN_APPROVAL",
+        "offline_sync": False,
+        "submitted_time_human": "15 mins ago"
     },
     {
         "report_id": "REP-NER-2026-002",
         "timestamp": "2026-09-08T06:15:00Z",
         "reporter_name": "S. Das (BRO Junior Engineer)",
-        "phone_number": "+91 94350 XXXXX",
+        "phone_number": "+91 94350 88219",
         "latitude": 25.0740,
         "longitude": 92.3610,
         "location_name": "Sonapur Tunnel Ingress, NH-6",
+        "region": "meghalaya",
         "hazard_type": "Flash Mudflow / Boulders",
         "severity": "CRITICAL",
-        "description": "Heavy slurry washing across portal. Heavy equipment on standby.",
+        "description": "Heavy slurry washing across portal. Heavy equipment deployed on standby.",
+        "photo_filename": "sonapur_mudflow_portal.jpg",
+        "photo_data_url": "https://images.unsplash.com/photo-1547683905-f686c993aae5?w=300&auto=format&fit=crop&q=60",
         "crack_width_estimate_mm": 45.0,
-        "status": "ACTION_DISPATCHED",
-        "offline_sync": True
+        "status": "APPROVED & VERIFIED",
+        "approved_by": "Er. K. Sharma (DEOC Officer)",
+        "offline_sync": True,
+        "submitted_time_human": "45 mins ago"
     }
 ]
 
@@ -970,47 +1677,543 @@ FIELD_REPORTS_DATABASE = [
 @app.post("/field-reports/submit", tags=["Citizen & Field Reporting"])
 def submit_field_report(report: FieldReportSubmission):
     """
-    Receives geo-tagged hazard reports from citizens or field officials,
-    supporting offline sync and instant DEOC logging.
+    Receives written location hazard reports from citizens (no manual coordinates or GPS required).
+    Sets status to PENDING_ADMIN_APPROVAL so DEOC Admin can verify before alerting the public.
     """
+    reg_key = (report.region or "sikkim").lower()
+    default_lat, default_lon, _ = REGION_DEFAULT_COORDS.get(reg_key, (27.3389, 88.6065, "Sikkim"))
+    final_lat = report.latitude if report.latitude is not None and report.latitude != 0 else default_lat
+    final_lon = report.longitude if report.longitude is not None and report.longitude != 0 else default_lon
+
     report_id = f"REP-NER-{time.strftime('%Y')}-{len(FIELD_REPORTS_DATABASE) + 1:03d}"
     new_entry = {
         "report_id": report_id,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-        "reporter_name": report.reporter_name,
-        "phone_number": report.phone_number,
-        "latitude": report.latitude,
-        "longitude": report.longitude,
+        "reporter_name": report.reporter_name or "Local Citizen",
+        "phone_number": report.phone_number or "Not provided",
+        "location_name": report.location_name or "Local Mountain Corridor",
+        "region": reg_key,
+        "latitude": final_lat,
+        "longitude": final_lon,
         "hazard_type": report.hazard_type,
         "severity": report.severity,
         "description": report.description,
         "photo_filename": report.photo_filename or "geo_field_photo.jpg",
-        "crack_width_estimate_mm": report.crack_width_estimate_mm,
-        "status": "QUEUED_FOR_VERIFICATION",
-        "offline_sync": report.is_offline_sync
+        "photo_data_url": report.photo_data_url or "https://images.unsplash.com/photo-1542385151-efd9000785a0?w=300&auto=format&fit=crop&q=60",
+        "crack_width_estimate_mm": report.crack_width_estimate_mm or 14.0,
+        "status": "PENDING_ADMIN_APPROVAL",
+        "offline_sync": report.is_offline_sync,
+        "submitted_time_human": "Just now"
     }
 
     FIELD_REPORTS_DATABASE.insert(0, new_entry)
 
     return {
         "status": "SUCCESS",
-        "message": "Geo-tagged field report successfully registered with DEOC Incident Command.",
+        "message": "Hazard report submitted with location landmark. Sent to DEOC Admin queue for verification.",
         "report_id": report_id,
+        "location_name": new_entry["location_name"],
         "acknowledgement_code": f"ACK-MDoNER-{int(time.time()) % 1000000:06d}",
-        "timestamp": new_entry["timestamp"]
+        "timestamp": new_entry["timestamp"],
+        "approval_status": "PENDING_ADMIN_APPROVAL"
     }
+
+
+@app.post("/field-reports/review", tags=["Citizen & Field Reporting"])
+def review_field_report(req: FieldReportReviewRequest):
+    """
+    DEOC Admin Review: Approves, Dispatches QRT, or Rejects incoming citizen hazard reports.
+    Approved reports are automatically published to the live public GIS map and alert all citizens!
+    """
+    for r in FIELD_REPORTS_DATABASE:
+        if r["report_id"] == req.report_id:
+            if req.action == "APPROVE":
+                r["status"] = "APPROVED & VERIFIED"
+                r["approved_by"] = req.reviewer_name
+                r["reviewed_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                
+                # Append to public active landslide feed so citizens immediately see it on map & feeds
+                loc_title = r.get("location_name") or r.get("hazard_type", "Landslide Hazard")
+                reg_name = REGION_DEFAULT_COORDS.get(r.get("region", "sikkim"), (0, 0, "NER Region"))[2]
+                new_hazard = {
+                    "id": f"LS-CIT-{r['report_id'][-3:]}",
+                    "name": f"Citizen Alert: {loc_title}",
+                    "corridor": f"{loc_title} (Reported by {r['reporter_name']})",
+                    "region": r.get("region", "sikkim"),
+                    "state_name": reg_name,
+                    "latitude": r["latitude"],
+                    "longitude": r["longitude"],
+                    "elevation_m": 1250.0,
+                    "rainfall_1h_mm": 22.0,
+                    "rainfall_24h_mm": 135.0,
+                    "rainfall_intensity": "Active Ground Inflow",
+                    "pore_pressure_kpa": 42.0,
+                    "factor_of_safety": 0.88,
+                    "status": r["severity"],
+                    "hazard_description": f"DEOC APPROVED CITIZEN REPORT: {loc_title} - {r['description']}",
+                    "recommended_action": "Community Alert Active: Suspend travel through this sector; use designated bypass routes.",
+                    "updated_time_human": "Just now",
+                    "updated_by": f"DEOC Admin Approved ({req.reviewer_name})",
+                    "source": f"Citizen Report: {r['reporter_name']} (DEOC Verified)"
+                }
+                REALTIME_LANDSLIDE_INVENTORY.insert(0, new_hazard)
+
+                return {
+                    "status": "SUCCESS",
+                    "action_taken": "APPROVED",
+                    "message": "Report approved and published live to public safety feed and GIS map.",
+                    "report": r,
+                    "published_hazard": new_hazard
+                }
+
+            elif req.action == "DISPATCH_QRT":
+                r["status"] = "QRT_DISPATCHED"
+                r["approved_by"] = req.reviewer_name
+                r["reviewed_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                return {
+                    "status": "SUCCESS",
+                    "action_taken": "DISPATCH_QRT",
+                    "message": "Quick Response Team (QRT) dispatched to the reported landmark.",
+                    "report": r
+                }
+
+            elif req.action == "REJECT":
+                r["status"] = "REJECTED_FALSE_ALARM"
+                r["approved_by"] = req.reviewer_name
+                r["reviewed_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+                return {
+                    "status": "SUCCESS",
+                    "action_taken": "REJECTED",
+                    "message": "Report dismissed as false alarm.",
+                    "report": r
+                }
+
+    raise HTTPException(status_code=404, detail="Report ID not found in database.")
+
 
 
 @app.get("/field-reports/list", tags=["Citizen & Field Reporting"])
 def list_field_reports(region: Optional[str] = "all"):
     """
-    Returns list of verified geo-tagged citizen and field official reports.
+    Returns list of citizen and field official reports with approval status.
     """
     return {
         "status": "SUCCESS",
         "total_reports": len(FIELD_REPORTS_DATABASE),
         "reports": FIELD_REPORTS_DATABASE
     }
+
+
+# =========================================================================================
+# CRITICAL INFRASTRUCTURE NETWORK (Hospitals, Strategic Bridges, Helipads)
+# Problem Statement ID: 26001 - Item (d) GIS Critical Infrastructure Mapping
+# =========================================================================================
+
+CRITICAL_INFRASTRUCTURE_NETWORK = [
+    # Sikkim
+    {
+        "id": "INFRA-SKM-HOSP-01",
+        "name": "STNM Multispeciality Trauma Hospital, Gangtok",
+        "type": "hospital",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.3235,
+        "longitude": 88.6012,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "1000 Beds • Level-1 Trauma Centre • 24x7 ICU",
+        "vulnerability_notes": "Main tertiary referral hospital for East & North Sikkim. Oxygen plant operational.",
+        "emergency_contact": "+91 3592 202944",
+        "updated_time_human": "Updated 8 mins ago",
+        "updated_by": "Sikkim State Disaster Management Authority (SSDMA)"
+    },
+    {
+        "id": "INFRA-SKM-BRG-01",
+        "name": "Singtam Teesta Suspension Lifeline Bridge (NH-10)",
+        "type": "bridge",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.2344,
+        "longitude": 88.4988,
+        "status": "WATCH_VULNERABLE",
+        "capacity_or_load": "Class 70 Tracked / 40 Tonne Wheeled • Single Arterial Spigot",
+        "vulnerability_notes": "Single point of failure connecting Gangtok to Siliguri plains. High river scour watch.",
+        "emergency_contact": "BRO Project Swastik HQ (+91 3592 231122)",
+        "updated_time_human": "Updated 12 mins ago",
+        "updated_by": "Border Roads Organisation (BRO Project Swastik)"
+    },
+    {
+        "id": "INFRA-SKM-HELI-01",
+        "name": "Burtuk Emergency Helipad & Evacuation Deck",
+        "type": "helipad",
+        "region": "sikkim",
+        "state_name": "Sikkim",
+        "latitude": 27.3520,
+        "longitude": 88.6180,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "IAF Mi-17 V5 & ALH Dhruv Air Ambulance Ready",
+        "vulnerability_notes": "All-weather concrete tarmac. Equipped with night-landing runway markers.",
+        "emergency_contact": "Indian Air Force Eastern Air Command Desk (1077)",
+        "updated_time_human": "Updated 15 mins ago",
+        "updated_by": "IAF EAC & Sikkim Civil Aviation"
+    },
+
+    # Assam
+    {
+        "id": "INFRA-ASM-HOSP-01",
+        "name": "Silchar Medical College & Hospital (SMCH)",
+        "type": "hospital",
+        "region": "assam",
+        "state_name": "Assam",
+        "latitude": 24.7890,
+        "longitude": 92.7930,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "850 Beds • Regional Disaster Trauma Surge Ward",
+        "vulnerability_notes": "Key medical lifeline for Barak Valley, Dima Hasao, and Mizoram spillover.",
+        "emergency_contact": "+91 3842 240222",
+        "updated_time_human": "Updated 10 mins ago",
+        "updated_by": "Assam State Disaster Management Authority (ASDMA)"
+    },
+    {
+        "id": "INFRA-ASM-BRG-01",
+        "name": "Jatinga Valley Viaduct & Bailey Bridge (Dima Hasao)",
+        "type": "bridge",
+        "region": "assam",
+        "state_name": "Assam",
+        "latitude": 25.1325,
+        "longitude": 92.9860,
+        "status": "WATCH_VULNERABLE",
+        "capacity_or_load": "Class 40 Dual-Lane • Railway / Road Confluence",
+        "vulnerability_notes": "Subject to mud slurry overtop during continuous rain (>150mm/day).",
+        "emergency_contact": "NF Railway & Assam PWD (+91 3673 236224)",
+        "updated_time_human": "Updated 18 mins ago",
+        "updated_by": "North East Frontier Railway (NFR)"
+    },
+    {
+        "id": "INFRA-ASM-HELI-01",
+        "name": "Haflong Relief & Airdrop Landing Ground",
+        "type": "helipad",
+        "region": "assam",
+        "state_name": "Assam",
+        "latitude": 25.1680,
+        "longitude": 93.0180,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Twin Helipad Capacity • Airdrop Staging Hub",
+        "vulnerability_notes": "Staging area for grain and plasma air drops to landlocked Dima Hasao settlements.",
+        "emergency_contact": "DEOC Dima Hasao (+91 3673 236222)",
+        "updated_time_human": "Updated 22 mins ago",
+        "updated_by": "DEOC Dima Hasao"
+    },
+
+    # Meghalaya
+    {
+        "id": "INFRA-MEG-HOSP-01",
+        "name": "NEIGRIHMS Super-Speciality Hospital, Mawdiangdiang",
+        "type": "hospital",
+        "region": "meghalaya",
+        "state_name": "Meghalaya",
+        "latitude": 25.6025,
+        "longitude": 91.9370,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "600 Beds • Apex Trauma & Neurosurgery",
+        "vulnerability_notes": "Direct ambulance corridor via Shillong Bypass. Heavy casualty reserve active.",
+        "emergency_contact": "+91 364 2538025",
+        "updated_time_human": "Updated 5 mins ago",
+        "updated_by": "Meghalaya SDMA"
+    },
+    {
+        "id": "INFRA-MEG-BRG-01",
+        "name": "Sonapur Tunnel Culvert & Overpass Bridge (NH-6)",
+        "type": "bridge",
+        "region": "meghalaya",
+        "state_name": "Meghalaya",
+        "latitude": 25.0740,
+        "longitude": 92.3610,
+        "status": "STANDBY_ALERT",
+        "capacity_or_load": "National Highway Lifeline to Barak, Mizoram, Tripura",
+        "vulnerability_notes": "High landslide vulnerability; river spate threatens road foundation at portal.",
+        "emergency_contact": "NHAI Project Unit Meghalaya (+91 364 250102)",
+        "updated_time_human": "Updated 14 mins ago",
+        "updated_by": "NHAI / BRO Project Setuk"
+    },
+    {
+        "id": "INFRA-MEG-HELI-01",
+        "name": "Upper Shillong IAF Eastern Air Command Helipad",
+        "type": "helipad",
+        "region": "meghalaya",
+        "state_name": "Meghalaya",
+        "latitude": 25.5410,
+        "longitude": 91.8540,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Heavy-lift Chinook & Mi-17 Suitable",
+        "vulnerability_notes": "Primary military search-and-rescue coordinating hub for central NER.",
+        "emergency_contact": "IAF HQ Eastern Air Command (+91 364 2560333)",
+        "updated_time_human": "Updated 25 mins ago",
+        "updated_by": "IAF Eastern Air Command"
+    },
+
+    # Arunachal Pradesh
+    {
+        "id": "INFRA-ARU-HOSP-01",
+        "name": "TRIHMS State Hospital, Naharlagun",
+        "type": "hospital",
+        "region": "arunachal",
+        "state_name": "Arunachal Pradesh",
+        "latitude": 27.1080,
+        "longitude": 93.6920,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "500 Beds • 50 ICU Beds • State Blood Bank",
+        "vulnerability_notes": "Central referral centre for Papum Pare and western Himalayan districts.",
+        "emergency_contact": "+91 360 2244222",
+        "updated_time_human": "Updated 15 mins ago",
+        "updated_by": "Arunachal SDMA"
+    },
+    {
+        "id": "INFRA-ARU-BRG-01",
+        "name": "Bhalukpong Kameng River Steel Truss Bridge",
+        "type": "bridge",
+        "region": "arunachal",
+        "state_name": "Arunachal Pradesh",
+        "latitude": 27.0120,
+        "longitude": 92.6480,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Class 70 Military / Strategic Trans-Himalayan Arterial",
+        "vulnerability_notes": "Main lifeline to Tawang and West Kameng sectors. Monitored for flash floods.",
+        "emergency_contact": "BRO Project Vartak (+91 3782 222110)",
+        "updated_time_human": "Updated 30 mins ago",
+        "updated_by": "Border Roads Organisation (BRO Project Vartak)"
+    },
+    {
+        "id": "INFRA-ARU-HELI-01",
+        "name": "Sela Military & Disaster Evacuation Helipad",
+        "type": "helipad",
+        "region": "arunachal",
+        "state_name": "Arunachal Pradesh",
+        "latitude": 27.5020,
+        "longitude": 92.1030,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "High-Altitude Landing Strip • Oxygen Boosted Facility",
+        "vulnerability_notes": "Altitude 13,700 ft. Critical for medical evacuations during snow or rock blockades.",
+        "emergency_contact": "Indian Army 4 Corps Aviation (+91 3712 233100)",
+        "updated_time_human": "Updated 20 mins ago",
+        "updated_by": "BRO Project Vartak / Indian Army"
+    },
+
+    # Manipur
+    {
+        "id": "INFRA-MAN-HOSP-01",
+        "name": "JNIMS Tertiary Care Medical Institute, Porompat, Imphal",
+        "type": "hospital",
+        "region": "manipur",
+        "state_name": "Manipur",
+        "latitude": 24.8150,
+        "longitude": 93.9530,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "650 Beds • Trauma & Burn Intensive Unit",
+        "vulnerability_notes": "Primary emergency treatment facility serving valley and hill district transfers.",
+        "emergency_contact": "+91 385 2443144",
+        "updated_time_human": "Updated 10 mins ago",
+        "updated_by": "Manipur Disaster Management Authority"
+    },
+    {
+        "id": "INFRA-MAN-BRG-01",
+        "name": "Ijei River Strategic Bailey Bridge (Noney)",
+        "type": "bridge",
+        "region": "manipur",
+        "state_name": "Manipur",
+        "latitude": 24.7890,
+        "longitude": 93.5970,
+        "status": "WATCH_VULNERABLE",
+        "capacity_or_load": "Class 40 Single Span • Railway Construction Corridor",
+        "vulnerability_notes": "Site of 2022 debris slide; automated water level & tilt sensors mounted.",
+        "emergency_contact": "Northeast Frontier Railway Construction (+91 385 2414112)",
+        "updated_time_human": "Updated 7 mins ago",
+        "updated_by": "NF Railway & BRO Project Sewak"
+    },
+    {
+        "id": "INFRA-MAN-HELI-01",
+        "name": "Kangla Evacuation & Disaster Response Deck, Imphal",
+        "type": "helipad",
+        "region": "manipur",
+        "state_name": "Manipur",
+        "latitude": 24.8080,
+        "longitude": 93.9420,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Dual Medium Helipad • Night Aviation Beacon",
+        "vulnerability_notes": "Central state disaster evacuation point with immediate ambulance linkage.",
+        "emergency_contact": "State Emergency Operations Centre (1070)",
+        "updated_time_human": "Updated 16 mins ago",
+        "updated_by": "SEOC Manipur"
+    },
+
+    # Mizoram
+    {
+        "id": "INFRA-MIZ-HOSP-01",
+        "name": "Aizawl Civil Hospital, Dawrpui",
+        "type": "hospital",
+        "region": "mizoram",
+        "state_name": "Mizoram",
+        "latitude": 23.7310,
+        "longitude": 92.7180,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "450 Beds • Landslide Debris Trauma Centre",
+        "vulnerability_notes": "Central medical facility for Mizoram with dedicated hill-trauma surgeons.",
+        "emergency_contact": "+91 389 2322318",
+        "updated_time_human": "Updated 11 mins ago",
+        "updated_by": "Mizoram Disaster Management & Rehabilitation"
+    },
+    {
+        "id": "INFRA-MIZ-BRG-01",
+        "name": "Tuirial River RCC Girder Bridge (NH-54)",
+        "type": "bridge",
+        "region": "mizoram",
+        "state_name": "Mizoram",
+        "latitude": 23.7650,
+        "longitude": 92.8120,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Class 70 Two-Lane • Connecting Aizawl to Lengpui Airport",
+        "vulnerability_notes": "Critical airport lifeline; continuous bank erosion monitoring by CWC.",
+        "emergency_contact": "Mizoram PWD National Highway Division (+91 389 2333450)",
+        "updated_time_human": "Updated 20 mins ago",
+        "updated_by": "Mizoram PWD"
+    },
+    {
+        "id": "INFRA-MIZ-HELI-01",
+        "name": "Lengpui Emergency Medical Helipad",
+        "type": "helipad",
+        "region": "mizoram",
+        "state_name": "Mizoram",
+        "latitude": 23.8410,
+        "longitude": 92.6240,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Airport Adjacent • Jet-A1 Refueling Available",
+        "vulnerability_notes": "Operates as secondary hub when Hunthar subsidence cuts road transit.",
+        "emergency_contact": "Lengpui Airport Controller (+91 389 2573355)",
+        "updated_time_human": "Updated 25 mins ago",
+        "updated_by": "Civil Aviation Wing Mizoram"
+    },
+
+    # Nagaland
+    {
+        "id": "INFRA-NAG-HOSP-01",
+        "name": "Naga Hospital Authority Kohima (NHAK)",
+        "type": "hospital",
+        "region": "nagaland",
+        "state_name": "Nagaland",
+        "latitude": 25.6700,
+        "longitude": 94.1080,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "400 Beds • 24/7 Trauma Surgery Unit",
+        "vulnerability_notes": "Primary tertiary medical hub for southern Nagaland.",
+        "emergency_contact": "+91 370 2244167",
+        "updated_time_human": "Updated 14 mins ago",
+        "updated_by": "Nagaland State Disaster Management Authority (NSDMA)"
+    },
+    {
+        "id": "INFRA-NAG-BRG-01",
+        "name": "Paglapahar River Bridge & Sinking Zone Bypass (NH-29)",
+        "type": "bridge",
+        "region": "nagaland",
+        "state_name": "Nagaland",
+        "latitude": 25.7950,
+        "longitude": 93.8500,
+        "status": "STANDBY_ALERT",
+        "capacity_or_load": "Class 70 4-Lane • Primary Arterial Linking Dimapur to Kohima",
+        "vulnerability_notes": "High rockfall and river inundation vulnerability; safety barriers enforced.",
+        "emergency_contact": "BRO Project Sewak (+91 3862 248231)",
+        "updated_time_human": "Updated 9 mins ago",
+        "updated_by": "Border Roads Organisation (BRO Project Sewak)"
+    },
+    {
+        "id": "INFRA-NAG-HELI-01",
+        "name": "Kohima Assam Rifles Garrison Helipad",
+        "type": "helipad",
+        "region": "nagaland",
+        "state_name": "Nagaland",
+        "latitude": 25.6820,
+        "longitude": 94.1150,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Medium Twin Helipad • Concrete Hardstanding",
+        "vulnerability_notes": "Helicopter evacuation hub for Kohima district emergencies.",
+        "emergency_contact": "NSDMA Control Room (1070 / +91 370 2291122)",
+        "updated_time_human": "Updated 19 mins ago",
+        "updated_by": "NSDMA & Assam Rifles"
+    },
+
+    # Tripura
+    {
+        "id": "INFRA-TRI-HOSP-01",
+        "name": "AGMC & GBP Hospital, Kunjaban, Agartala",
+        "type": "hospital",
+        "region": "tripura",
+        "state_name": "Tripura",
+        "latitude": 23.8610,
+        "longitude": 91.2940,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "800 Beds • Super-Speciality Cardiac & Trauma",
+        "vulnerability_notes": "State apex hospital with dedicated disaster surge contingency ward.",
+        "emergency_contact": "+91 381 2353344",
+        "updated_time_human": "Updated 12 mins ago",
+        "updated_by": "Tripura Disaster Management Authority"
+    },
+    {
+        "id": "INFRA-TRI-BRG-01",
+        "name": "Manu River Strategic Lifeline Bridge (NH-8 / NH-44)",
+        "type": "bridge",
+        "region": "tripura",
+        "state_name": "Tripura",
+        "latitude": 24.0150,
+        "longitude": 92.0120,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Class 70 Heavy Commercial Arterial",
+        "vulnerability_notes": "Critical corridor across Dhalai district into northern hills and Jampui.",
+        "emergency_contact": "Tripura PWD NH Division (+91 381 2325511)",
+        "updated_time_human": "Updated 17 mins ago",
+        "updated_by": "Tripura PWD"
+    },
+    {
+        "id": "INFRA-TRI-HELI-01",
+        "name": "Agartala State Disaster Response Helipad",
+        "type": "helipad",
+        "region": "tripura",
+        "state_name": "Tripura",
+        "latitude": 23.8820,
+        "longitude": 91.2410,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Civil Aviation & BSF Staging Base",
+        "vulnerability_notes": "Primary air bridge for Jampui Hills during monsoon landslides.",
+        "emergency_contact": "SEOC Agartala (+91 381 2418074)",
+        "updated_time_human": "Updated 22 mins ago",
+        "updated_by": "SEOC Tripura"
+    }
+]
+
+
+@app.get("/infrastructure/critical", tags=["Critical Infrastructure"])
+def get_critical_infrastructure(region: Optional[str] = "all"):
+    """
+    Returns critical GIS infrastructure: hospitals, single-point-of-failure bridges, and emergency helipads.
+    Supports regional filtering or all NER states.
+    """
+    if region and region.lower() != "all":
+        filtered = [item for item in CRITICAL_INFRASTRUCTURE_NETWORK if item["region"] == region.lower()]
+        return {
+            "status": "SUCCESS",
+            "region": region,
+            "total_items": len(filtered),
+            "infrastructure": filtered
+        }
+    return {
+        "status": "SUCCESS",
+        "region": "all",
+        "total_items": len(CRITICAL_INFRASTRUCTURE_NETWORK),
+        "infrastructure": CRITICAL_INFRASTRUCTURE_NETWORK
+    }
+
+
+# =========================================================================================
+# COMMUNITY SMS EARLY WARNING SUBSCRIPTION SYSTEM
+
+
 
 
 

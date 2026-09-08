@@ -51,21 +51,44 @@
     "shelter_directions": "Get Route Directions",
     "shelter_beds": "Beds Available",
     "active_landslides_title": "Active Landslides & Road Closures Near You",
-    "call_helpline_btn": "Call 24x7 DEOC Helpline (1077)"
+    "call_helpline_btn": "Call 24x7 DEOC Helpline (1077)",
+    "google_maps_route": "Google Maps Route",
+    "view_on_gmaps": "View on Google Maps",
+    "updated_at": "Updated:",
+    "updated_by": "Updated by:",
+    "source_label": "Source:",
+    "filter_by_region": "Filter by Region",
+    "no_landslides": "No active landslides reported for this region.",
+    "no_roads": "No road closures reported for this region.",
+    "no_shelters": "No shelters listed for this region."
+  },
+  "weather_broadcast": {
+    "badge": "LIVE IMD WEATHER BROADCAST",
+    "listen_btn": "Listen Weather Bulletin",
+    "stop_btn": "Stop",
+    "projected_rain": "24H PROJECTED RAIN:",
+    "flood_risk": "FLASH FLOOD RISK:"
   },
   "field_report": {
     "title": "Citizen & Field Official Hazard Reporting",
-    "subtitle": "Upload geo-tagged photos/videos of cracks, slope movements or blocked roads. Works 100% offline.",
+    "subtitle": "Report cracks, slope movements or blocked roads with landmark description and photos. Works 100% offline.",
     "photo_label": "Attach Field Photo / Video",
-    "gps_label": "GPS Coordinates",
-    "gps_btn": "Auto Detect GPS",
+    "photo_preview_title": "Attached Photo Preview",
+    "location_label": "Hazard Location & Landmark",
+    "state_label": "State / Region",
+    "landmark_label": "Nearest Landmark",
     "hazard_type_label": "Hazard Classification",
     "severity_label": "Severity Level",
     "desc_label": "Observation Details / Location Landmarks",
     "desc_placeholder": "Describe what you observed (e.g. 15mm tension crack widening across NH-10 road cut, water seeping from slope)...",
     "ai_btn": "Test AI Optical Flow Crack Scan",
-    "submit_btn": "SUBMIT GEO-TAGGED REPORT",
-    "offline_notice": "Zero-network active: Report will be queued locally in SQLite and synchronized automatically when internet is restored."
+    "submit_btn": "SUBMIT HAZARD REPORT FOR VERIFICATION",
+    "approval_notice": "DEOC Admin verifies your report before publishing live to alert all citizens.",
+    "offline_notice": "Zero-network active: Report will be queued locally in SQLite and synchronized automatically when internet is restored.",
+    "status_pending": "Pending DEOC Approval",
+    "status_approved": "Approved & Verified",
+    "status_qrt": "QRT Dispatched",
+    "status_rejected": "False Alarm / Rejected"
   },
   "roads": {
     "matrix_title": "Arterial Road Connectivity Status Matrix",
@@ -73,7 +96,8 @@
     "status_open": "OPEN / PASSABLE",
     "status_restricted": "RESTRICTED / CONVOY",
     "status_blocked": "BLOCKED / IMPASSABLE",
-    "focus_road": "Focus Corridor"
+    "focus_road": "Focus Corridor",
+    "choke_point": "Choke Point"
   },
   "forecast": {
     "title": "IMD 72-Hour Weather-Linked Risk Forecast",
@@ -94,7 +118,11 @@
     "copy_xml": "Copy XML",
     "logout": "Log Out Admin Session",
     "historical_title": "GSI Historical Landslides Catalog (1968 - 2024)",
-    "reports_title": "Incoming Citizen Field Reports & Verified Queue"
+    "reports_title": "Incoming Citizen Field Reports & Verified Queue",
+    "btn_approve": "✓ Approve & Publish to Map",
+    "btn_dispatch_qrt": "🚨 Dispatch QRT",
+    "btn_reject": "✗ Reject / False Alarm",
+    "photo_attached": "Field Photograph Attached"
   },
   "vedas": {
     "title": "ISRO VEDAS Earth Observation System",
@@ -109,5 +137,36 @@
   "speech": {
     "safe": "North Eastern Disaster Management Advisory: Regional mountain slopes are currently stable and monitored in real time via ISRO satellite and ground sensors. No immediate evacuation is required at this hour.",
     "alert": "Emergency Warning from North Eastern Disaster Management. Critical landslide risk detected along National Highway 10. Residents near steep slopes are advised to evacuate to designated relief shelters immediately. Dial 1077 for emergency assistance."
+  },
+  "sms_subscribe": {
+    "title": "Community SMS Early Warning",
+    "subtitle": "NDMA SACHET / C-DAC Telecom Broadcast Gateway",
+    "desc": "Subscribe your mobile phone to receive automated, localized early warnings in your language.",
+    "phone_label": "Mobile Phone Number (10 Digits)",
+    "name_label": "Subscriber Name",
+    "region_label": "Target State",
+    "corridor_label": "District / Village / NH Corridor",
+    "lang_label": "Preferred Language",
+    "btn_subscribe": "Subscribe Mobile to Free SMS Alerts",
+    "registered_msg": "Successfully registered for automated NDMA SACHET early warnings."
+  },
+  "infrastructure": {
+    "title": "Critical Infrastructure Mapping",
+    "hospital": "Hospital / Trauma Center",
+    "bridge": "Strategic Lifeline Bridge",
+    "helipad": "Emergency Airdrop Helipad",
+    "layer_label": "Critical Infra",
+    "google_maps": "Google Maps Route"
+  },
+  "siren": {
+    "btn_start": "Evacuation Siren",
+    "btn_stop": "Stop Siren",
+    "alert_msg": "EMERGENCY EVACUATION SIREN SOUNDED"
+  },
+  "my_reports": {
+    "title": "My Field Reports & Offline Queue",
+    "btn_open": "My Reports & Offline Queue",
+    "btn_sync": "Sync Queue Now",
+    "empty": "No reports submitted yet."
   }
 }
