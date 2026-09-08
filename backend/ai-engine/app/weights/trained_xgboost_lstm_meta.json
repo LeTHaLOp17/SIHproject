@@ -1,0 +1,41 @@
+{
+  "model_architecture": "Hybrid XGBoost (Spatial) + Bidirectional LSTM (Temporal) + DEI Exposure Engine",
+  "training_timestamp": "2026-09-09T01:39:42.110920",
+  "training_duration_seconds": 0.41,
+  "dataset_size": 2400,
+  "holdout_test_size": 480,
+  "performance_metrics": {
+    "recall": 0.9958,
+    "precision": 0.9365,
+    "f1_score": 0.9652,
+    "roc_auc": 0.989,
+    "decision_threshold": 0.35,
+    "meets_life_safety_target": true
+  },
+  "risk_formula": "Risk = Hazard * Exposure, where Hazard = f(P_XGBoost, P_LSTM) and Exposure = DEI",
+  "risk_distribution": {
+    "low_risk_count": 343,
+    "moderate_risk_count": 104,
+    "high_risk_count": 23,
+    "severe_evac_risk_count": 10,
+    "mean_risk": 0.1784,
+    "max_risk": 0.913
+  },
+  "feature_importances": {
+    "slope_deg": 0.2784,
+    "soil_moisture_pct": 0.1825,
+    "lithology_vuln": 0.1689,
+    "soil_depth_m": 0.119,
+    "dist_road_m": 0.0409,
+    "rainfall_3d_mm": 0.034,
+    "plan_curvature": 0.0255,
+    "ndvi": 0.0236,
+    "impervious_ratio": 0.0233,
+    "dist_river_m": 0.0215,
+    "aspect_deg": 0.0214,
+    "elevation_m": 0.0212,
+    "dist_fault_m": 0.021,
+    "profile_curvature": 0.0188
+  },
+  "status": "ACTIVE_PRODUCTION_MODEL"
+}

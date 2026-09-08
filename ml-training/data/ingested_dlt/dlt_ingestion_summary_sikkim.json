@@ -1,0 +1,10 @@
+{
+  "status": "COMPLETED",
+  "pipeline_framework": "dlt (data load tool | dlthub.com)",
+  "region": "sikkim",
+  "rainfall_records_ingested": 288,
+  "satellite_telemetry_records": 3,
+  "destination": "D:\\SIHproject\\ml-training\\data\\ingested_dlt",
+  "elapsed_seconds": 0.01,
+  "schema_version": "v1.2"
+}

@@ -1,0 +1,4 @@
+corridor_id,region,satellite_constellation,soil_wetness_index_swi,ndvi_vegetation_cover,insar_deformation_velocity_mm_yr,ingested_at
+NH-10_Corridor,sikkim,RISAT-1A / EOS-04 C-band SAR,65.55,0.462,-19.81,2026-09-09T01:42:23.496389
+Rongli_Valleys,sikkim,RISAT-1A / EOS-04 C-band SAR,79.52,0.377,-8.74,2026-09-09T01:42:23.496412
+Melli_Sinking_Zone,sikkim,RISAT-1A / EOS-04 C-band SAR,77.1,0.396,-15.3,2026-09-09T01:42:23.496427

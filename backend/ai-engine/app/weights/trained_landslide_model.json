@@ -1,0 +1,87 @@
+{
+  "model_name": "MDoNER-PINN-XGBoost-Ensemble-v2",
+  "training_timestamp": "2026-09-09T01:11:09.347770",
+  "training_duration_seconds": 1.32,
+  "dataset_samples": 2200,
+  "holdout_test_samples": 440,
+  "features": [
+    "slope_deg",
+    "aspect_deg",
+    "elevation_m",
+    "plan_curvature",
+    "profile_curvature",
+    "lithology_vuln",
+    "soil_depth_m",
+    "dist_road_m",
+    "dist_fault_m",
+    "dist_river_m",
+    "impervious_ratio",
+    "ndvi",
+    "rainfall_3d_mm",
+    "soil_moisture_pct"
+  ],
+  "feature_importances": {
+    "slope_deg": 0.4191,
+    "soil_depth_m": 0.1931,
+    "soil_moisture_pct": 0.1895,
+    "lithology_vuln": 0.1488,
+    "dist_fault_m": 0.0103,
+    "dist_road_m": 0.0073,
+    "ndvi": 0.007,
+    "plan_curvature": 0.0064,
+    "rainfall_3d_mm": 0.0038,
+    "profile_curvature": 0.0037,
+    "aspect_deg": 0.0034,
+    "impervious_ratio": 0.0031,
+    "elevation_m": 0.0024,
+    "dist_river_m": 0.0023
+  },
+  "life_safety_metrics": {
+    "threshold": 0.35,
+    "recall": 0.9834,
+    "precision": 0.9442,
+    "f1_score": 0.9634,
+    "roc_auc": 0.9945,
+    "confusion_matrix": [
+      [
+        185,
+        14
+      ],
+      [
+        4,
+        237
+      ]
+    ],
+    "true_positives": 237,
+    "false_negatives": 4,
+    "false_positives": 14,
+    "true_negatives": 185,
+    "meets_life_safety_target": true
+  },
+  "standard_metrics": {
+    "threshold": 0.5,
+    "recall": 0.9793,
+    "precision": 0.9516,
+    "f1_score": 0.9652,
+    "roc_auc": 0.9945,
+    "confusion_matrix": [
+      [
+        187,
+        12
+      ],
+      [
+        5,
+        236
+      ]
+    ],
+    "true_positives": 236,
+    "false_negatives": 5,
+    "false_positives": 12,
+    "true_negatives": 187,
+    "meets_life_safety_target": true
+  },
+  "factor_of_safety_mae": 0.4389,
+  "model_format": "scikit-learn GradientBoostingClassifier",
+  "decision_threshold": 0.35,
+  "status": "DEPLOYED_ACTIVE"
+}

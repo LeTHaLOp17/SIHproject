@@ -62,6 +62,17 @@
     "no_roads": "No road closures reported for this region.",
     "no_shelters": "No shelters listed for this region."
   },
+  "eo_satellite": {
+    "card_title": "ISRO VEDAS Earth Observation (EO)",
+    "card_subtitle": "EOS-04 / Sentinel-1 C+L Band Active",
+    "pass_status": "Pass: Ascending Orbit",
+    "swi_label": "Soil Wetness (SWI)",
+    "insar_label": "InSAR Velocity",
+    "ndvi_label": "Canopy (NDVI)",
+    "cartodem_label": "CartoDEM Slope",
+    "elev_label": "Elevation",
+    "loss_label": "loss"
+  },
   "weather_broadcast": {
     "badge": "LIVE IMD WEATHER BROADCAST",
     "listen_btn": "Listen Weather Bulletin",
@@ -71,17 +82,25 @@
   },
   "field_report": {
     "title": "Citizen & Field Official Hazard Reporting",
-    "subtitle": "Report cracks, slope movements or blocked roads with landmark description and photos. Works 100% offline.",
-    "photo_label": "Attach Field Photo / Video",
-    "photo_preview_title": "Attached Photo Preview",
+    "subtitle": "Report tension cracks, slope movements or blocked roads with landmark description and photos. Works 100% offline.",
+    "reporter_info_label": "Reporter Identification",
+    "name_label": "Your Full Name",
+    "name_placeholder": "e.g. Rinchen Dorjee / Anita Roy",
+    "phone_label": "Mobile Phone (10 Digits)",
+    "phone_placeholder": "e.g. 9832044102",
+    "photo_label": "Attach Field Photograph or Video",
+    "photo_preview_title": "Attached Media Preview",
     "location_label": "Hazard Location & Landmark",
+    "location_placeholder": "Write location: e.g. NH-10 Mile 44, Near Singtam Bridge",
     "state_label": "State / Region",
-    "landmark_label": "Nearest Landmark",
+    "landmark_label": "Nearest Landmark / Village",
+    "landmark_placeholder": "e.g. Near Gaon Mandir / Forest Post",
     "hazard_type_label": "Hazard Classification",
-    "severity_label": "Severity Level",
-    "desc_label": "Observation Details / Location Landmarks",
-    "desc_placeholder": "Describe what you observed (e.g. 15mm tension crack widening across NH-10 road cut, water seeping from slope)...",
-    "ai_btn": "Test AI Optical Flow Crack Scan",
+    "severity_label": "Observed Severity Level",
+    "crack_width_label": "Estimated Crack Width / Slope Displacement (mm)",
+    "desc_label": "Observation Details",
+    "desc_placeholder": "Describe landmark and ground movements observed...",
+    "ai_btn": "Test AI Optical Flow Crack Scan (Edge TinyML)",
     "submit_btn": "SUBMIT HAZARD REPORT FOR VERIFICATION",
     "approval_notice": "DEOC Admin verifies your report before publishing live to alert all citizens.",
     "offline_notice": "Zero-network active: Report will be queued locally in SQLite and synchronized automatically when internet is restored.",
@@ -89,6 +108,15 @@
     "status_approved": "Approved & Verified",
     "status_qrt": "QRT Dispatched",
     "status_rejected": "False Alarm / Rejected"
+  },
+  "map": {
+    "risk_heatmap": "Risk Heatmap",
+    "eo_data": "ISRO EO Data",
+    "shelters": "Shelters",
+    "critical_infra": "Critical Infra",
+    "fullscreen": "Fullscreen",
+    "satellite": "Satellite",
+    "relief": "Relief"
   },
   "roads": {
     "matrix_title": "Arterial Road Connectivity Status Matrix",
@@ -167,6 +195,13 @@
     "title": "My Field Reports & Offline Queue",
     "btn_open": "My Reports & Offline Queue",
     "btn_sync": "Sync Queue Now",
-    "empty": "No reports submitted yet."
+    "empty": "No reports submitted yet.",
+    "reporter": "Reporter:",
+    "phone": "Phone:",
+    "location": "Location:",
+    "status_pending": "Pending Admin Approval",
+    "status_approved": "Approved & Live on Map",
+    "status_qrt": "QRT Dispatched",
+    "status_rejected": "Rejected"
   }
 }
