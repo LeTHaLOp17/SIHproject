@@ -3,16 +3,17 @@
 MDoNER AI Landslide Early Warning & Risk Assessment Platform
 Full Model Training & Physics-Informed Ingestion Pipeline
 Problem Statement 26001 | Life-Safety Priority (Target Recall > 0.90)
+Trained on 12,000-Sample North-East India Geotechnical & Climatic Dataset
 ========================================================================================
 This pipeline trains:
 1. Tabular Landslide Susceptibility Classifier (Gradient Boosting / Random Forest)
-   with SMOTE (Synthetic Minority Over-sampling Technique) to balance 1:12 imbalance.
-2. Physics-Informed Neural / Analytical Hybrid Constraints:
+   trained directly on 12,000 real samples across 8 North-Eastern states.
+2. Physics-Informed Analytical Geotechnical Constraints:
    - Infinite Slope Factor of Safety: FS = (c' + (gamma*z*cos^2(beta) - u)*tan(phi')) / (gamma*z*sin(beta)*cos(beta))
-   - 1D Richards' equation pore pressure infiltration: du/dt = D * d^2u/dz^2
-   - Rainfall Intensity-Duration Threshold: I = 14.82 * D^(-0.39) (Caine 1980 NER Monsoon calibration)
+   - Mohr-Coulomb shear resistance under pore pressure saturation.
+   - Intensity-Duration Caine 1980 monsoonal rainfall loading.
 3. Model Evaluation:
-   - Recall on positive landslide events (Target > 0.90)
+   - Recall on positive landslide events (Life-safety Target > 0.90)
    - Precision, F1-Score, ROC-AUC
    - Factor of Safety (FS) Mean Absolute Error
 4. Model Weight & Metric Artifact Export to `backend/ai-engine/app/weights/`
@@ -28,168 +29,85 @@ import numpy as np
 import pandas as pd
 import joblib
 
-from typing import Tuple
+from typing import Tuple, Dict, Any
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score, confusion_matrix, recall_score, precision_score, f1_score
 
 
 # --------------------------------------------------------------------------------------
-# 1. DATA INGESTION: HISTORICAL RAINFALL & GEOMORPHOLOGICAL CONDITIONING FACTORS
+# 1. DATA INGESTION: 12,000-SAMPLE NORTH-EAST INDIA DATASET
 # --------------------------------------------------------------------------------------
 
-def load_imd_rainfall_history(filepath: str) -> pd.DataFrame:
-    """Loads 100-year historical monsoon rainfall from IMD across North East India."""
+def load_ner_12000_geotechnical_dataset(filepath: str) -> Tuple[pd.DataFrame, np.ndarray, np.ndarray, np.ndarray, list]:
+    """Loads and preprocesses the 12,000-sample NER landslide dataset."""
     if not os.path.exists(filepath):
-        print(f"[WARN] IMD rainfall file not found at {filepath}, generating fallback distribution.")
-        return pd.DataFrame()
+        raise FileNotFoundError(f"[ERROR] Required dataset not found at {filepath}")
 
     df = pd.read_csv(filepath)
-    ner_regions = ['Arunachal Pradesh', 'Assam & Meghalaya', 'Sub-Himalayan West Bengal & Sikkim', 'Nagaland, Manipur, Mizoram & Tripura']
-    df_ner = df[df['SUBDIVISION'].isin(ner_regions)].copy() if 'SUBDIVISION' in df.columns else df
-    print(f"[DATA] Ingested {len(df_ner)} IMD annual rainfall records across North-East India.")
-    return df_ner
+    n_samples = len(df)
+    print(f"[DATA] Ingested {n_samples} records from {os.path.basename(filepath)}")
+    print(f"[DATA] States represented: {list(df['state'].unique())}")
 
+    # Impute missing rainfall values
+    rain_cols = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC', 'ANNUAL', 'JF', 'MAM', 'JJAS', 'OND']
+    for col in rain_cols:
+        if col in df.columns:
+            df[col] = df[col].fillna(df[col].median())
 
-def generate_augmented_himalayan_dataset(n_samples: int = 2000, seed: int = 42) -> Tuple[pd.DataFrame, np.ndarray, np.ndarray, np.ndarray]:
-    """
-    Generates high-fidelity geotechnical spatial samples representing the 8 North-Eastern states:
-    Sikkim (East/Pakyong), Assam (Dima Hasao/Barak), Meghalaya (Khasi Hills),
-    Arunachal (Sela/Kameng), Nagaland (Kohima), Manipur (Noney), Mizoram (Aizawl), Tripura (Jampui).
-    """
-    np.random.seed(seed)
+    # Geotechnical Mohr-Coulomb parameters based on lithology & soil type
+    soil_phi = {'Sandy Loam': 32.0, 'Mountain Soil': 30.0, 'Silty': 26.0, 'Laterite': 28.0, 'Alluvial': 24.0, 'Clay': 20.0, 'Loamy': 27.0}
+    soil_c = {'Sandy Loam': 10.0, 'Mountain Soil': 15.0, 'Silty': 12.0, 'Laterite': 18.0, 'Alluvial': 8.0, 'Clay': 22.0, 'Loamy': 14.0}
+    lc_veg = {'Barren': 0.10, 'Forest': 0.85, 'Agriculture': 0.40, 'Grassland': 0.50, 'Built-up': 0.20}
 
-    lithologies = ['PHYL', 'SHALE', 'MUDST', 'SANDST', 'SCHIST', 'QUARTZ', 'GNEISS']
-    litho_strengths = {
-        'PHYL': 0.92,   # Daling phyllite - fragile, fissile
-        'SHALE': 0.88,  # Disang shale - expansive, slaking
-        'MUDST': 0.80,  # Weathered mudstone
-        'SANDST': 0.55, # Barail sandstone - moderate
-        'SCHIST': 0.70, # Mica schist - foliation slip
-        'QUARTZ': 0.35, # Shillong quartzite - competent
-        'GNEISS': 0.30  # High-grade basement gneiss - stable
-    }
+    phi_vals = df['soil_type'].map(soil_phi).fillna(26.0).values
+    c_vals = df['soil_type'].map(soil_c).fillna(14.0).values
+    veg_vals = df['land_cover'].map(lc_veg).fillna(0.50).values
 
-    # 14 Conditioning factors
-    slope_deg = np.random.uniform(10.0, 58.0, n_samples)
-    aspect_deg = np.random.uniform(0.0, 360.0, n_samples)
-    elevation_m = np.random.uniform(250.0, 3200.0, n_samples)
-    plan_curvature = np.random.normal(0.0, 0.08, n_samples)
-    profile_curvature = np.random.normal(0.0, 0.08, n_samples)
-    litho_choice = np.random.choice(lithologies, n_samples, p=[0.20, 0.20, 0.15, 0.15, 0.15, 0.10, 0.05])
-    litho_vuln = np.array([litho_strengths[l] for l in litho_choice])
-    soil_depth_m = np.random.uniform(0.8, 5.2, n_samples)
-    dist_road_m = np.random.exponential(350.0, n_samples)
-    dist_fault_m = np.random.exponential(1200.0, n_samples)
-    dist_river_m = np.random.exponential(500.0, n_samples)
-    impervious_ratio = np.random.uniform(0.05, 0.85, n_samples)
-    ndvi = np.random.uniform(0.15, 0.85, n_samples)
+    slope_rad = np.radians(df['slope_degree'].values)
+    phi_rad = np.radians(phi_vals)
 
-    # Precipitation & Hydrology: Monsoon peak and dry spell distributions
-    rainfall_3d_mm = np.random.gamma(shape=3.2, scale=42.0, size=n_samples)
-    soil_moisture_pct = np.clip(np.random.uniform(35.0, 96.0, n_samples) + (rainfall_3d_mm * 0.12), 20.0, 99.5)
+    # Pore water pressure proxy (Richards' proxy)
+    u_pore_kpa = np.maximum(0.0, (df['soil_moisture_pct'].values - 62.0) * 1.7)
+    gamma = 18.5
+    soil_depth = 2.5
 
-    # ----------------------------------------------------------------------------------
-    # 2. PHYSICS CONSTRAINTS: INFINITE SLOPE FACTOR OF SAFETY (FS)
-    # ----------------------------------------------------------------------------------
-    gamma = 18.5 # Soil unit weight (kN/m^3)
-    c_prime = np.where(litho_vuln > 0.7, 8.0, 16.0) # Effective cohesion (kPa)
-    phi_prime = np.where(litho_vuln > 0.7, 24.0, 34.0) # Internal friction angle (deg)
-    phi_rad = np.radians(phi_prime)
-    slope_rad = np.radians(slope_deg)
-
-    # Pore water pressure (u) estimated via Richards' saturation proxy
-    u_pore_kpa = np.maximum(0.0, (soil_moisture_pct - 68.0) * 1.6)
-
-    # Normal stress & effective normal stress
-    sigma_n = gamma * soil_depth_m * (np.cos(slope_rad) ** 2)
+    sigma_n = gamma * soil_depth * (np.cos(slope_rad) ** 2)
     sigma_prime = np.maximum(0.5, sigma_n - u_pore_kpa)
-
-    # Shear strength vs Shear driving stress
-    tau_resisting = c_prime + (sigma_prime * np.tan(phi_rad))
-    tau_driving = gamma * soil_depth_m * np.sin(slope_rad) * np.cos(slope_rad)
-    tau_driving = np.maximum(0.5, tau_driving)
-
-    # Exact Analytical Factor of Safety (FS)
+    tau_resisting = c_vals + (sigma_prime * np.tan(phi_rad)) + (veg_vals * 7.5)
+    tau_driving = np.maximum(0.5, gamma * soil_depth * np.sin(slope_rad) * np.cos(slope_rad))
     analytical_fs = np.clip(tau_resisting / tau_driving, 0.1, 5.0)
 
-    # Ground-truth binary landslide label:
-    road_cut_trigger = (dist_road_m < 85.0) & (slope_deg > 32.0) & (rainfall_3d_mm > 140.0)
-    is_landslide = ((analytical_fs < 1.05) | road_cut_trigger).astype(np.int32)
+    df['pore_pressure_kpa'] = u_pore_kpa
+    df['analytical_fs'] = analytical_fs
+    df['monsoon_intensity'] = df['JJAS'] / 122.0
+    df['saturation_ratio'] = df['soil_moisture_pct'] / 100.0
+    df['road_toe_cut'] = 1.0 / (df['distance_to_road_km'] + 0.1)
+    df['river_undercut'] = 1.0 / (df['distance_to_river_km'] + 0.1)
 
-    df_data = pd.DataFrame({
-        'slope_deg': slope_deg,
-        'aspect_deg': aspect_deg,
-        'elevation_m': elevation_m,
-        'plan_curvature': plan_curvature,
-        'profile_curvature': profile_curvature,
-        'lithology_vuln': litho_vuln,
-        'soil_depth_m': soil_depth_m,
-        'dist_road_m': dist_road_m,
-        'dist_fault_m': dist_fault_m,
-        'dist_river_m': dist_river_m,
-        'impervious_ratio': impervious_ratio,
-        'ndvi': ndvi,
-        'rainfall_3d_mm': rainfall_3d_mm,
-        'soil_moisture_pct': soil_moisture_pct,
-        'pore_pressure_kpa': u_pore_kpa,
-        'analytical_fs': analytical_fs,
-        'is_landslide': is_landslide
-    })
+    df_encoded = pd.get_dummies(df, columns=['soil_type', 'land_cover', 'state'], drop_first=True)
 
-    feature_cols = [
-        'slope_deg', 'aspect_deg', 'elevation_m', 'plan_curvature', 'profile_curvature',
-        'lithology_vuln', 'soil_depth_m', 'dist_road_m', 'dist_fault_m', 'dist_river_m',
-        'impervious_ratio', 'ndvi', 'rainfall_3d_mm', 'soil_moisture_pct'
+    base_features = [
+        'slope_degree', 'aspect_degree', 'elevation_m', 'soil_moisture_pct', 'ndvi',
+        'historical_landslides', 'distance_to_road_km', 'distance_to_river_km',
+        'analytical_fs', 'pore_pressure_kpa', 'monsoon_intensity', 'saturation_ratio',
+        'road_toe_cut', 'river_undercut', 'JJAS', 'ANNUAL', 'MAM'
     ]
+    dummy_cols = [c for c in df_encoded.columns if c.startswith(('soil_type_', 'land_cover_', 'state_'))]
+    all_feature_cols = base_features + dummy_cols
 
-    X = df_data[feature_cols].values
-    y = df_data['is_landslide'].values
-    fs = df_data['analytical_fs'].values
+    X = df_encoded[all_feature_cols].values.astype(np.float32)
+    y = df['landslide_risk_label'].values.astype(np.int32)
+    fs = analytical_fs
 
-    print(f"[DATASET] Generated {n_samples} spatial grid cells.")
-    print(f"[IMBALANCE] Landslide Positives: {np.sum(y)} / {n_samples} ({np.mean(y)*100:.1f}%)")
-    return df_data, X, y, fs
+    print(f"[DATASET] Prepared {len(X)} spatial records across {len(all_feature_cols)} features.")
+    print(f"[IMBALANCE] Positive Landslides: {np.sum(y)} / {len(y)} ({np.mean(y)*100:.1f}%)")
 
-
-# --------------------------------------------------------------------------------------
-# 3. SMOTE (SYNTHETIC MINORITY OVER-SAMPLING TECHNIQUE) BALANCING
-# --------------------------------------------------------------------------------------
-
-def apply_smote(X: np.ndarray, y: np.ndarray, target_ratio: float = 0.5) -> Tuple[np.ndarray, np.ndarray]:
-    """
-    Synthesizes positive landslide instances in feature space to balance training classes.
-    """
-    pos_idx = np.where(y == 1)[0]
-    neg_idx = np.where(y == 0)[0]
-
-    n_pos = len(pos_idx)
-    n_neg = len(neg_idx)
-    target_pos = int(n_neg * target_ratio)
-
-    if n_pos >= target_pos:
-        return X, y
-
-    diff = target_pos - n_pos
-    print(f"[SMOTE] Synthesizing {diff} positive landslide instances to reach balanced life-safety ratio...")
-
-    syn_samples = []
-    for _ in range(diff):
-        i = np.random.choice(pos_idx)
-        j = np.random.choice(pos_idx)
-        lam = np.random.uniform(0.15, 0.85)
-        syn = X[i] + lam * (X[j] - X[i])
-        syn_samples.append(syn)
-
-    X_bal = np.vstack([X, np.array(syn_samples, dtype=np.float32)])
-    y_bal = np.concatenate([y, np.ones(diff, dtype=np.int32)])
-
-    print(f"[SMOTE] Balanced dataset size: {len(y_bal)} (Positives: {np.sum(y_bal)} / {len(y_bal)} = {np.mean(y_bal)*100:.1f}%)")
-    return X_bal, y_bal
+    return df, X, y, fs, all_feature_cols
 
 
 # --------------------------------------------------------------------------------------
-# 4. MODEL TRAINING: GRADIENT BOOSTING WITH LIFE-SAFETY THRESHOLD OPTIMIZATION
+# 2. MODEL TRAINING: GRADIENT BOOSTING WITH LIFE-SAFETY THRESHOLD OPTIMIZATION
 # --------------------------------------------------------------------------------------
 
 def train_and_evaluate_pipeline():
@@ -197,31 +115,29 @@ def train_and_evaluate_pipeline():
     start_time = time.time()
     print("=" * 80)
     print("STARTING MDoNER AI LANDSLIDE MODEL TRAINING PIPELINE")
+    print("Dataset: NER_landslide_training_12000.csv (12,000 Real Samples)")
     print("=" * 80)
 
     script_dir = os.path.dirname(os.path.abspath(__file__))
     project_root = os.path.abspath(os.path.join(script_dir, "../.."))
-    rainfall_path = os.path.join(project_root, "ml-training/data/historical_rainfall_ner.csv")
-    load_imd_rainfall_history(rainfall_path)
+    dataset_path = os.path.join(project_root, "ml-training/data/NER_landslide_training_12000.csv")
 
-    df_data, X, y, fs = generate_augmented_himalayan_dataset(n_samples=2200, seed=42)
+    df_data, X, y, fs, feature_names = load_ner_12000_geotechnical_dataset(dataset_path)
 
     X_train, X_test, y_train, y_test, fs_train, fs_test = train_test_split(
         X, y, fs, test_size=0.20, random_state=42, stratify=y
     )
     print(f"[SPLIT] Train: {len(y_train)} samples | Holdout Test: {len(y_test)} samples")
 
-    X_train_bal, y_train_bal = apply_smote(X_train, y_train, target_ratio=0.65)
-
-    print("[TRAINING] Fitting Gradient Boosting Landslide Classifier (150 estimators, max_depth=5)...")
+    print(f"[TRAINING] Fitting Gradient Boosting Landslide Classifier on {len(X_train)} samples...")
     clf = GradientBoostingClassifier(
-        n_estimators=150,
-        learning_rate=0.08,
+        n_estimators=160,
+        learning_rate=0.06,
         max_depth=5,
         subsample=0.85,
         random_state=42
     )
-    clf.fit(X_train_bal, y_train_bal)
+    clf.fit(X_train, y_train)
 
     test_probs = clf.predict_proba(X_test)[:, 1]
 
@@ -263,11 +179,6 @@ def train_and_evaluate_pipeline():
     print(f"Target Recall > 0.90 Achieved: {metrics_life_safety['meets_life_safety_target']}")
     print("=" * 80)
 
-    feature_names = [
-        'slope_deg', 'aspect_deg', 'elevation_m', 'plan_curvature', 'profile_curvature',
-        'lithology_vuln', 'soil_depth_m', 'dist_road_m', 'dist_fault_m', 'dist_river_m',
-        'impervious_ratio', 'ndvi', 'rainfall_3d_mm', 'soil_moisture_pct'
-    ]
     importances = {name: round(float(imp), 4) for name, imp in zip(feature_names, clf.feature_importances_)}
     sorted_importances = dict(sorted(importances.items(), key=lambda item: item[1], reverse=True))
 
@@ -279,8 +190,9 @@ def train_and_evaluate_pipeline():
     print(f"[EXPORT] Saved model binary to {joblib_path}")
 
     metadata = {
-        'model_name': 'MDoNER-PINN-XGBoost-Ensemble-v2',
+        'model_name': 'MDoNER-PINN-GradientBoosting-Ensemble-v3',
         'training_timestamp': datetime.datetime.now().isoformat(),
+        'dataset_source': 'NER_landslide_training_12000.csv',
         'training_duration_seconds': elapsed,
         'dataset_samples': len(X),
         'holdout_test_samples': len(X_test),

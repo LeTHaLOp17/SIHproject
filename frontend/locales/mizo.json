@@ -1,0 +1,188 @@
+{
+  "app": {
+    "title": "MDoNER EWS COMMAND",
+    "subtitle": "Leimin Thleng Thei Hriattirna & Hmun Hlauthawm Vantlang Tana Enkawlna • North Eastern Region",
+    "portal_citizen": "Mipui Himna Hmun",
+    "portal_admin": "DEOC Admin Portal",
+    "admin_badge": "THUNEITU CHAUH",
+    "passcode_prompt": "DEOC Security PIN chhu lut rawh (26001)",
+    "offline_online": "Live Sync Kal Mek",
+    "offline_offline": "Internet A Awm Lo (Khaikhawm)",
+    "mobile_map_view": "Map Enna",
+    "mobile_list_view": "Hriattirna & Chettirna"
+  },
+  "nav": {
+    "citizen_portal": "Mipui Himna",
+    "admin_portal": "DEOC Admin Command",
+    "listen_audio": "Thurawn Ngaithla Rawh",
+    "stop_audio": "Ti Tawp Rawh",
+    "emergency_helpline": "Emergency Helpline: 1077",
+    "large_text": "Hawrawp Lian Mode"
+  },
+  "citizen_tabs": {
+    "safety": "Himna & Khawchin",
+    "report": "Hlauhthawnna Report",
+    "roads": "Kawng & Leimin",
+    "shelters": "Himna Hmun (Shelters)"
+  },
+  "regions": {
+    "all": "NER Pum",
+    "sikkim": "Sikkim (NH-10)",
+    "assam": "Assam (Haflong)",
+    "meghalaya": "Meghalaya (NH-6)",
+    "arunachal": "Arunachal (Sela)",
+    "manipur": "Manipur (Noney)",
+    "mizoram": "Mizoram (Hunthar)",
+    "nagaland": "Nagaland (NH-29)",
+    "tripura": "Tripura (Jampui)"
+  },
+  "citizen": {
+    "banner_safe_title": "I Awmna Hmun A Him: Tlangpangte An Pangngai E",
+    "banner_safe_desc": "Satellite leh sensor hmangin 24x7 vil reng a ni. Hmun danga insawn a ngai lo rih e.",
+    "banner_alert_title": "HRIATTIRNA PAWIMAWH: Leimin Hlauthawm A Awm E",
+    "banner_alert_desc": "Leimin theihna hmuh a ni. Tlangpang awih lutuk hnaih suh la, himna hmun pan rawh.",
+    "weather_card_title": "Vawiin Ruahsur Dan & Lei Hnawng Dan",
+    "weather_status_normal": "Ruah Pangngai A Sur",
+    "weather_status_danger": "Ruahpui Sur / Tuilian Hlauthawm",
+    "safe_shelters_title": "Hnai Ber Himna Hmun Te (Relief Shelters)",
+    "shelter_school": "Govt Higher Secondary School",
+    "shelter_community": "Community Relief Centre",
+    "shelter_college": "College Auditorium Emergency Shelter",
+    "shelter_directions": "Kawng Zawh Dan En Rawh",
+    "shelter_beds": "Khum Awm Zat",
+    "active_landslides_title": "I Hnaia Leimin & Kawng Pingte",
+    "call_helpline_btn": "DEOC Helpline Be Rawh (1077)",
+    "google_maps_route": "Google Maps Kawng",
+    "view_on_gmaps": "Google Maps-ah En Rawh",
+    "updated_at": "Siamthat Hun:",
+    "updated_by": "Siamthattu:",
+    "source_label": "Hnar:",
+    "filter_by_region": "State Thlang Rawh",
+    "no_landslides": "He hmuna leimin a awm lo rih e.",
+    "no_roads": "Kawng ping a awm lo rih e.",
+    "no_shelters": "He hmuna shelter a awm lo rih e."
+  },
+  "weather_broadcast": {
+    "badge": "IMD KHAWCHIN HRIATTIRNA LIVE",
+    "listen_btn": "Khawchin Ngaithla Rawh",
+    "stop_btn": "Tawp",
+    "projected_rain": "DARKAR 24 RUAH SUR TUR:",
+    "flood_risk": "TUILIAN HLAUTHAWN:"
+  },
+  "field_report": {
+    "title": "Mipui Hlauhthawnna Report Thehna",
+    "subtitle": "Leimin, lei khi emaw kawng pingte thlalak nen thehlut rawh. Internet awm loh pawn a theih e.",
+    "reporter_info_label": "Hming Leh Phone Number",
+    "name_label": "I Hming Pum *",
+    "name_placeholder": "Hming chhu lut rawh (e.g. Lalthansanga)",
+    "phone_label": "Phone Number (Digit 10) *",
+    "phone_placeholder": "9876543210",
+    "photo_label": "Thlalak Emaw Video Dah Tel Rawh",
+    "photo_preview_title": "Thlalak Enlawkna",
+    "location_label": "Hmun Hming Leh Veng",
+    "location_placeholder": "Khua / Veng / Kawng Hming",
+    "state_label": "State / Hmun",
+    "landmark_label": "Hriat Lar Hmun",
+    "landmark_placeholder": "Biak In / Sikul / Forest Post Hnaih",
+    "hazard_type_label": "Hlauhthawnna Chi",
+    "severity_label": "Hlauhthawnna San Dan",
+    "crack_width_label": "Lei Khi Len Zawng",
+    "desc_label": "Hriattirna Kimchang",
+    "desc_placeholder": "Thil thleng zualko ziak rawh...",
+    "submit_btn": "HRIATTIRNA THEHLUT RAWH",
+    "approval_notice": "DEOC Admin-in an endik hnuah map-ah tihchhuah a ni ang.",
+    "offline_notice": "Internet a awm lo: I thehluh hi phone-ah vawn a ni a, internet a awm veleh thawn a ni ang."
+  },
+  "roads": {
+    "matrix_title": "Kawngpui Tlang Leh Ping Dinhmun",
+    "subtitle": "Hmar-Chhak kawngpui lian leh rel kawng kal theih dan",
+    "status_open": "A TLANG E / KAL THEIH",
+    "status_restricted": "FIMKHUR NGAI",
+    "status_blocked": "A PING / KAL THEIH LOH",
+    "focus_road": "Kawngpui",
+    "choke_point": "Hmun Hlauthawm"
+  },
+  "admin": {
+    "title": "DEOC Incident Command & Alert Dispatcher",
+    "subtitle": "Section 30, Disaster Management Act (2005) • NDMA SACHET Gateway",
+    "target_area": "Hmun Bituk",
+    "severity": "Hlauhthawnna San Dan",
+    "dispatch_btn": "MIPUI HNENA HRIATTIRNA THAWN RAWH",
+    "logout": "Chhuak Rawh"
+  },
+  "sms_subscribe": {
+    "title": "SMS Early Warning Inziahluhna",
+    "subtitle": "NDMA SACHET Gateway",
+    "desc": "I phone-ah leimin leh tuilian hriattirna thlawna dawng turin inziak lut rawh.",
+    "phone_label": "Phone Number (Digit 10)",
+    "name_label": "Hming",
+    "region_label": "State",
+    "corridor_label": "Veng / Khua / District",
+    "lang_label": "Tawng Duh Zawk",
+    "btn_subscribe": "SMS Hriattirna Thlawn Dawng Rawh"
+  },
+  "siren": {
+    "btn_start": "Insawnna Siren",
+    "btn_stop": "Siren Ti Tawp",
+    "alert_msg": "INSAWN CHHUAHNA SIREN A RI E"
+  },
+  "eo_satellite": {
+    "card_title": "ISRO VEDAS Earth Observation (EO)",
+    "card_subtitle": "EOS-04 / Sentinel-1 C+L Band",
+    "pass_status": "Orbit: Kal Mek",
+    "swi_label": "Lei Hnawng (SWI)",
+    "insar_label": "InSAR Chak Dan",
+    "ndvi_label": "Hnah Hring (NDVI)",
+    "cartodem_label": "CartoDEM Awn Dan",
+    "elev_label": "San Zawng",
+    "loss_label": "hlauh"
+  },
+  "map": {
+    "risk_heatmap": "Hlauhthawnna Heatmap",
+    "eo_data": "ISRO EO Data",
+    "shelters": "Himna Hmun",
+    "critical_infra": "Hmun Pawimawh",
+    "fullscreen": "Screen Pum",
+    "satellite": "Satellite",
+    "relief": "Tlangpang"
+  },
+  "forecast": {
+    "title": "IMD Darkar 72 Khawchin leh Leimin Hlauthawn",
+    "subtitle": "Ruahsur leh lei ngheh loh theih dan hrilhlawkna"
+  },
+  "vedas": {
+    "title": "ISRO VEDAS Earth Observation System",
+    "subtitle": "Space Applications Centre (SAC), Ahmedabad",
+    "swi_label": "Soil Wetness Index (SWI)",
+    "insar_label": "InSAR Downslope Velocity",
+    "ndvi_label": "Sentinel-2 Canopy Vigour",
+    "cartodem_label": "CartoDEM 30m Elevation",
+    "sync_btn": "VEDAS SATELLITE SYNC RAWH",
+    "sync_success": "VEDAS satellite feed hlawhtling takin a thleng e!"
+  },
+  "speech": {
+    "safe": "MDoNER EWS Hriattirna: Tlangpangte an him rih e. ISRO satellite leh sensor hmangin vil reng a ni. Hmun danga insawn a ngai lo e.",
+    "alert": "HRIATTIRNA PAWIMAWH MDoNER EWS atangin: NH-10 leh tlangpang awihah leimin hlauthawm a awm e. Hnai ber himna hmun pan nghal rawh u. Emergency Helpline 1077-ah be rawh u."
+  },
+  "infrastructure": {
+    "title": "Hmun Pawimawh Te",
+    "hospital": "Damdawi In / Trauma Centre",
+    "bridge": "Leihlawn Pawimawh",
+    "helipad": "Helipad Hmun",
+    "layer_label": "Hmun Pawimawh",
+    "google_maps": "Google Maps Kawng"
+  },
+  "my_reports": {
+    "title": "Ka Hriattirna Thehluh Te",
+    "btn_open": "Ka Report-te Enna",
+    "btn_sync": "Sync Nghal Rawh",
+    "empty": "Hriattirna thehluh a la awm lo.",
+    "reporter": "Thehluttu:",
+    "phone": "Phone:",
+    "location": "Hmun:",
+    "status_pending": "Endik Mek",
+    "status_approved": "Pawm A Ni E",
+    "status_qrt": "QRT Tirh A Ni",
+    "status_rejected": "Hnawl A Ni"
+  }
+}

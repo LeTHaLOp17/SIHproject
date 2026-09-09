@@ -46,6 +46,13 @@ const server = http.createServer((req, res) => {
   });
 });
 
+server.on('error', (err) => {
+  console.error('Server error:', err);
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use. Retrying or shutting down.`);
+  }
+});
+
 server.listen(PORT, () => {
   console.log('='.repeat(70));
   console.log('🚀 MDoNER AI LANDSLIDE EARLY WARNING & MONITORING SYSTEM');
