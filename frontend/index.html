@@ -27,6 +27,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
   <script src="terrain3d.js"></script>
+  <!-- Edge TinyML On-Device Offline Inference Engine -->
+  <script src="tinyml_engine.js"></script>
 
   <!-- Tailwind Configuration - shadcn/ui Inspired Design Tokens -->
   <script>
@@ -508,16 +510,16 @@
           <!-- 3 Plain-Language Glance Chips -->
           <div class="grid grid-cols-3 gap-2 text-center pt-1 font-mono">
             <div class="p-2 bg-slate-950/80 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 block uppercase">Weather</span>
+              <span class="text-[10px] text-slate-400 block uppercase" data-i18n="glance.weather">Weather</span>
               <b class="text-xs text-white" id="cit-glance-wx">24°C • Clear</b>
             </div>
             <div class="p-2 bg-slate-950/80 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 block uppercase">24h Rain</span>
+              <span class="text-[10px] text-slate-400 block uppercase" data-i18n="glance.rain_24h">24h Rain</span>
               <b class="text-xs text-cyan-400" id="cit-glance-rain">38.4 mm</b>
             </div>
             <div class="p-2 bg-slate-950/80 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 block uppercase">Ground</span>
-              <b class="text-xs text-emerald-400" id="cit-glance-ground">Firm & Safe</b>
+              <span class="text-[10px] text-slate-400 block uppercase" data-i18n="glance.ground">Ground</span>
+              <b class="text-xs text-emerald-400" id="cit-glance-ground" data-i18n="glance.firm_safe">Firm & Safe</b>
             </div>
           </div>
 
@@ -525,15 +527,15 @@
           <div class="grid grid-cols-3 gap-2 pt-1">
             <button onclick="switchCitizenSubTab('roads')" class="p-2.5 bg-slate-800/80 hover:bg-slate-700 text-cyan-300 hover:text-white rounded-xl border border-slate-700 text-xs font-bold transition flex flex-col items-center justify-center space-y-1 shadow-sm">
               <i data-lucide="git-commit" class="w-4 h-4 text-cyan-400"></i>
-              <span>Road Status</span>
+              <span data-i18n="labels.road_status">Road Status</span>
             </button>
             <button onclick="switchCitizenSubTab('shelters')" class="p-2.5 bg-slate-800/80 hover:bg-slate-700 text-emerald-300 hover:text-white rounded-xl border border-slate-700 text-xs font-bold transition flex flex-col items-center justify-center space-y-1 shadow-sm">
               <i data-lucide="home" class="w-4 h-4 text-emerald-400"></i>
-              <span>Safe Shelters</span>
+              <span data-i18n="labels.safe_shelters">Safe Shelters</span>
             </button>
             <button onclick="open3dTerrainModal('nh10')" class="p-2.5 bg-cyan-600/20 hover:bg-cyan-600/35 text-cyan-300 hover:text-white rounded-xl border border-cyan-500/40 text-xs font-extrabold transition flex flex-col items-center justify-center space-y-1 shadow-sm">
               <i data-lucide="box" class="w-4 h-4 text-cyan-400"></i>
-              <span>3D Mountain</span>
+              <span data-i18n="labels.mountain_3d">3D Mountain</span>
             </button>
           </div>
 
@@ -542,19 +544,19 @@
             <div class="flex items-center space-x-1.5">
               <button onclick="startAudioAdvisory()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center space-x-1.5">
                 <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
-                <span id="btn-txt-listen-advisory">Listen Advisory</span>
+                <span id="btn-txt-listen-advisory" data-i18n="labels.listen_advisory">Listen Advisory</span>
               </button>
               <span class="info-btn" onclick="showInlineInfo(event, 'audio_listen')" title="Audio Advisory Info">i</span>
             </div>
             <button onclick="openSosModal()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center space-x-1.5">
               <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
-              <span>Call 1077 Helpline</span>
+              <span data-i18n="labels.call_helpline">Call 1077 Helpline</span>
             </button>
           </div>
 
           <div class="pt-1 flex items-center justify-between text-[10px] text-slate-400 font-mono">
-            <span>Last Evaluated: <b class="text-slate-200" id="cit-status-updated-time">08 Sep 2026 • 21:30 IST</b></span>
-            <span class="text-emerald-400 font-bold">● High Confidence (98.3% Recall)</span>
+            <span><span id="lbl-last-evaluated-prefix" data-i18n="labels.last_evaluated">Last Evaluated:</span> <b class="text-slate-200" id="cit-status-updated-time">08 Sep 2026 • 21:30 IST</b></span>
+            <span class="text-emerald-400 font-bold" id="lbl-confidence-metric" data-i18n="labels.high_confidence">● High Confidence (98.3% Recall)</span>
           </div>
         </div>
 
@@ -587,13 +589,13 @@
             </div>
             <button onclick="switchCitizenSubTab('shelters')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-xl shadow transition flex items-center space-x-1">
               <i data-lucide="home" class="w-3.5 h-3.5"></i>
-              <span>Nearest Shelter</span>
+              <span data-i18n="labels.nearest_shelter">Nearest Shelter</span>
             </button>
           </div>
 
           <div class="flex items-center justify-between text-[10px] font-mono text-zinc-400 pt-1 border-t border-zinc-800 flex-wrap gap-1">
-            <span>Forecast Horizon: <b class="text-amber-400" id="cit-ai-hazard-horizon">Next 2 - 4 Hours</b></span>
-            <span>Target Corridor: <b class="text-zinc-200" id="cit-ai-hazard-location">NH-10 Mile 44 (Singtam-Rangpo)</b></span>
+            <span><span id="lbl-horizon-prefix" data-i18n="labels.forecast_horizon">Forecast Horizon:</span> <b class="text-amber-400" id="cit-ai-hazard-horizon">Next 2 - 4 Hours</b></span>
+            <span><span id="lbl-target-prefix" data-i18n="labels.target_corridor">Target Corridor:</span> <b class="text-zinc-200" id="cit-ai-hazard-location">NH-10 Mile 44 (Singtam-Rangpo)</b></span>
           </div>
         </div>
 
@@ -630,11 +632,11 @@
 
           <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
             <div class="bg-zinc-950/90 p-2 rounded-lg border border-zinc-800">
-              <span class="text-zinc-400">24H PROJECTED RAIN:</span>
+              <span class="text-zinc-400" data-i18n="weather_broadcast.projected_rain">24H PROJECTED RAIN:</span>
               <span class="text-cyan-400 font-bold ml-1" id="wx-bc-rain">165 - 220 mm</span>
             </div>
             <div class="bg-zinc-950/90 p-2 rounded-lg border border-zinc-800">
-              <span class="text-zinc-400">FLASH FLOOD RISK:</span>
+              <span class="text-zinc-400" data-i18n="weather_broadcast.flood_risk">FLASH FLOOD RISK:</span>
               <span class="text-red-400 font-bold ml-1" id="wx-bc-flood">CRITICAL HIGH</span>
             </div>
           </div>
@@ -734,6 +736,88 @@
             <i data-lucide="folder-check" class="w-3.5 h-3.5"></i>
             <span id="btn-my-reports">My Reports & Offline Queue</span>
           </button>
+        </div>
+
+        
+        <!-- Game-Changer 2: True Edge AI (100% Offline / Zero-Cloud TinyML Scanner) -->
+        <div class="shadcn-card rounded-2xl p-4 border-2 border-sky-500/60 bg-gradient-to-br from-sky-950/30 via-zinc-950 to-zinc-900 space-y-3 shadow-xl">
+          <div class="flex items-center justify-between flex-wrap gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse"></span>
+              <h3 class="font-black text-xs uppercase tracking-wider text-sky-400">EDGE TINYML ON-DEVICE FIELD SCANNER (ZERO-CLOUD)</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-bold">100% OFFLINE PURE JS</span>
+          </div>
+
+          <p class="text-[11px] text-zinc-300 leading-relaxed">
+            <b class="text-white">Field Officer Zero-Signal Mode:</b> In remote Himalayan villages with zero cellular reception, this scanner runs quantized neural inference and infinite slope limit equilibrium directly on your phone's processor. No cloud API calls.
+          </p>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-mono">
+            <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800">
+              <span class="text-[10px] text-zinc-400 block">Slope Incline:</span>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-white font-bold" id="edge-tinyml-slope-val">34°</span>
+                <input type="range" id="edge-tinyml-slope" min="10" max="65" value="34" oninput="document.getElementById('edge-tinyml-slope-val').textContent = this.value + '°'" class="w-24 accent-sky-400">
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800">
+              <span class="text-[10px] text-zinc-400 block">Soil Moisture:</span>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-white font-bold" id="edge-tinyml-moist-val">82%</span>
+                <input type="range" id="edge-tinyml-moist" min="20" max="100" value="82" oninput="document.getElementById('edge-tinyml-moist-val').textContent = this.value + '%'" class="w-24 accent-sky-400">
+              </div>
+            </div>
+
+            <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800">
+              <span class="text-[10px] text-zinc-400 block">Rain Intensity:</span>
+              <div class="flex items-center justify-between mt-1">
+                <span class="text-white font-bold" id="edge-tinyml-rain-val">65 mm/h</span>
+                <input type="range" id="edge-tinyml-rain" min="0" max="150" value="65" oninput="document.getElementById('edge-tinyml-rain-val').textContent = this.value + ' mm/h'" class="w-24 accent-sky-400">
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
+            <button type="button" onclick="runEdgeTinyMLScan()" class="flex-1 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-black font-extrabold text-xs rounded-xl shadow-lg shadow-sky-500/25 transition flex items-center justify-center space-x-1.5">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              <span>CALCULATE RISK ON-DEVICE (&lt; 15ms)</span>
+            </button>
+            <label class="flex items-center space-x-2 text-[11px] font-mono text-zinc-300 cursor-pointer p-1.5 bg-zinc-900 rounded-xl border border-zinc-800">
+              <input type="checkbox" id="edge-offline-simulator-toggle" onchange="toggleEdgeOfflineSimulator(this.checked)" class="accent-sky-400 rounded">
+              <span>Simulate Zero Signal (Airgap)</span>
+            </label>
+          </div>
+
+          <!-- On-Device Result Display -->
+          <div id="edge-tinyml-result-card" class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2 font-mono text-xs">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] text-zinc-400">ON-DEVICE INFERENCE ENGINE:</span>
+              <span id="edge-scan-status-badge" class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold text-[10px]">🟢 GREEN: SAFE (FS = 1.62)</span>
+            </div>
+            <div class="grid grid-cols-3 gap-2 text-center text-[10px] pt-1">
+              <div class="bg-black/50 p-1.5 rounded-lg">
+                <span class="text-zinc-500 block text-[9px]">Factor of Safety</span>
+                <b class="text-emerald-400 text-xs" id="edge-fs-val">1.62</b>
+              </div>
+              <div class="bg-black/50 p-1.5 rounded-lg">
+                <span class="text-zinc-500 block text-[9px]">Neural Risk</span>
+                <b class="text-sky-400 text-xs" id="edge-prob-val">24.5%</b>
+              </div>
+              <div class="bg-black/50 p-1.5 rounded-lg">
+                <span class="text-zinc-500 block text-[9px]">Latency</span>
+                <b class="text-emerald-300 text-xs" id="edge-latency-val">4.2 ms</b>
+              </div>
+            </div>
+            <p class="text-[11px] text-zinc-300" id="edge-action-val">
+              Slope mechanically secure (FS &gt; 1.35). Normal conditions. Routine monitoring active.
+            </p>
+            <div class="text-[10px] text-zinc-400 pt-1 border-t border-zinc-800/80 flex items-center justify-between">
+              <span id="edge-queue-status">💾 Persisted to Offline Local Queue (0 pending syncs)</span>
+              <button type="button" onclick="showOfflineQueueModal()" class="text-sky-400 hover:underline">View Queue</button>
+            </div>
+          </div>
         </div>
 
         <div class="shadcn-card rounded-2xl p-4 border-l-4 border-amber-500 space-y-2.5">
@@ -868,6 +952,82 @@
           <div>
             <label class="text-[11px] font-mono uppercase text-zinc-400">Observation Details</label>
             <textarea id="report-desc" rows="2" placeholder="Describe landmark and ground movements observed..." class="w-full bg-zinc-900 border border-zinc-700 rounded-xl p-2 text-white text-xs mt-1"></textarea>
+          </div>
+
+          
+          <!-- Game-Changer 3: Time-Series Crack Propagation Visualizer & Auto Evacuation -->
+          <div class="shadcn-card rounded-2xl p-4 border-2 border-rose-500/60 bg-gradient-to-br from-rose-950/30 via-zinc-950 to-zinc-900 space-y-3 shadow-xl">
+            <div class="flex items-center justify-between flex-wrap gap-1">
+              <div class="flex items-center space-x-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+                <h3 class="font-black text-xs uppercase tracking-wider text-rose-400">DIGITAL IMAGE CORRELATION (DIC) CRACK DISPLACEMENT</h3>
+              </div>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold">OPTICAL FLOW Δw</span>
+            </div>
+
+            <p class="text-[11px] text-zinc-300 leading-relaxed">
+              <b class="text-white">Temporal Pair Comparison:</b> Automatically correlates two field photos taken at identical GPS coordinates 24 hours apart to calculate physical crack displacement.
+              <span class="text-rose-400 font-bold">If Δw &ge; 2.0 mm in 24h, the system automatically escalates to IMMEDIATE EVACUATION without human review.</span>
+            </p>
+
+            <!-- Dual Photo Comparison Frame -->
+            <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+              <div class="p-2 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-1">
+                <div class="flex justify-between items-center text-zinc-400">
+                  <span>DAY 1: BASELINE</span>
+                  <span class="text-emerald-400">24h Ago</span>
+                </div>
+                <div class="w-full h-24 bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800 relative overflow-hidden">
+                  <svg viewBox="0 0 100 60" class="w-full h-full text-zinc-700">
+                    <path d="M 10 30 Q 35 32 50 28 T 90 31" fill="none" stroke="#64748b" stroke-width="2"/>
+                  </svg>
+                  <span class="absolute bottom-1 right-2 text-[9px] bg-black/70 px-1.5 py-0.5 rounded text-zinc-300">Crack: 1.2 mm</span>
+                </div>
+                <div class="text-[9px] text-zinc-400 truncate">GPS: 27.3389°N, 88.6065°E</div>
+              </div>
+
+              <div class="p-2 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-1">
+                <div class="flex justify-between items-center text-zinc-400">
+                  <span>DAY 2: CURRENT SCAN</span>
+                  <span class="text-rose-400 animate-pulse">LIVE VERIFIED</span>
+                </div>
+                <div class="w-full h-24 bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800 relative overflow-hidden" id="crack-visualizer-box">
+                  <svg viewBox="0 0 100 60" class="w-full h-full">
+                    <path id="crack-svg-path" d="M 10 30 Q 35 34 50 26 T 90 32" fill="none" stroke="#ef4444" stroke-width="5"/>
+                  </svg>
+                  <span class="absolute bottom-1 right-2 text-[9px] bg-red-950/80 px-1.5 py-0.5 rounded text-red-300 font-bold" id="crack-visualizer-badge">Widened: +2.6 mm</span>
+                </div>
+                <div class="text-[9px] text-emerald-400 truncate">&check; Identical GPS Confirmed (&Delta; &lt; 5m)</div>
+              </div>
+            </div>
+
+            <!-- Displacement Simulation Slider -->
+            <div class="p-2.5 bg-zinc-900/80 rounded-xl border border-zinc-800 space-y-1 font-mono text-xs">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="text-zinc-400">Simulate Measured Crack Displacement (Δw):</span>
+                <b class="text-rose-400 text-xs font-bold" id="crack-slider-val">2.6 mm / 24h</b>
+              </div>
+              <input type="range" id="crack-displacement-slider" min="0.2" max="5.0" step="0.1" value="2.6" oninput="onCrackDisplacementChange(this.value)" class="w-full accent-rose-500">
+              <div class="flex justify-between text-[9px] text-zinc-500">
+                <span>0.2 mm (Elastic)</span>
+                <span class="text-rose-400 font-bold">2.0 mm CRITICAL TRIGGER</span>
+                <span>5.0 mm (Rupture)</span>
+              </div>
+            </div>
+
+            <!-- Automated Evacuation Trigger Alert -->
+            <div id="crack-auto-evac-alert" class="p-3 bg-red-950/80 rounded-xl border-2 border-red-500 space-y-1.5 emergency-strobe text-white font-mono text-xs">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-white animate-ping shrink-0"></i>
+                <b class="text-xs tracking-wider uppercase">🚨 AUTOMATED IMMEDIATE EVACUATION ESCALATION ACTIVE</b>
+              </div>
+              <p class="text-[10px] text-red-100 leading-snug" id="crack-auto-evac-desc">
+                Optical Flow detected crack widening of <b>2.60 mm within 24 hours</b> (&ge; 2.0 mm life-safety threshold). Automated evacuation protocol triggered without human review delay. Downslope settlements ordered to evacuate immediately!
+              </p>
+              <div class="text-[9px] text-amber-200 bg-black/40 p-1.5 rounded-lg border border-red-800">
+                &check; Sovereign Broadcast Dispatched &bull; NDRF & District Collectorate Notified &bull; Siren Activated
+              </div>
+            </div>
           </div>
 
           <!-- AI Optical Flow Scan Action Button -->
@@ -1349,6 +1509,129 @@
             </button>
           </div>
         </div>
+
+        <!-- Game-Changer 1: PINN vs. Pure Black-Box ML Benchmark Console -->
+        <div class="shadcn-card rounded-2xl p-4 border-2 border-emerald-500/50 bg-gradient-to-br from-emerald-950/30 via-zinc-950 to-zinc-900 space-y-3.5 shadow-2xl">
+          <div class="flex items-center justify-between flex-wrap gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <h3 class="font-black text-xs uppercase tracking-wider text-emerald-400">PHYSICS-INFORMED AI (PINN) VS. BLACK-BOX ML BENCHMARK</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold">ELIMINATES FALSE ALARMS</span>
+          </div>
+
+          <p class="text-[11px] text-zinc-300 leading-relaxed">
+            <b class="text-white">Why District Authorities Need PINNs:</b> NER has sparse historical landslide event data (30-40 years). Pure ML models (LSTM or Random Forest on rainfall) trigger false alarms during heavy cloudbursts on geotechnically secure rock, wasting public funds and eroding community trust. Our coupled PINN enforces Limit Equilibrium Geomechanics (<span class="font-mono text-amber-300">FS</span>) to suppress false alarms while guaranteeing critical evacuation triggers.
+          </p>
+
+          <!-- Preset Quick Demonstration Scenarios -->
+          <div class="space-y-1">
+            <label class="text-[10px] font-mono uppercase text-zinc-400">Quick Demonstrations (Compare Pure ML vs. PINN):</label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 text-[10px] font-mono">
+              <button type="button" onclick="loadPinnPreset('cloudburst_stable')" class="p-2 rounded-lg bg-zinc-900 hover:bg-emerald-950/50 border border-zinc-700 hover:border-emerald-500 text-left transition">
+                <div class="font-bold text-emerald-400">1. Cloudburst on Stable Rock</div>
+                <div class="text-[9px] text-zinc-400">Rain 95mm/h, FS=1.95 &rarr; <span class="text-emerald-300 font-bold">False Alarm Suppressed!</span></div>
+              </button>
+              <button type="button" onclick="loadPinnPreset('weak_colluvium')" class="p-2 rounded-lg bg-zinc-900 hover:bg-red-950/50 border border-zinc-700 hover:border-red-500 text-left transition">
+                <div class="font-bold text-red-400">2. Weak Colluvium Saturated</div>
+                <div class="text-[9px] text-zinc-400">Slope 38°, FS=0.82 &rarr; <span class="text-red-300 font-bold">Critical Failure Evacuate</span></div>
+              </button>
+              <button type="button" onclick="loadPinnPreset('marginal_creep')" class="p-2 rounded-lg bg-zinc-900 hover:bg-amber-950/50 border border-zinc-700 hover:border-amber-500 text-left transition">
+                <div class="font-bold text-amber-400">3. Marginal Equilibrium</div>
+                <div class="text-[9px] text-zinc-400">Pore Press 38kPa, FS=1.12 &rarr; <span class="text-amber-300 font-bold">High Alert Watch</span></div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Parameter Sensitivity Sliders -->
+          <div class="p-3 bg-zinc-950/90 rounded-xl border border-zinc-800 space-y-2.5 text-xs font-mono">
+            <div class="flex justify-between items-center text-zinc-300 font-bold text-[10px] border-b border-zinc-800 pb-1">
+              <span class="text-amber-300">GEOTECHNICAL & HYDROMETEOROLOGICAL SENSITIVITY SLIDERS</span>
+              <span class="text-cyan-400">REAL-TIME LIMIT EQUILIBRIUM</span>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <div class="flex justify-between text-[10px] text-zinc-400">
+                  <span>Slope Angle (β):</span>
+                  <span class="font-bold text-white" id="pinn-val-slope">24°</span>
+                </div>
+                <input type="range" id="pinn-slider-slope" min="10" max="60" value="24" oninput="onPinnSliderChange()" class="w-full accent-amber-500">
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[10px] text-zinc-400">
+                  <span>Soil Cohesion (c'):</span>
+                  <span class="font-bold text-white" id="pinn-val-cohesion">22 kPa</span>
+                </div>
+                <input type="range" id="pinn-slider-cohesion" min="2" max="50" value="22" oninput="onPinnSliderChange()" class="w-full accent-emerald-500">
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[10px] text-zinc-400">
+                  <span>Pore-Water Pressure (u):</span>
+                  <span class="font-bold text-white" id="pinn-val-pore">15 kPa</span>
+                </div>
+                <input type="range" id="pinn-slider-pore" min="0" max="70" value="15" oninput="onPinnSliderChange()" class="w-full accent-cyan-500">
+              </div>
+
+              <div>
+                <div class="flex justify-between text-[10px] text-zinc-400">
+                  <span>Cloudburst Rainfall Rate:</span>
+                  <span class="font-bold text-white" id="pinn-val-rain">95 mm/h</span>
+                </div>
+                <input type="range" id="pinn-slider-rain" min="10" max="150" value="95" oninput="onPinnSliderChange()" class="w-full accent-sky-500">
+              </div>
+            </div>
+          </div>
+
+          <!-- Comparison Output Cards (Side-by-Side) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs font-mono">
+            <!-- 1. Pure Black-Box ML -->
+            <div id="pinn-card-pureml" class="p-3 bg-red-950/40 rounded-xl border border-red-700/60 space-y-1.5">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="font-bold text-red-400">1. PURE BLACK-BOX ML</span>
+                <span id="pinn-badge-pureml" class="px-1.5 py-0.5 rounded bg-red-900 text-red-200 text-[9px] font-bold">FALSE ALARM</span>
+              </div>
+              <div class="text-lg font-black text-white" id="pinn-pureml-prob">81.7% Probability</div>
+              <div class="text-[10px] text-red-300 font-bold" id="pinn-pureml-alert">CRITICAL EVACUATION WARNING</div>
+              <div class="text-[9px] text-zinc-400 pt-1 border-t border-zinc-800 leading-tight">
+                Lacks physical ground equations. Sees 95 mm/h rainfall and triggers false evacuation alarm.
+              </div>
+            </div>
+
+            <!-- 2. Deterministic Geotechnical Physics -->
+            <div id="pinn-card-physics" class="p-3 bg-cyan-950/30 rounded-xl border border-cyan-800/60 space-y-1.5">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="font-bold text-cyan-400">2. TERRAIN MECHANICS</span>
+                <span id="pinn-badge-fs" class="px-1.5 py-0.5 rounded bg-emerald-900 text-emerald-200 text-[9px] font-bold">FS &gt; 1.35 STABLE</span>
+              </div>
+              <div class="text-lg font-black text-emerald-400" id="pinn-fs-val">FS = 1.95</div>
+              <div class="text-[10px] text-cyan-200 font-bold" id="pinn-fs-state">COMPLETELY STABLE BEDROCK</div>
+              <div class="text-[9px] text-zinc-400 pt-1 border-t border-zinc-800 leading-tight">
+                Terzaghi Effective Stress confirms resisting shear strength exceeds driving stress.
+              </div>
+            </div>
+
+            <!-- 3. Coupled PINN Model -->
+            <div id="pinn-card-coupled" class="p-3 bg-emerald-950/40 rounded-xl border-2 border-emerald-500/80 space-y-1.5 shadow-lg">
+              <div class="flex justify-between items-center text-[10px]">
+                <span class="font-bold text-emerald-400">3. COUPLED PINN HYBRID</span>
+                <span id="pinn-badge-action" class="px-1.5 py-0.5 rounded bg-emerald-800 text-emerald-100 text-[9px] font-bold">SUPPRESSED</span>
+              </div>
+              <div class="text-lg font-black text-emerald-300" id="pinn-coupled-risk">18.0% Surface Risk</div>
+              <div class="text-[10px] text-emerald-400 font-bold" id="pinn-coupled-status">SURFACE RUNOFF ADVISORY ONLY</div>
+              <div class="text-[9px] text-zinc-300 pt-1 border-t border-zinc-800 leading-tight" id="pinn-coupled-reason">
+                False alarm eliminated. Heavy rain drains over bedrock. No mass evacuation needed.
+              </div>
+            </div>
+          </div>
+
+          <div class="p-2.5 bg-black/60 rounded-xl border border-zinc-800 text-[10px] font-mono text-zinc-400 flex items-center justify-between flex-wrap gap-1">
+            <span>Loss Formulation: <b class="text-zinc-200 font-sans">ℒ_PINN = ℒ_Data + λ · max(0, 1.0 - FS)²</b></span>
+            <span class="text-emerald-400 font-bold">Zero False Evacuations in NER</span>
+          </div>
+        </div>
       </div>
 
       <!-- Admin Tab 2: Road Connectivity & Tarjan Isolation -->
@@ -1376,6 +1659,74 @@
           </div>
         </div>
         <div id="admin-isolation-leaderboard" class="space-y-2 font-mono text-xs"></div>
+
+        <!-- Game-Changer 4: Connectivity Isolation Index (CII - Network Graph Theory) -->
+        <div class="shadcn-card rounded-2xl p-4 border-2 border-indigo-500/60 bg-gradient-to-br from-indigo-950/30 via-zinc-950 to-zinc-900 space-y-3.5 shadow-2xl">
+          <div class="flex items-center justify-between flex-wrap gap-1">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-indigo-400 animate-pulse"></span>
+              <h3 class="font-black text-xs uppercase tracking-wider text-indigo-400">CONNECTIVITY ISOLATION INDEX (CII - GRAPH THEORY)</h3>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 border border-indigo-800 font-bold">TARJAN DFS + DIJKSTRA</span>
+          </div>
+
+          <p class="text-[11px] text-zinc-300 leading-relaxed">
+            <b class="text-white">Predictive Infrastructure Cascading Failure:</b> When a mountain corridor breaches, Tarjan's Bridge DFS determines every downstream landlocked settlement, tallies cutoff vulnerable demographics (children, elderly), calculates medical stock runway, and generates helicopter airdrop coordinates.
+          </p>
+
+          <!-- Scenario Selector -->
+          <div>
+            <label class="text-[10px] font-mono uppercase text-zinc-400">Select Road Network Disaster Scenario:</label>
+            <select id="adm-cii-scenario-select" onchange="runCiiSimulation(this.value)" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white text-xs mt-1 focus:outline-none focus:border-indigo-500 font-mono">
+              <option value="RONGLI_VALLEY">Rorathang-Rongli Mountain Feeder Road Collapse (Pakyong District)</option>
+              <option value="NH10_SINGTAM_CORRIDOR">NH-10 Rangpo to Singtam Arterial Breach (Teesta Lifeline)</option>
+              <option value="ALL_ARTERIES_COLLAPSE">Compound Multi-Valley Simultaneous Collapse (Regional Emergency)</option>
+            </select>
+          </div>
+
+          <!-- Live Impact Counters -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs font-mono">
+            <div class="bg-indigo-950/60 p-2.5 rounded-xl border border-indigo-800/70">
+              <span class="text-[9px] text-indigo-300 uppercase block">Landlocked Villages</span>
+              <b class="text-lg font-black text-white" id="cii-isolated-count">3 Settlements</b>
+            </div>
+            <div class="bg-red-950/60 p-2.5 rounded-xl border border-red-800/70">
+              <span class="text-[9px] text-red-300 uppercase block">Cutoff Population</span>
+              <b class="text-lg font-black text-white" id="cii-cutoff-pop">11,170</b>
+            </div>
+            <div class="bg-amber-950/60 p-2.5 rounded-xl border border-amber-800/70">
+              <span class="text-[9px] text-amber-300 uppercase block">Vulnerable Civilians</span>
+              <b class="text-lg font-black text-amber-400" id="cii-vulnerable-count">1,838</b>
+            </div>
+            <div class="bg-rose-950/60 p-2.5 rounded-xl border border-rose-800/70">
+              <span class="text-[9px] text-rose-300 uppercase block">Supply Runway</span>
+              <b class="text-lg font-black text-rose-400" id="cii-supply-runway">1.5 - 2.5 Days</b>
+            </div>
+          </div>
+
+          <!-- Prioritized Evacuation Leaderboard (Actionable Hierarchy) -->
+          <div class="space-y-2">
+            <div class="flex justify-between items-center text-[10px] font-mono text-zinc-400">
+              <span class="font-bold text-amber-300 uppercase">PRIORITIZED EVACUATION & AIRDROP LEADERBOARD</span>
+              <span class="text-zinc-500">Demographic & Stock Weighted</span>
+            </div>
+            <div id="cii-leaderboard-container" class="space-y-2 text-xs font-mono">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <!-- Helipad Airdrop Trigger Action -->
+          <div class="pt-1 flex space-x-2">
+            <button type="button" onclick="dispatchAirdropManifest()" class="flex-1 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-extrabold text-xs rounded-xl shadow-lg transition flex items-center justify-center space-x-1.5">
+              <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+              <span>TRANSMIT AIRDROP MANIFEST TO IAF / NDRF WING</span>
+            </button>
+            <button type="button" onclick="restoreRoads()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs rounded-xl transition">
+              Reset
+            </button>
+          </div>
+        </div>
+
 
         <!-- Emergency Response Prioritisation & Resource Allocation Dashboard -->
         <div class="shadcn-card rounded-2xl p-4 border border-amber-500/40 space-y-3">

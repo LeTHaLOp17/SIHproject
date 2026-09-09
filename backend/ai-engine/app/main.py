@@ -16,9 +16,25 @@ import numpy as np
 from app.models.ensemble import HybridEnsembleFusionEngine
 from app.models.crack_cv import CrackDisplacementAnalyzer
 from app.models.rainfall_lstm import RainfallForecaster
+from app.physics.slope_stability import SlopeStabilityPhysics, GeotechnicalParameters, SlopeConditions
 from app.ambee_client import ambee_client
 from app.weatherandradar_client import weather_radar_client
 from app.radar_client import radar_client
+
+# Graph Theory Village Isolation Engine
+GRAPH_ISOLATION_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../graph-isolation"))
+if GRAPH_ISOLATION_DIR not in sys.path:
+    sys.path.append(GRAPH_ISOLATION_DIR)
+
+try:
+    from isolation_index import (
+        build_sample_ner_network,
+        HimalayanRoadIsolationGraph,
+        SettlementNode,
+        RoadEdge
+    )
+except ImportError:
+    build_sample_ner_network = None
 
 app = FastAPI(
     title="NER Landslide AI Inference Service",
@@ -79,6 +95,31 @@ class RainfallForecastRequest(BaseModel):
 class CrackSimulationRequest(BaseModel):
     crack_widening_mm: float = Field(..., example=12.5)
     time_elapsed_hours: float = Field(default=24.0, example=24.0)
+
+
+class PINNBenchmarkRequest(BaseModel):
+    slope_deg: float = Field(default=26.0, ge=0.0, le=85.0, example=26.0)
+    cohesion_kpa: float = Field(default=24.0, ge=0.0, example=24.0)
+    friction_angle_deg: float = Field(default=32.0, ge=0.0, le=60.0, example=32.0)
+    soil_unit_weight_kn_m3: float = Field(default=19.5, example=19.5)
+    soil_depth_m: float = Field(default=2.0, example=2.0)
+    pore_water_pressure_kpa: float = Field(default=12.0, example=12.0)
+    seismic_coeff_kh: float = Field(default=0.08, example=0.08)
+    rainfall_intensity_mm_h: float = Field(default=85.0, example=85.0)
+    antecedent_rain_7d_mm: float = Field(default=190.0, example=190.0)
+
+
+class CrackPropagationCompareRequest(BaseModel):
+    crack_widening_mm: float = Field(default=2.6, example=2.6)
+    time_elapsed_hours: float = Field(default=24.0, example=24.0)
+    latitude: float = Field(default=27.3389, example=27.3389)
+    longitude: float = Field(default=88.6065, example=88.6065)
+    location_name: str = Field(default="NH-10 Gangtok-Singtam Slope Corridor", example="NH-10 Gangtok-Singtam Slope Corridor")
+
+
+class NetworkSimulateRequest(BaseModel):
+    scenario_key: Optional[str] = Field(default="RONGLI_VALLEY", example="RONGLI_VALLEY")
+    blocked_link_ids: Optional[List[str]] = Field(default=None, example=["RD-FEEDER-RONGLI-VALLEY"])
 
 
 # -----------------------------------------------------------------------------------------
@@ -296,6 +337,129 @@ async def analyze_uploaded_crack_photos(
         "followup_filename": image_followup.filename,
         "displacement_metrics": analysis
     }
+
+
+# -----------------------------------------------------------------------------------------
+# High-Impact Differentiator Endpoints: PINN, Crack CV & Graph Isolation
+# -----------------------------------------------------------------------------------------
+
+@app.post("/physics/pinn-benchmark", tags=["Physics-Informed AI"])
+def evaluate_pinn_vs_blackbox_benchmark(request: PINNBenchmarkRequest):
+    """
+    Evaluates Geotechnical Limit Equilibrium (Terzaghi Infinite Slope FS) coupled with
+    ML Anomaly Detection. Compares Pure Black-Box ML vs. Coupled PINN, demonstrating
+    how physics-informed boundaries eliminate false alarms for District Authorities.
+    """
+    params = GeotechnicalParameters(
+        cohesion_kpa=request.cohesion_kpa,
+        friction_angle_deg=request.friction_angle_deg,
+        soil_unit_weight_kn_m3=request.soil_unit_weight_kn_m3
+    )
+    conditions = SlopeConditions(
+        slope_angle_deg=request.slope_deg,
+        soil_depth_m=request.soil_depth_m,
+        pore_water_pressure_kpa=request.pore_water_pressure_kpa,
+        seismic_coeff_kh=request.seismic_coeff_kh
+    )
+    result = SlopeStabilityPhysics.evaluate_pinn_hybrid_benchmark(
+        params=params,
+        conditions=conditions,
+        rainfall_intensity_mm_h=request.rainfall_intensity_mm_h,
+        antecedent_rain_7d_mm=request.antecedent_rain_7d_mm
+    )
+    return {
+        "status": "SUCCESS",
+        "benchmark": result
+    }
+
+
+@app.post("/cv/crack-propagation/compare", tags=["Computer Vision"])
+def compare_temporal_crack_propagation(request: CrackPropagationCompareRequest):
+    """
+    Digital Image Correlation / Optical Flow Crack Propagation Evaluator.
+    Life-Safety Rule: If crack displacement Delta_w >= 2.0 mm within <= 24 hours
+    (creep velocity >= 2.0 mm/day), the system automatically triggers IMMEDIATE EVACUATION
+    without requiring human review.
+    """
+    analysis = CrackDisplacementAnalyzer.simulate_mock_analysis(
+        crack_widening_mm=request.crack_widening_mm,
+        time_hours=request.time_elapsed_hours,
+        gps_coordinates=(request.latitude, request.longitude),
+        location_name=request.location_name
+    )
+    return {
+        "status": "SUCCESS",
+        "analysis": analysis
+    }
+
+
+@app.get("/network/preset-scenarios", tags=["Graph Isolation Index"])
+def get_network_collapse_scenarios():
+    """
+    Returns curated regional road network collapse disaster scenarios in NER.
+    """
+    return {
+        "status": "SUCCESS",
+        "scenarios": [
+            {
+                "key": "RONGLI_VALLEY",
+                "title": "Rorathang-Rongli Mountain Feeder Road Collapse",
+                "region": "Pakyong / East Sikkim",
+                "blocked_links": ["RD-FEEDER-RONGLI-VALLEY"],
+                "hazard_level": "CRITICAL",
+                "description": "Catastrophic single-artery landslide severance. Landlocks 3 mountain settlements with 11,170 total population and 1,838 highly vulnerable individuals."
+            },
+            {
+                "key": "NH10_SINGTAM_CORRIDOR",
+                "title": "NH-10 Rangpo to Singtam Arterial Breach",
+                "region": "Sikkim Lifeline Highway",
+                "blocked_links": ["RD-NH10-RANGPO-SINGTAM"],
+                "hazard_level": "SEVERE",
+                "description": "Breach along the Teesta river gorge severing the Siliguri corridor from Gangtok capital logistics."
+            },
+            {
+                "key": "ALL_ARTERIES_COLLAPSE",
+                "title": "Compound Multi-Valley Simultaneous Collapse",
+                "region": "Sikkim Eastern Belt",
+                "blocked_links": ["RD-FEEDER-RONGLI-VALLEY", "RD-NH10-RANGPO-SINGTAM", "RD-NH10-SINGTAM-GANGTOK"],
+                "hazard_level": "CATASTROPHIC_EMERGENCY",
+                "description": "Widespread monsoon debris flow isolating all regional valleys. Requires immediate NDRF / IAF air operations."
+            }
+        ]
+    }
+
+
+@app.post("/network/simulate-collapse", tags=["Graph Isolation Index"])
+def simulate_network_road_collapse(request: NetworkSimulateRequest):
+    """
+    Executes Tarjan's Bridge DFS and Dijkstra Reachability across the Himalayan Settlement Graph.
+    Computes landlocked settlements, cutoff population demographics, medical supply runway,
+    and prioritizes evacuation / IAF helicopter airdrop operations.
+    """
+    if build_sample_ner_network is None:
+        raise HTTPException(status_code=500, detail="Graph Isolation Engine not available.")
+
+    graph = build_sample_ner_network()
+
+    blocked = request.blocked_link_ids
+    if not blocked:
+        if request.scenario_key == "NH10_SINGTAM_CORRIDOR":
+            blocked = ["RD-NH10-RANGPO-SINGTAM"]
+        elif request.scenario_key == "ALL_ARTERIES_COLLAPSE":
+            blocked = ["RD-FEEDER-RONGLI-VALLEY", "RD-NH10-RANGPO-SINGTAM", "RD-NH10-SINGTAM-GANGTOK"]
+        else: # Default RONGLI_VALLEY
+            blocked = ["RD-FEEDER-RONGLI-VALLEY"]
+
+    simulation_result = graph.simulate_collapse(blocked_link_ids=blocked)
+    network_bridges = graph.find_network_bridges()
+
+    return {
+        "status": "SUCCESS",
+        "scenario_key": request.scenario_key,
+        "single_points_of_failure_bridges": network_bridges,
+        "simulation": simulation_result
+    }
+
 
 
 # -----------------------------------------------------------------------------------------
@@ -1634,10 +1798,11 @@ def get_active_evacuation_mandate(region: Optional[str] = "all"):
 
 
 @app.get("/predict/ai-hazard-alerts", tags=["Risk Monitoring"])
-def get_ai_predicted_hazard_alerts(region: Optional[str] = "all"):
+def get_ai_predicted_hazard_alerts(region: Optional[str] = "all", lang: Optional[str] = "en"):
     """
     Fuses all datasets (GSI, ISRO VEDAS, live Ambee, WeatherAndRadar nowcasts)
     to predict impending hazards and automatically alert DEOC Admin with actionable recommendations.
+    Supports multi-language responses across 8 North Eastern regional languages.
     """
     alerts = [
         {
@@ -1658,7 +1823,42 @@ def get_ai_predicted_hazard_alerts(region: Optional[str] = "all"):
             "admin_recommendation": "AI Recommends: Issue location evacuation mandate for Rongli & Singtam settlements.",
             "citizen_plain_text": "High risk of slope failure along NH-10 due to continuous rain. Avoid hill roads.",
             "recommended_shelter": "Singtam Community Relief Centre (1.8 km away)",
-            "ai_model": "Hybrid XGBoost+LSTM / AlertClassifier-v4 (12,000 NER Samples | Recall 100%)"
+            "ai_model": "Hybrid XGBoost+LSTM / AlertClassifier-v4 (12,000 NER Samples | Recall 100%)",
+            "predicted_hazard_hi": "स्थानांतरित भूस्खलन और तीव्र कीचड़ बहाव",
+            "predicted_hazard_as": "স্থানান্তৰিত ভূমিস্খলন আৰু বোকামাটিৰ প্ৰবাহ",
+            "predicted_hazard_bn": "স্থানান্তরিত ভূমিধস এবং তীব্র কাদা প্রবাহ",
+            "predicted_hazard_bodo": "हा सोमावनाय आरो दैख्लाव थासारि",
+            "predicted_hazard_khasi": "Ka Jingkhih Lum bad Jinghap Khyndew",
+            "predicted_hazard_mizo": "Leimin Tlahawm & Nawr Chhuak",
+            "predicted_hazard_ne": "पहिरो तथा तीव्र हिलो बहाव",
+            "citizen_plain_text_hi": "लगातार बारिश के कारण NH-10 पर ढलान खिसकने का भारी खतरा। पहाड़ी सड़कों पर जाने से बचें।",
+            "citizen_plain_text_as": "ধাৰাসাৰ বৰষুণৰ ফলত NH-10 পথত ভূমিস্খলনৰ প্ৰৱল আশংকা। পাহাৰীয়া পথত নাযাব।",
+            "citizen_plain_text_bn": "টানা বৃষ্টির কারণে NH-10 এ বিপজ্জনক ধস নামার চরম আশঙ্কা। পাহাড়ি রাস্তা এড়িয়ে চলুন।",
+            "citizen_plain_text_bodo": "गोख्रों अखानि थाखाय NH-10 लामायाव हा सोमावनायनि गिखांथि। लामायाव दाथां।",
+            "citizen_plain_text_khasi": "U slapbah u lah ban pynkhih ia u lum ha NH-10. Phim dei ban leit jngoh.",
+            "citizen_plain_text_mizo": "Ruah sur reng vangin NH-10-ah leimin hlauthawm a sang. Tlang kawng zawh rih loh a him ber.",
+            "citizen_plain_text_ne": "लगातार वर्षाको कारण NH-10 मा पहिरोको उच्च जोखिम। पहाडी सडकमा नजानुहोस्।",
+            "time_horizon_hi": "अगले 2 से 4 घंटे",
+            "time_horizon_as": "আগামী ২ ৰ পৰা ৪ ঘণ্টা",
+            "time_horizon_bn": "পরবর্তী ২ থেকে ৪ ঘণ্টা",
+            "time_horizon_bodo": "थांनाय २ निफ्राय ४ घन्टा",
+            "time_horizon_khasi": "2 haduh 4 Kynta",
+            "time_horizon_mizo": "Darkar 2 atanga 4 Chhung",
+            "time_horizon_ne": "आगामी २ देखि ४ घण्टा",
+            "recommended_shelter_hi": "सिङ्ताम सामुदायिक राहत केंद्र (1.8 किमी दूर)",
+            "recommended_shelter_as": "ছিংতাম সামূহিক আশ্ৰয় কেন্দ্ৰ (১.৮ কিঃমিঃ দূৰত্বত)",
+            "recommended_shelter_bn": "সিংতাম কমিউনিটি রিলিফ সেন্টার (১.৮ কিমি দূরে)",
+            "recommended_shelter_bodo": "सिंघताम रैखाथि जायगा (१.८ कि.मि)",
+            "recommended_shelter_khasi": "Singtam Relief Centre (1.8 km)",
+            "recommended_shelter_mizo": "Singtam Community Relief Centre (1.8 km hla)",
+            "recommended_shelter_ne": "सिङ्ताम सामुदायिक राहत केन्द्र (१.८ किमी टाढा)",
+            "sector_name_hi": "NH-10 माइल 44 (सिङ्ताम-रंगपो मार्ग)",
+            "sector_name_as": "NH-10 মাইল ৪৪ (ছিংতাম-ৰংপো কৰিডৰ)",
+            "sector_name_bn": "NH-10 মাইল ৪৪ (সিংতাম-রংপো করিডোর)",
+            "sector_name_bodo": "NH-10 माइल ४४ (सिंघताम लामा)",
+            "sector_name_khasi": "NH-10 Mile 44 (Singtam)",
+            "sector_name_mizo": "NH-10 Mile 44 (Singtam-Rangpo)",
+            "sector_name_ne": "NH-10 माइल ४४ (सिङ्ताम-राङ्पो खण्ड)"
         },
         {
             "alert_id": "AI-HAZ-AS-01",
@@ -1678,7 +1878,42 @@ def get_ai_predicted_hazard_alerts(region: Optional[str] = "all"):
             "admin_recommendation": "AI Recommends: Restrict railway movement; alert local relief camps.",
             "citizen_plain_text": "Heavy rainfall in Haflong hills may cause mudslides. Exercise extreme caution near hill cuttings.",
             "recommended_shelter": "Haflong Town Multi-Purpose Relief Hall",
-            "ai_model": "Hybrid XGBoost+LSTM / AlertClassifier-v4 (12,000 NER Samples | Recall 100%)"
+            "ai_model": "Hybrid XGBoost+LSTM / AlertClassifier-v4 (12,000 NER Samples | Recall 100%)",
+            "predicted_hazard_hi": "मलबा हिमस्खलन और रेल तटबंध धंसना",
+            "predicted_hazard_as": "ধ্বংসাৱশেষ স্খলন আৰু ৰেলপথৰ মাটি খহনীয়া",
+            "predicted_hazard_bn": "ধ্বংসাবশেষ ধস এবং রেললাইন বাঁধের ভাঙন",
+            "predicted_hazard_bodo": "हा बाहायनाय आरो रेल लामा खहा जानाय",
+            "predicted_hazard_khasi": "Jingkylla Lum ha Lynti Rel Haflong",
+            "predicted_hazard_mizo": "Tlang Balh Leh Rel Kawng Chhe Thei",
+            "predicted_hazard_ne": "गेग्रान पहिरो र रेलमार्गको बाँध भासिने जोखिम",
+            "citizen_plain_text_hi": "हाफलोंग पहाड़ियों में भारी बारिश से कीचड़ धंसने की आशंका। पहाड़ी मोड़ों पर अत्यधिक सावधानी बरतें।",
+            "citizen_plain_text_as": "হাফলং পাহাৰত প্ৰৱল বৰষুণৰ বাবে ভূমিস্খলন হ'ব পাৰে। সতৰ্ক থাকক।",
+            "citizen_plain_text_bn": "হাফলং পাহাড়ে ভারী বৃষ্টির কারণে ভূমিধসের সম্ভাবনা। পাহাড়ের বাঁকে সতর্ক থাকুন।",
+            "citizen_plain_text_bodo": "हाफलं हाजोआव अखा हानायनि थाखाय हा सोमावनो हागौ। सांग्रां था।",
+            "citizen_plain_text_khasi": "U slapbah ha Haflong u lah ban wanrah ia ka jingkylla lum.",
+            "citizen_plain_text_mizo": "Haflong tlangah ruahpui sur vangin leimin a awm thei. Fimkhur hle rawh u.",
+            "citizen_plain_text_ne": "हाफलोङ पहाडमा भारी वर्षाले पहिरो जान सक्ने जोखिम। पहाडी घुम्तीहरूमा सावधानी अपनाउनुहोस्।",
+            "time_horizon_hi": "अगले 3 से 6 घंटे",
+            "time_horizon_as": "আগামী ৩ ৰ পৰা ৬ ঘণ্টা",
+            "time_horizon_bn": "পরবর্তী ৩ থেকে ৬ ঘণ্টা",
+            "time_horizon_bodo": "३ निफ्राय ६ घन्टा",
+            "time_horizon_khasi": "3 haduh 6 Kynta",
+            "time_horizon_mizo": "Darkar 3 atanga 6 Chhung",
+            "time_horizon_ne": "आगामी ३ देखि ६ घण्टा",
+            "recommended_shelter_hi": "हाफलोंग टाउन बहुउद्देशीय राहत हॉल",
+            "recommended_shelter_as": "হাফলং টাউন বহুমুখী আশ্ৰয় কেন্দ্ৰ",
+            "recommended_shelter_bn": "হাফলং বহুমুখী ত্রাণ শিবির",
+            "recommended_shelter_bodo": "हाफलं बहुमुखी रैखाथि हल",
+            "recommended_shelter_khasi": "Haflong Relief Hall",
+            "recommended_shelter_mizo": "Haflong Town Multi-Purpose Relief Hall",
+            "recommended_shelter_ne": "हाफलोङ नगर बहुउद्देश्यीय राहत हल",
+            "sector_name_hi": "हाफलोंग-जातिंगा पहाड़ी खंड (NH-27 और रेलवे)",
+            "sector_name_as": "হাফলং-জাতিংগা পাহাৰীয়া খণ্ড (NH-27 আৰু ৰেলপথ)",
+            "sector_name_bn": "হাফলং-জাতিঙ্গা পাহাড়ি সেকশন (NH-27 ও রেলওয়ে)",
+            "sector_name_bodo": "हाफलं जातिंगा लामा",
+            "sector_name_khasi": "Haflong-Jatinga Lum Section",
+            "sector_name_mizo": "Haflong-Jatinga Tlang Kawng",
+            "sector_name_ne": "हाफलोङ-जातिङ्गा पहाडी खण्ड (NH-27 तथा रेलवे)"
         },
         {
             "alert_id": "AI-HAZ-ML-01",
@@ -1698,9 +1933,63 @@ def get_ai_predicted_hazard_alerts(region: Optional[str] = "all"):
             "admin_recommendation": "AI Recommends: Pre-position BRO excavators and issue immediate vehicular diversion.",
             "citizen_plain_text": "Severe mudslide danger at Sonapur Tunnel portal. All civilian traffic advised to hold at Khliehriat.",
             "recommended_shelter": "Khliehriat Government Higher Secondary School",
-            "ai_model": "Hybrid XGBoost+LSTM / AlertClassifier-v4 (12,000 NER Samples | Recall 100%)"
+            "ai_model": "Hybrid XGBoost+LSTM / AlertClassifier-v4 (12,000 NER Samples | Recall 100%)",
+            "predicted_hazard_hi": "तीव्र कीचड़ भूस्खलन और अचानक बाढ़ का बहाव",
+            "predicted_hazard_as": "ধাৰাবাহিক ভূমিস্খলন আৰু আকস্মিক বানপানী",
+            "predicted_hazard_bn": "ধারাবাহিক কাদা-ধস এবং আকস্মিক বন্যা প্রবাহ",
+            "predicted_hazard_bodo": "दैबाना आरो हा सोमावनाय",
+            "predicted_hazard_khasi": "Ka Jingjyllei Um bad Jinghap Khyndew ha Sonapur",
+            "predicted_hazard_mizo": "Chhimbuk Leimin Leh Tuilian Zualko",
+            "predicted_hazard_ne": "लगातार पहिरो तथा आकस्मिक बाढीको बहाव",
+            "citizen_plain_text_hi": "सोनापुर सुरंग पोर्टल पर भारी भूस्खलन का खतरा। सभी वाहनों को खलीहरियात में रुकने की सलाह।",
+            "citizen_plain_text_as": "সোনাপুৰ সুৰংগ পথত অতি বিপজ্জনক ভূমিস্খলনৰ আশংকা। যান-বাহন খ্লিহৰিয়াতত ৰখাই থওক।",
+            "citizen_plain_text_bn": "সোনাপুর টানেল মুখে ভয়াবহ কাদা-ধসের শঙ্কা। সকল যানবাহন ক্লিহরিয়াটে থামার পরামর্শ।",
+            "citizen_plain_text_bodo": "सोनापुर थनेलसिम हा सोमावनायनि गिथाव खौरां। गारिफोरो ख्लिहरियातआव था।",
+            "citizen_plain_text_khasi": "Ka jingma ba khraw ha Sonapur Tunnel. Baroh ki kali ki dei ban sangeh ha Khliehriat.",
+            "citizen_plain_text_mizo": "Sonapur Tunnel bulah leimin hlauthawm a awm. Motor zawng zawng Khliehriat-ah chawl rih tur.",
+            "citizen_plain_text_ne": "सोनापुर सुरुङद्वारमा गम्भीर पहिरोको खतरा। सबै सवारी साधन ख्लिहरियातमा रोक्न अनुरोध।",
+            "time_horizon_hi": "अगले 1 से 3 घंटे",
+            "time_horizon_as": "আগামী ১ ৰ পৰা ৩ ঘণ্টা",
+            "time_horizon_bn": "পরবর্তী ১ থেকে ৩ ঘণ্টা",
+            "time_horizon_bodo": "१ निफ्राय ३ घन्टा",
+            "time_horizon_khasi": "1 haduh 3 Kynta",
+            "time_horizon_mizo": "Darkar 1 atanga 3 Chhung",
+            "time_horizon_ne": "आगामी १ देखि ३ घण्टा",
+            "recommended_shelter_hi": "खलीहरियात सरकारी उच्चतर माध्यमिक विद्यालय",
+            "recommended_shelter_as": "খ্লিহৰিয়াত চৰকাৰী উচ্চতৰ মাধ্যমিক বিদ্যালয়",
+            "recommended_shelter_bn": "ক্লিহরিয়াট সরকারি উচ্চ মাধ্যমিক বিদ্যালয়",
+            "recommended_shelter_bodo": "ख्लिहरियात सरकारि हाय सेकेन्डारि फरायसालि",
+            "recommended_shelter_khasi": "Khliehriat Govt Higher Secondary School",
+            "recommended_shelter_mizo": "Khliehriat Government Higher Secondary School",
+            "recommended_shelter_ne": "ख्लिहरियात सरकारी उच्च माध्यमिक विद्यालय",
+            "sector_name_hi": "सोनापुर सुरंग NH-6 मार्ग (ईस्ट जयंतिया)",
+            "sector_name_as": "সোনাপুৰ সুৰংগ NH-6 পথ (পূব জয়ন্তীয়া)",
+            "sector_name_bn": "সোনাপুর টানেল NH-6 লাইফলাইন (পূর্ব জয়ন্তীয়া)",
+            "sector_name_bodo": "सोनापुर थनेल NH-6 लामा",
+            "sector_name_khasi": "Sonapur Tunnel NH-6 (East Jaintia)",
+            "sector_name_mizo": "Sonapur Tunnel NH-6 (East Jaintia)",
+            "sector_name_ne": "सोनापुर सुरुङ NH-6 मार्ग (पूर्वी जयन्तिया)"
         }
     ]
+
+    # If requested language is specified and not english, adapt default fields directly
+    selected_lang = (lang or "en").lower()
+    for a in alerts:
+        p_key = f"predicted_hazard_{selected_lang}"
+        c_key = f"citizen_plain_text_{selected_lang}"
+        t_key = f"time_horizon_{selected_lang}"
+        s_key = f"recommended_shelter_{selected_lang}"
+        sec_key = f"sector_name_{selected_lang}"
+        if p_key in a:
+            a["predicted_hazard"] = a[p_key]
+        if c_key in a:
+            a["citizen_plain_text"] = a[c_key]
+        if t_key in a:
+            a["time_horizon"] = a[t_key]
+        if s_key in a:
+            a["recommended_shelter"] = a[s_key]
+        if sec_key in a:
+            a["sector_name"] = a[sec_key]
 
     if region and region.lower() != "all":
         filtered = [a for a in alerts if a["region"] == region.lower()]
@@ -1891,6 +2180,15 @@ ACTIVE_WEATHER_BROADCAST: Dict[str, Any] = {
     "bulletin_text_kha": (
         "Khubor Ka Suinbneng: Ka jingther u lapbah ha ryngkat ka jingjyllei um ha ki lum Meghalaya bad Sikkim. "
         "Phim dei ban leit jngoh shuh sha ki surok ba ma kum ka NH-6 bad NH-10."
+    ),
+    "bulletin_text_mizo": (
+        "MDoNER EWS Khawchin Hriattirna: Sikkim, Meghalaya leh Assam tlangpangah ruahpui a sur reng avangin "
+        "leimin hlauhawm zual a awm e. NH-10 leh NH-6 kawnga kal te fimkhur a ngai a, tlang kawng zawh rih loh a tha ang."
+    ),
+    "bulletin_text_ne": (
+        "पूर्वोत्तर क्षेत्रको लागि विशेष मौसम बुलेटिन: बङ्गालको खाडीबाट आएको जलवाष्पका कारण सिक्किम, मेघालय र असमका "
+        "पहाडी क्षेत्रहरूमा मुसलधारे वर्षा भइरहेको छ। NH-10 र NH-6 मार्गमा पहिरोको उच्च जोखिम छ। "
+        "अत्यावश्यक बाहेक पहाडी सडकमा यात्रा नगर्नुहोस् र सुरक्षित रहनुहोस्।"
     ),
     "doppler_station": "Doppler Weather Radar (DWR) Cherrapunji / Mohanbari / Agartala",
     "expected_rainfall_24h": "165 - 220 mm",

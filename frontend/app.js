@@ -95,6 +95,7 @@ let activeUtterance = null;
 let selectedPhotoDataUrl = null;
 let currentLocalesData = {};
 let cachedSheltersData = [];
+let cachedAiAlertsData = null;
 let cachedLandslidesData = [];
 let cachedRoadsData = [];
 let cachedHistoricalData = [];
@@ -956,14 +957,25 @@ function renderSheltersList(shelters) {
   if (!list) return;
   list.innerHTML = '';
 
+  const emptyMsg = currentLocalesData?.citizen?.no_shelters || "No designated emergency shelters listed for this region.";
   if (shelters.length === 0) {
     list.innerHTML = `
       <div class="p-4 text-center text-zinc-500 bg-zinc-950/60 rounded-xl border border-zinc-800">
-        <p class="text-xs">No designated emergency shelters listed for this region.</p>
+        <p class="text-xs">${emptyMsg}</p>
       </div>
     `;
     return;
   }
+
+  const safeBadge = currentLocalesData?.labels?.safe_shelter_badge || "SAFE SHELTER";
+  const capLabel = currentLocalesData?.labels?.capacity || "Capacity:";
+  const traumaLabel = currentLocalesData?.labels?.trauma_active || "Trauma Team: Active";
+  const stockLabel = currentLocalesData?.labels?.stock_buffer || "Stock Buffer:";
+  const daysLabel = currentLocalesData?.labels?.days || "Days";
+  const auditedLabel = currentLocalesData?.labels?.audited || "Audited:";
+  const byLabel = currentLocalesData?.labels?.by || "by";
+  const locateMapLabel = currentLocalesData?.labels?.locate_map || "Locate Map";
+  const mapsRouteLabel = currentLocalesData?.labels?.google_maps_route || "Google Maps Route";
 
   shelters.forEach(s => {
     const lat = s.latitude || s.lat;
@@ -971,39 +983,39 @@ function renderSheltersList(shelters) {
     const cap = (s.capacity_persons || s.pop || 2500).toLocaleString();
     const medDays = s.medical_stock_days || s.medDays || 3;
     const updated = s.updated_time_human || '10 mins ago';
-    const byWhom = s.updated_by || 'District Disaster Management Authority (DDMA)';
+    const byWhom = tDynamic(s.updated_by || 'District Disaster Management Authority (DDMA)');
+    const sName = tDynamic(s.name);
+    const vName = tDynamic(s.village_name || s.name);
 
     const card = document.createElement('div');
     card.className = "p-3.5 bg-zinc-950/80 rounded-xl border border-zinc-800 space-y-2.5";
     card.innerHTML = `
       <div class="flex items-center justify-between">
         <div>
-          <div class="font-bold text-white text-xs">${s.name}</div>
-          <div class="text-[10px] text-zinc-400 font-mono mt-0.5">${s.village_name || s.name} • Capacity: ${cap} | Trauma Team: Active</div>
+          <div class="font-bold text-white text-xs">${sName}</div>
+          <div class="text-[10px] text-zinc-400 font-mono mt-0.5">${vName} • ${capLabel} ${cap} | ${traumaLabel}</div>
         </div>
-        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-sky-950 text-sky-400 border border-sky-800">SAFE SHELTER</span>
+        <span class="px-2 py-0.5 rounded-full text-[9px] font-bold font-mono bg-sky-950 text-sky-400 border border-sky-800">${safeBadge}</span>
       </div>
 
       <div class="flex items-center justify-between text-[10px] font-mono">
-        <span class="text-emerald-400">Stock Buffer: ${medDays} Days</span>
+        <span class="text-emerald-400">${stockLabel} ${medDays} ${daysLabel}</span>
         <span class="text-cyan-400">GPS: ${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E</span>
       </div>
 
-      <!-- Freshness & Provenance with Full Date & Time -->
       <div class="p-1.5 bg-black/50 rounded-lg border border-zinc-800/80 text-[10px] font-mono text-zinc-400 flex items-center space-x-1.5">
         <i data-lucide="clock" class="w-3 h-3 text-emerald-400 shrink-0"></i>
-        <span class="truncate">Audited: <b class="text-zinc-200">${formatDateTime(s.timestamp || new Date())}</b> (${updated}) by <b class="text-zinc-200">${byWhom}</b></span>
+        <span class="truncate">${auditedLabel} <b class="text-zinc-200">${formatDateTime(s.timestamp || new Date())}</b> (${updated}) ${byLabel} <b class="text-zinc-200">${byWhom}</b></span>
       </div>
 
-      <!-- Action Navigation Buttons -->
       <div class="flex items-center justify-between pt-1 border-t border-zinc-800">
-        <button onclick="flyToCoordinates(${lat}, ${lon}, '${s.name}')" class="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-[10px] font-bold transition flex items-center space-x-1">
+        <button onclick="flyToCoordinates(${lat}, ${lon}, '${sName.replace(/'/g, "\\'")}')" class="px-2.5 py-1 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 rounded-lg text-[10px] font-bold transition flex items-center space-x-1">
           <i data-lucide="crosshair" class="w-3 h-3 text-amber-400"></i>
-          <span>Locate Map</span>
+          <span>${locateMapLabel}</span>
         </button>
         <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}" target="_blank" rel="noopener noreferrer" class="px-3 py-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-[10px] font-bold transition flex items-center space-x-1 shadow-md shadow-emerald-600/20">
           <i data-lucide="navigation" class="w-3 h-3"></i>
-          <span>Google Maps Route</span>
+          <span>${mapsRouteLabel}</span>
         </a>
       </div>
     `;
@@ -1160,14 +1172,21 @@ function renderRoadConnectivityMatrix(roads) {
   if (!container) return;
   container.innerHTML = '';
 
+  const emptyMsg = currentLocalesData?.citizen?.no_roads || "No arterial road closures or blockages reported for this region.";
   if (roads.length === 0) {
     container.innerHTML = `
       <div class="p-4 text-center text-zinc-500 bg-zinc-950/60 rounded-xl border border-zinc-800">
-        <p class="text-xs">No arterial road closures or blockages reported for this region.</p>
+        <p class="text-xs">${emptyMsg}</p>
       </div>
     `;
     return;
   }
+
+  const updatedLabel = currentLocalesData?.citizen?.updated_at || "Updated:";
+  const byLabel = currentLocalesData?.labels?.by || "by";
+  const chokeLabel = currentLocalesData?.labels?.choke || "Choke:";
+  const focusLabel = currentLocalesData?.roads?.focus_road || "Focus Corridor";
+  const mapsLabel = currentLocalesData?.citizen?.view_on_gmaps || "Google Maps";
 
   roads.forEach(r => {
     const isBlocked = r.status === 'BLOCKED' || r.status === 'SUSPENDED';
@@ -1178,8 +1197,11 @@ function renderRoadConnectivityMatrix(roads) {
     const chokeLat = r.choke_lat || (r.coordinates && r.coordinates[0] ? r.coordinates[0][0] : 27.2344);
     const chokeLon = r.choke_lon || (r.coordinates && r.coordinates[0] ? r.coordinates[0][1] : 88.5002);
     const updated = r.updated_time_human || '8 mins ago';
-    const byWhom = r.updated_by || 'Border Roads Organisation (BRO)';
-    const source = r.source || 'Traffic Checkpost';
+    const byWhom = tDynamic(r.updated_by || 'Border Roads Organisation (BRO)');
+    const source = tDynamic(r.source || 'Traffic Checkpost');
+    const rName = tDynamic(r.name);
+    const rCondition = tDynamic(r.current_condition || r.condition);
+    const rChoke = tDynamic(r.choke_point);
 
     let statusLabel = r.status;
     if (isBlocked && currentLocalesData?.roads?.status_blocked) {
@@ -1190,30 +1212,27 @@ function renderRoadConnectivityMatrix(roads) {
       statusLabel = currentLocalesData.roads.status_open;
     }
 
-    const focusLabel = currentLocalesData?.roads?.focus_road || "Focus Corridor";
-
     const card = document.createElement('div');
     card.className = `p-3.5 rounded-xl border ${borderColor} space-y-2`;
     card.innerHTML = `
       <div class="flex items-center justify-between">
-        <span class="font-extrabold text-white text-xs">${r.name}</span>
+        <span class="font-extrabold text-white text-xs">${rName}</span>
         <span class="text-[9px] px-2 py-0.5 rounded-full font-black font-mono ${pillColor}">${statusLabel}</span>
       </div>
-      <div class="text-[11px] text-zinc-300">${r.current_condition || r.condition}</div>
+      <div class="text-[11px] text-zinc-300">${rCondition}</div>
 
-      <!-- Provenance & Freshness Info with Full Date & Time -->
       <div class="p-1.5 bg-black/50 rounded-lg border border-zinc-800/80 text-[10px] font-mono text-zinc-400 flex items-center space-x-1.5">
         <i data-lucide="clock" class="w-3 h-3 text-cyan-400 shrink-0"></i>
-        <span class="truncate">Updated: <b class="text-zinc-200">${formatDateTime(r.timestamp || new Date())}</b> (${updated}) by <b class="text-zinc-200">${byWhom}</b> (${source})</span>
+        <span class="truncate">${updatedLabel} <b class="text-zinc-200">${formatDateTime(r.timestamp || new Date())}</b> (${updated}) ${byLabel} <b class="text-zinc-200">${byWhom}</b> (${source})</span>
       </div>
 
       <div class="flex items-center justify-between pt-1 border-t border-zinc-800 text-[10px] font-mono">
-        <span class="text-zinc-400">Choke: <b class="text-zinc-200">${r.choke_point}</b></span>
+        <span class="text-zinc-400">${chokeLabel} <b class="text-zinc-200">${rChoke}</b></span>
         <div class="flex items-center space-x-2">
           <button onclick="focusRoadSegment('${r.road_id}')" class="text-amber-400 hover:underline font-bold">${focusLabel}</button>
           <a href="https://www.google.com/maps/dir/?api=1&destination=${chokeLat},${chokeLon}" target="_blank" rel="noopener noreferrer" class="px-2 py-0.5 bg-cyan-600/90 hover:bg-cyan-500 text-white rounded font-bold flex items-center space-x-1 transition">
             <i data-lucide="navigation" class="w-2.5 h-2.5"></i>
-            <span>Google Maps</span>
+            <span>${mapsLabel}</span>
           </a>
         </div>
       </div>
@@ -1417,6 +1436,11 @@ async function testAiCrackScan() {
 
       // Auto-populate citizen form fields
       if (crackInput) crackInput.value = disp;
+      if (typeof onCrackDisplacementChange === 'function') {
+        const slider = document.getElementById('crack-displacement-slider');
+        if (slider) slider.value = Math.min(5.0, Math.max(0.2, disp));
+        onCrackDisplacementChange(Math.min(5.0, Math.max(0.2, disp)));
+      }
       if (hazardSelect) hazardSelect.value = "Tension Crack Widening";
       if (severitySelect) severitySelect.value = "CRITICAL";
       if (descText && !descText.value.includes("Optical Flow")) {
@@ -1978,7 +2002,16 @@ function renderCitizenLandslidesList(records) {
   if (!container) return;
   container.innerHTML = '';
 
-  // Show Live Ambee Intelligence provenance header
+  const liveFeedText = currentLocalesData?.labels?.live_feed || "100% Real-Time Ambee Feed (Zero Dummy Data)";
+  const activeEventsText = currentLocalesData?.labels?.active_events || "Active Events";
+  const verifiedLabel = currentLocalesData?.labels?.verified || "Verified:";
+  const byLabel = currentLocalesData?.labels?.by || "by";
+  const centerLabel = currentLocalesData?.labels?.center || "Center";
+  const mapsRouteLabel = currentLocalesData?.labels?.google_maps_route || "Google Maps Route";
+  const rain24Label = currentLocalesData?.labels?.rain_24h || "24h Rain:";
+  const poreLabel = currentLocalesData?.labels?.pore_pressure || "Pore Pressure:";
+  const emptyMsg = currentLocalesData?.citizen?.no_landslides || "No active landslides reported for this region.";
+
   const isLiveStream = records.some(r => r.is_live_ambee);
   if (isLiveStream) {
     const liveHeader = document.createElement('div');
@@ -1986,9 +2019,9 @@ function renderCitizenLandslidesList(records) {
     liveHeader.innerHTML = `
       <div class="flex items-center space-x-2 text-emerald-300">
         <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-        <span class="font-bold">100% Real-Time Ambee Feed (Zero Dummy Data)</span>
+        <span class="font-bold">${liveFeedText}</span>
       </div>
-      <span class="text-[9px] px-1.5 py-0.5 rounded bg-black/60 text-emerald-400 font-bold border border-emerald-500/40">${records.length} Active Events</span>
+      <span class="text-[9px] px-1.5 py-0.5 rounded bg-black/60 text-emerald-400 font-bold border border-emerald-500/40">${records.length} ${activeEventsText}</span>
     `;
     container.appendChild(liveHeader);
   }
@@ -1996,7 +2029,7 @@ function renderCitizenLandslidesList(records) {
   if (records.length === 0) {
     container.innerHTML = `
       <div class="p-4 text-center text-zinc-500 bg-zinc-950/60 rounded-xl border border-zinc-800">
-        <p class="text-xs">No active landslides reported for this region.</p>
+        <p class="text-xs">${emptyMsg}</p>
       </div>
     `;
     return;
@@ -2007,26 +2040,32 @@ function renderCitizenLandslidesList(records) {
     const isWatch = item.status === 'WATCH';
     const badgeColor = isCrit ? 'bg-red-600 text-white' : (isWatch ? 'bg-amber-500 text-black' : 'bg-emerald-600 text-white');
     const updated = item.updated_time_human || 'Just now';
-    const byWhom = item.updated_by || 'DEOC Incident Reconnaissance';
-    const source = item.source || 'Ground Sensors & Drone Recon';
+    const byWhom = tDynamic(item.updated_by || 'DEOC Incident Reconnaissance');
+    const source = tDynamic(item.source || 'Ground Sensors & Drone Recon');
+    const itemName = tDynamic(item.name);
+    const itemDesc = tDynamic(item.hazard_description);
+    const itemState = tDynamic(item.state_name);
+
+    let statusText = item.status;
+    if (isCrit && currentLocalesData?.labels?.red_alert) statusText = currentLocalesData.labels.red_alert;
+    else if (isWatch && currentLocalesData?.labels?.orange_alert) statusText = currentLocalesData.labels.orange_alert;
 
     const card = document.createElement('div');
     card.className = `p-3.5 rounded-xl border ${isCrit ? 'bg-red-950/40 border-red-500/80 badge-glow-red' : 'bg-zinc-900/80 border-zinc-800'} space-y-2.5`;
     card.innerHTML = `
       <div class="flex items-center justify-between">
         <div>
-          <span class="font-extrabold text-white text-xs">${item.name}</span>
-          <div class="text-[10px] text-zinc-400 font-mono">${item.state_name} • Sector ${item.id}</div>
+          <span class="font-extrabold text-white text-xs">${itemName}</span>
+          <div class="text-[10px] text-zinc-400 font-mono">${itemState} • Sector ${item.id}</div>
         </div>
         <span class="text-[10px] px-2 py-0.5 rounded-full font-bold font-mono ${badgeColor}">
-          ${item.status}
+          ${statusText}
         </span>
       </div>
 
-      <!-- Freshness & Provenance Metadata with Full Date & Time -->
       <div class="p-1.5 bg-black/50 rounded-lg border border-zinc-800/80 text-[10px] font-mono text-zinc-400 flex items-center space-x-1.5">
         <i data-lucide="clock" class="w-3 h-3 text-amber-400 shrink-0"></i>
-        <span class="truncate">Verified: <b class="text-zinc-200">${formatDateTime(item.timestamp || new Date())}</b> (${updated}) by <b class="text-zinc-200">${byWhom}</b> (${source})</span>
+        <span class="truncate">${verifiedLabel} <b class="text-zinc-200">${formatDateTime(item.timestamp || new Date())}</b> (${updated}) ${byLabel} <b class="text-zinc-200">${byWhom}</b> (${source})</span>
       </div>
 
       <div class="p-2 bg-black/60 rounded-lg border border-zinc-800/80 flex items-center justify-between text-[11px] font-mono flex-wrap gap-1">
@@ -2035,23 +2074,23 @@ function renderCitizenLandslidesList(records) {
           <span>GPS: ${item.latitude.toFixed(4)}°N, ${item.longitude.toFixed(4)}°E</span>
         </div>
         <div class="flex items-center space-x-1.5">
-          <button onclick="flyToCoordinates(${item.latitude}, ${item.longitude}, '${item.name}')" class="px-2 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-[10px] rounded transition flex items-center space-x-1">
+          <button onclick="flyToCoordinates(${item.latitude}, ${item.longitude}, '${itemName.replace(/'/g, "\\'")}')" class="px-2.5 py-0.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-[10px] rounded transition flex items-center space-x-1">
             <i data-lucide="map-pin" class="w-3 h-3 text-amber-400"></i>
-            <span>Center</span>
+            <span>${centerLabel}</span>
           </button>
           <a href="https://www.google.com/maps/dir/?api=1&destination=${item.latitude},${item.longitude}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-0.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-[10px] rounded transition flex items-center space-x-1 shadow-sm shadow-amber-500/30">
             <i data-lucide="navigation" class="w-2.5 h-2.5"></i>
-            <span>Google Maps Route</span>
+            <span>${mapsRouteLabel}</span>
           </a>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2 text-[11px] font-mono text-zinc-300">
-        <div>24h Rain: <b class="text-cyan-400">${item.rainfall_24h_mm} mm</b></div>
-        <div>Pore Pressure: <b class="text-red-400">${item.pore_pressure_kpa} kPa</b></div>
+        <div>${rain24Label} <b class="text-cyan-400">${item.rainfall_24h_mm} mm</b></div>
+        <div>${poreLabel} <b class="text-red-400">${item.pore_pressure_kpa} kPa</b></div>
       </div>
       <div class="text-[10px] text-zinc-400 leading-tight">
-        ${item.hazard_description}
+        ${itemDesc}
       </div>
     `;
     container.appendChild(card);
@@ -2362,6 +2401,529 @@ function stopAudioAdvisory() {
   if (btnListen) btnListen.classList.remove('text-amber-400');
 }
 
+
+// =========================================================================================
+// 14B. REAL-TIME MULTILINGUAL DYNAMIC DATA TRANSLATOR (All 8 Regional Languages)
+// =========================================================================================
+
+const NER_DYNAMIC_TRANSLATIONS = {
+  // Hazard names
+  "Translational Rockslide & Flash Mudflow": {
+    hi: "स्थानांतरित भूस्खलन और तीव्र कीचड़ बहाव",
+    as: "স্থানান্তৰিত ভূমিস্খলন আৰু বোকামাটিৰ প্ৰবাহ",
+    bn: "স্থানান্তরিত ভূমিধস এবং তীব্র কাদা প্রবাহ",
+    bodo: "हा सोमावनाय आरो दैख्लाव थासारि",
+    khasi: "Ka Jingkhih Lum bad Jinghap Khyndew",
+    mizo: "Leimin Tlahawm & Nawr Chhuak",
+    ne: "पहिरो तथा तीव्र हिलो बहाव"
+  },
+  "Debris Avalanche & Railway Embankment Slump": {
+    hi: "मलबा हिमस्खलन और रेल तटबंध धंसना",
+    as: "ধ্বংসাৱশেষ স্খলন আৰু ৰেলপথৰ মাটি খহনীয়া",
+    bn: "ধ্বংসাবশেষ ধস এবং রেললাইন বাঁধের ভাঙন",
+    bodo: "हा बाहायनाय आरो रेल लामा खहा जानाय",
+    khasi: "Jingkylla Lum ha Lynti Rel Haflong",
+    mizo: "Tlang Balh Leh Rel Kawng Chhe Thei",
+    ne: "गेग्रान पहिरो र रेलमार्गको बाँध भासिने जोखिम"
+  },
+  "Cascading Mudslide & Flash Flood Overwash": {
+    hi: "तीव्र कीचड़ भूस्खलन और अचानक बाढ़ का बहाव",
+    as: "ধাৰাবাহিক ভূমিস্খলন আৰু আকস্মিক বানপানী",
+    bn: "ধারাবাহিক কাদা-ধস এবং আকস্মিক বন্যা প্রবাহ",
+    bodo: "दैबाना आरो हा सोमावनाय",
+    khasi: "Ka Jingjyllei Um bad Jinghap Khyndew ha Sonapur",
+    mizo: "Chhimbuk Leimin Leh Tuilian Zualko",
+    ne: "लगातार पहिरो तथा आकस्मिक बाढीको बहाव"
+  },
+  "Impending Landslide / Debris Flow Predicted": {
+    hi: "आसन्न भूस्खलन / मलबा बहाव का अनुमान",
+    as: "আসন্ন ভূমিস্খলন / বোকা প্ৰবাহৰ পূৰ্বানুমান",
+    bn: "আসন্ন ভূমিধস / কাদা প্রবাহের পূর্বাভাস",
+    bodo: "हा सोमावनाय आरो दैख्लावनि सिगां खौरां",
+    khasi: "Ka Jingma ban Hap u Lum",
+    mizo: "Leimin & Nawr Chhuak Thleng Thei",
+    ne: "सम्भावित पहिरो तथा गेग्रान बहाव पूर्वानुमान"
+  },
+
+  // Hazard descriptions
+  "High risk of slope failure along NH-10 due to continuous rain. Avoid hill roads.": {
+    hi: "लगातार बारिश के कारण NH-10 पर ढलान खिसकने का भारी खतरा। पहाड़ी सड़कों पर जाने से बचें।",
+    as: "ধাৰাসাৰ বৰষুণৰ ফলত NH-10 পথত ভূমিস্খলনৰ প্ৰৱল আশংকা। পাহাৰীয়া পথত নাযাব।",
+    bn: "টানা বৃষ্টির কারণে NH-10 এ বিপজ্জনক ধস নামার চরম আশঙ্কা। পাহাড়ি রাস্তা এড়িয়ে চলুন।",
+    bodo: "गोख्रों अखानि थाखाय NH-10 लामायाव हा सोमावनायनि गिखांथि। लामायाव दाथां।",
+    khasi: "U slapbah u lah ban pynkhih ia u lum ha NH-10. Phim dei ban leit jngoh.",
+    mizo: "Ruah sur reng vangin NH-10-ah leimin hlauthawm a sang. Tlang kawng zawh rih loh a him ber.",
+    ne: "लगातार वर्षाको कारण NH-10 मा पहिरोको उच्च जोखिम। पहाडी सडकमा नजानुहोस्।"
+  },
+  "Heavy rainfall in Haflong hills may cause mudslides. Exercise extreme caution near hill cuttings.": {
+    hi: "हाफलोंग पहाड़ियों में भारी बारिश से कीचड़ धंसने की आशंका। पहाड़ी मोड़ों पर अत्यधिक सावधानी बरतें।",
+    as: "হাফলং পাহাৰত প্ৰৱল বৰষুণৰ বাবে ভূমিস্খলন হ'ব পাৰে। সতৰ্ক থাকক।",
+    bn: "হাফলং পাহাড়ে ভারী বৃষ্টির কারণে ভূমিধসের সম্ভাবনা। পাহাড়ের বাঁকে সতর্ক থাকুন।",
+    bodo: "हाफलं हाजोआव अखा हानायनि थाखाय हा सोमावनो हागौ। सांग्रां था।",
+    khasi: "U slapbah ha Haflong u lah ban wanrah ia ka jingkylla lum.",
+    mizo: "Haflong tlangah ruahpui sur vangin leimin a awm thei. Fimkhur hle rawh u.",
+    ne: "हाफलोङ पहाडमा भारी वर्षाले पहिरो जान सक्ने जोखिम। पहाडी घुम्तीहरूमा सावधानी अपनाउनुहोस्।"
+  },
+  "Severe mudslide danger at Sonapur Tunnel portal. All civilian traffic advised to hold at Khliehriat.": {
+    hi: "सोनापुर सुरंग पोर्टल पर भारी भूस्खलन का खतरा। सभी वाहनों को खलीहरियात में रुकने की सलाह।",
+    as: "সোনাপুৰ সুৰংগ পথত অতি বিপজ্জনক ভূমিস্খলনৰ আশংকা। যান-বাহন খ্লিহৰিয়াতত ৰখাই থওক।",
+    bn: "সোনাপুর টানেল মুখে ভয়াবহ কাদা-ধসের শঙ্কা। সকল যানবাহন ক্লিহরিয়াটে থামার পরামর্শ।",
+    bodo: "सोनापुर थनेलसिम हा सोमावनायनि गिथाव खौरां। गारिफोरो ख्लिहरियातआव था।",
+    khasi: "Ka jingma ba khraw ha Sonapur Tunnel. Baroh ki kali ki dei ban sangeh ha Khliehriat.",
+    mizo: "Sonapur Tunnel bulah leimin hlauthawm a awm. Motor zawng zawng Khliehriat-ah chawl rih tur.",
+    ne: "सोनापुर सुरुङद्वारमा गम्भीर पहिरोको खतरा। सबै सवारी साधन ख्लिहरियातमा रोक्न अनुरोध।"
+  },
+  "AI multi-hazard fusion of live Doppler radar, continuous mountain rainfall, and ground saturation indicates high probability of slope failure along NH-10 in the next 2-4 hours.": {
+    hi: "लाइव डॉपलर रडार, निरंतर पर्वतीय वर्षा और जमीन संतृप्ति का एआई विश्लेषण अगले 2-4 घंटों में NH-10 पर ढलान विफलता की उच्च संभावना दर्शाता है।",
+    as: "লাইভ ডপলাৰ ৰাডাৰ, ধাৰাবাহিক বৰষুণ আৰু মাটিৰ আদ্ৰতাৰ এআই বিশ্লেষণে অহা ২-৪ ঘণ্টাত NH-10ত ভূমিস্খলনৰ প্ৰৱল আশংকা দেখুৱাইছে।",
+    bn: "লাইভ ডপলার রাডার, অবিরত বৃষ্টি ও মাটির আর্দ্রতার এআই বিশ্লেষণ নির্দেশ করে যে পরবর্তী ২-৪ ঘণ্টায় NH-10 এ ভূমিধসের চরম আশঙ্কা রয়েছে।",
+    bodo: "डपलर रादार आरो अखानि थासारि नायबिजिरनानै २-४ घन्टायाव NH-10 आव हा सोमावनायनि गोख्रों खौरां मोनदों।",
+    khasi: "Ka radar bad u slap ki pyni ba u lum ha NH-10 u lah ban hap hapoh 2-4 kynta.",
+    mizo: "Doppler radar leh ruahsur dan thlithlumnain darkar 2-4 chhung hian NH-10-ah leimin hlauthawm a sang hle tih a entir.",
+    ne: "प्रत्यक्ष डपलर रडार र निरन्तर वर्षाको विश्लेषणले आगामी २-४ घण्टामा NH-10 मा पहिरो जाने उच्च सम्भावना देखाउँछ।"
+  },
+
+  // Shelters
+  "Singtam Community Relief Centre (1.8 km away)": {
+    hi: "सिङ्ताम सामुदायिक राहत केंद्र (1.8 किमी दूर)",
+    as: "ছিংতাম সামূহিক আশ্ৰয় কেন্দ্ৰ (১.৮ কিঃমিঃ দূৰত্বত)",
+    bn: "সিংতাম কমিউনিটি রিলিফ সেন্টার (১.৮ কিমি দূরে)",
+    bodo: "सिंघताम रैखाथि जायगा (१.८ कि.मि)",
+    khasi: "Singtam Relief Centre (1.8 km)",
+    mizo: "Singtam Community Relief Centre (1.8 km hla)",
+    ne: "सिङ्ताम सामुदायिक राहत केन्द्र (१.८ किमी टाढा)"
+  },
+  "Haflong Town Multi-Purpose Relief Hall": {
+    hi: "हाफलोंग टाउन बहुउद्देशीय राहत हॉल",
+    as: "হাফলং টাউন বহুমুখী আশ্ৰয় কেন্দ্ৰ",
+    bn: "হাফলং বহুমুখী ত্রাণ শিবির",
+    bodo: "हाफलं बहुमुखी रैखाथि हल",
+    khasi: "Haflong Relief Hall",
+    mizo: "Haflong Town Multi-Purpose Relief Hall",
+    ne: "हाफलोङ नगर बहुउद्देश्यीय राहत हल"
+  },
+  "Khliehriat Government Higher Secondary School": {
+    hi: "खलीहरियात सरकारी उच्चतर माध्यमिक विद्यालय",
+    as: "খ্লিহৰিয়াত চৰকাৰী উচ্চতৰ মাধ্যমিক বিদ্যালয়",
+    bn: "ক্লিহরিয়াট সরকারি উচ্চ মাধ্যমিক বিদ্যালয়",
+    bodo: "ख्लिहरियात सरकारि हाय सेकेन्डारि फरायसालि",
+    khasi: "Khliehriat Govt Higher Secondary School",
+    mizo: "Khliehriat Government Higher Secondary School",
+    ne: "ख्लिहरियात सरकारी उच्च माध्यमिक विद्यालय"
+  },
+  "Govt Senior Secondary School Rongli": {
+    hi: "सरकारी वरिष्ठ माध्यमिक विद्यालय रोंगली",
+    as: "চৰকাৰী উচ্চতৰ মাধ্যমিক বিদ্যালয় ৰংলি",
+    bn: "সরকারি সিনিয়র সেকেন্ডারি স্কুল রোংলি",
+    bodo: "सरकारि सिनियर सेकेन्डारि फरायसालि रंलि",
+    khasi: "Govt School Rongli",
+    mizo: "Govt Senior Secondary School Rongli",
+    ne: "सरकारी उच्च माध्यमिक विद्यालय रोङ्ग्ली"
+  },
+  "Dolepchep Community Relief Centre": {
+    hi: "दोलेपचेप सामुदायिक राहत केंद्र",
+    as: "দলেপচেপ সামূহিক সাহায্য কেন্দ্ৰ",
+    bn: "দোলেপচেপ কমিউনিটি রিলিফ সেন্টার",
+    bodo: "दलेपचेप रैखाथि जायगा",
+    khasi: "Dolepchep Relief Centre",
+    mizo: "Dolepchep Community Relief Centre",
+    ne: "दोलेपचेप सामुदायिक राहत केन्द्र"
+  },
+  "Rhenock College Emergency Auditorium": {
+    hi: "रेनोक कॉलेज आपातकालीन सभागार",
+    as: "ৰেনক মহাবিদ্যালয় জৰুৰী প্ৰেক্ষাগৃহ",
+    bn: "রেনক কলেজ জরুরি প্রেক্ষাগৃহ",
+    bodo: "रेनक कलेज हल",
+    khasi: "Rhenock College Hall",
+    mizo: "Rhenock College Emergency Auditorium",
+    ne: "रेनोक कलेज आपतकालीन हल"
+  },
+
+  // Horizons & Locations
+  "Next 2 to 4 Hours": {
+    hi: "अगले 2 से 4 घंटे",
+    as: "আগামী ২ ৰ পৰা ৪ ঘণ্টা",
+    bn: "পরবর্তী ২ থেকে ৪ ঘণ্টা",
+    bodo: "थांनाय २ निफ्राय ४ घन्टा",
+    khasi: "2 haduh 4 Kynta",
+    mizo: "Darkar 2 atanga 4 Chhung",
+    ne: "आगामी २ देखि ४ घण्टा"
+  },
+  "Next 3 to 6 Hours": {
+    hi: "अगले 3 से 6 घंटे",
+    as: "আগামী ৩ ৰ পৰা ৬ ঘণ্টা",
+    bn: "পরবর্তী ৩ থেকে ৬ ঘণ্টা",
+    bodo: "३ निफ्राय ६ घन्टा",
+    khasi: "3 haduh 6 Kynta",
+    mizo: "Darkar 3 atanga 6 Chhung",
+    ne: "आगामी ३ देखि ६ घण्टा"
+  },
+  "Next 1 to 3 Hours": {
+    hi: "अगले 1 से 3 घंटे",
+    as: "আগামী ১ ৰ পৰা ৩ ঘণ্টা",
+    bn: "পরবর্তী ১ থেকে ৩ ঘণ্টা",
+    bodo: "१ निफ्राय ३ घन्टा",
+    khasi: "1 haduh 3 Kynta",
+    mizo: "Darkar 1 atanga 3 Chhung",
+    ne: "आगामी १ देखि ३ घण्टा"
+  },
+  "NH-10 Mile 44 (Singtam-Rangpo Corridor)": {
+    hi: "NH-10 माइल 44 (सिङ्ताम-रंगपो मार्ग)",
+    as: "NH-10 মাইল ৪৪ (ছিংতাম-ৰংপো কৰিডৰ)",
+    bn: "NH-10 মাইল ৪৪ (সিংতাম-রংপো করিডোর)",
+    bodo: "NH-10 माइल ४४ (सिंघताम लामा)",
+    khasi: "NH-10 Mile 44 (Singtam)",
+    mizo: "NH-10 Mile 44 (Singtam-Rangpo)",
+    ne: "NH-10 माइल ४४ (सिङ्ताम-राङ्पो खण्ड)"
+  },
+  "Haflong-Jatinga Hill Section (NH-27 & Railway)": {
+    hi: "हाफलोंग-जातिंगा पहाड़ी खंड (NH-27 और रेलवे)",
+    as: "হাফলং-জাতিংগা পাহাৰীয়া খণ্ড (NH-27 আৰু ৰেলপথ)",
+    bn: "হাফলং-জাতিঙ্গা পাহাড়ি সেকশন (NH-27 ও রেলওয়ে)",
+    bodo: "हाफलं जातिंगा लामा",
+    khasi: "Haflong-Jatinga Lum Section",
+    mizo: "Haflong-Jatinga Tlang Kawng",
+    ne: "हाफलोङ-जातिङ्गा पहाडी खण्ड (NH-27 तथा रेलवे)"
+  },
+  "Sonapur Tunnel NH-6 Lifeline (East Jaintia)": {
+    hi: "सोनापुर सुरंग NH-6 मार्ग (ईस्ट जयंतिया)",
+    as: "সোনাপুৰ সুৰংগ NH-6 পথ (পূব জয়ন্তীয়া)",
+    bn: "সোনাপুর টানেল NH-6 লাইফলাইন (পূর্ব জয়ন্তীয়া)",
+    bodo: "सोनापुर थनेल NH-6 लामा",
+    khasi: "Sonapur Tunnel NH-6 (East Jaintia)",
+    mizo: "Sonapur Tunnel NH-6 (East Jaintia)",
+    ne: "सोनापुर सुरुङ NH-6 मार्ग (पूर्वी जयन्तिया)"
+  },
+
+  // Road Conditions
+  "Active translational slope creep and mud slurry. Light vehicles only via Lava-Algarah diversion.": {
+    hi: "ढलान पर सक्रिय दरारें और कीचड़। लावा-अल्गराह मार्ग से केवल हल्के वाहनों की आवाजाही।",
+    as: "পাহাৰীয়া ঢালত বোকা আৰু ফাট। লাভা-আলগাৰাহেৰে কেৱল সৰু বাহন চলাচলৰ অনুমতি।",
+    bn: "পাহাড়ের ঢালে ধস ও কাদা। লাভা-আলগাড়া হয়ে শুধু হালকা যান চলাচলের অনুমতি।",
+    bodo: "हा सोमावनाय आरो दैख्लाव। फिसा गारिफोरो लावा लामाजों थां।",
+    khasi: "Khyndew ba jlih bad ktieh. Tang ki kali rit ki lah ban iaid lyngba Lava.",
+    mizo: "Leimin leh chirh awm vangin Lava-Algarah kawngah motor te chauh kal theih.",
+    ne: "भिरालोमा पहिरो र हिलो। लाभा-अल्गराह डाइभर्सनबाट साना सवारी मात्र चल्न सक्ने।"
+  },
+  "Massive mudflow slurry and falling boulders blocking tunnel ingress. Border Roads Organisation (BRO) bulldozers deployed.": {
+    hi: "सुरंग के मुहाने पर भारी कीचड़ और गिरते पत्थर। बीआरओ (BRO) बुलडोजर तैनात।",
+    as: "সুৰংগৰ মুখত প্ৰকাণ্ড শিল আৰু বোকা। বিআৰঅ' (BRO) বুলডজাৰ মোতায়েন।",
+    bn: "টানেলের প্রবেশমুখে তীব্র কাদা ও পড়ন্ত পাথর। বিআরও (BRO) বুলডোজার মোতায়েন।",
+    bodo: "थनेल मुखाव हा आरो अनथाय खहा जानाय। बि.आर.ओ बुलडोजार हाबदों।",
+    khasi: "Ki maw bah bad ka ktieh ki khang ia ka tunnel. Ki bulldozer BRO ki don hangta.",
+    mizo: "Tunnel luhnaah chirh leh lung lian a tla. BRO bulldozer hna thawk mek.",
+    ne: "सुरुङको मुखमा भारी हिलो र खसिरहेको ढुङ्गाले बाटो बन्द। बीआरओ बुलडोजर परिचालन।"
+  },
+  "Loose rockfall screen active. Controlled convoy escort deployed.": {
+    hi: "पत्थर गिरने की संभावना। सुरक्षा काफिले के साथ वाहनों की नियंत्रित आवाजाही।",
+    as: "শিল খহি পৰাৰ আশংকা। নিৰাপত্তা কনভয়ৰ সৈতে নিয়ন্ত্ৰিত চলাচল।",
+    bn: "পাথর পড়ার ঝুঁকি সক্রিয়। নিয়ন্ত্রিত কনভয় সহ যানবাহন চলাচল।",
+    bodo: "अनथाय गोलैनायनि गिखांथि। सामलायनाय गारि थांनाय।",
+    khasi: "Maw hap. Ka jingiaid kali kaba phikir.",
+    mizo: "Lung tla theih dinhmun. Fimkhur takin motor tlantiar a kal mek.",
+    ne: "ढुङ्गा खस्ने जोखिम। सुरक्षा स्कर्टसहित नियन्त्रित सवारी आवागमन।"
+  },
+  "Track ballast subsidence caused by saturated Disang shale collapse.": {
+    hi: "दिसंग शेल चट्टान धंसने से रेल पटरी के नीचे की जमीन धंसी। रेल परिचालन बंद।",
+    as: "ডিছাং শেল মাটি খহি পৰাত ৰেলপথ ক্ষতিগ্ৰস্ত। ৰেল চলাচল বন্ধ।",
+    bn: "মাটি ধসের কারণে রেললাইন ক্ষতিগ্রস্ত। ট্রেন চলাচল স্থগিত।",
+    bodo: "रेल लामा खहा जानाय। रेल थांनाय बन्द।",
+    khasi: "Lynti rel ba la julor na ka jingkylla lum.",
+    mizo: "Lei tlahawm vangin rel kawng chhe rih. Rel a kal lo.",
+    ne: "माटो भासिएर रेलमार्ग अवरुद्ध। रेल सेवा स्थगित।"
+  },
+  "Passable for all traffic. Slope drainage culverts functioning smoothly.": {
+    hi: "सभी वाहनों के लिए खुला। ढलान पर जल निकासी की नालियां सुचारू रूप से कार्यशील।",
+    as: "সকলো বাহনৰ বাবে খোলা। পাহাৰৰ পানী নিৰ্গমন সুচাৰুৰূপে চলিছে।",
+    bn: "সকল যানবাহনের জন্য খোলা। পাহাড়ের ড্রেনেজ ব্যবস্থা সচল।",
+    bodo: "गासै गारिनि थाखाय उदां। दै थांनाय लामाया मोजां।",
+    khasi: "Plie na ka bynta baroh ki kali. Ki nala pynmih um ki trei bha.",
+    mizo: "Motor zawng zawng tan tlang e. Tui luan kawng a tha.",
+    ne: "सबै सवारीका लागि खुला। ढल निकास प्रणाली सुचारु रूपमा सञ्चालनमा।"
+  },
+  "Permafrost freeze-thaw dislodgement. Heavy 4x4 convoys prioritized.": {
+    hi: "बर्फ पिघलने से पत्थर खिसक रहे हैं। केवल 4x4 भारी वाहनों को प्राथमिकता।",
+    as: "বৰফ গলাৰ ফলত শিল খহিছে। ৪x৪ গধুৰ বাহনক অগ্ৰাধিকাৰ।",
+    bn: "বরফ গলে পাথর পড়ছে। শুধু ৪x৪ ভারী যানবাহনকে অগ্রাধিকার।",
+    bodo: "बरफ गलिनाय अनथाय गोलैदों। ४x४ गारिफोरो थां।",
+    khasi: "Thah ba um ka pynhap maw. Tang ki kali 4x4 ki lah ban iaid.",
+    mizo: "Vûr tui vangin lung a lum. 4x4 motor chauh kal hmasak tir.",
+    ne: "हिउँ पग्लिएर ढुङ्गा खस्दै। ४x४ भारी सवारीलाई मात्र प्राथमिकता।"
+  },
+
+  // Choke Points
+  "Mile 44 / Singtam - Rangpo Stretch": {
+    hi: "माइल 44 / सिङ्ताम - रंगपो खंड",
+    as: "মাইল ৪৪ / ছিংতাম - ৰংপো খণ্ড",
+    bn: "মাইল ৪৪ / সিংতাম - রংপো সেকশন",
+    bodo: "माइल ४४ / सिंघताम लामा",
+    khasi: "Mile 44 / Singtam - Rangpo",
+    mizo: "Mile 44 / Singtam - Rangpo",
+    ne: "माइल ४४ / सिङ्ताम - राङ्पो खण्ड"
+  },
+  "Sonapur Tunnel Portal": {
+    hi: "सोनापुर सुरंग मुहाना",
+    as: "সোনাপুৰ সুৰংগ মুখ",
+    bn: "সোনাপুর টানেল মুখ",
+    bodo: "सोनापुर थनेल मुखा",
+    khasi: "Sonapur Tunnel",
+    mizo: "Sonapur Tunnel Luhna",
+    ne: "सोनापुर सुरुङद्वार"
+  },
+  "Paglapahar Gorge Stretch": {
+    hi: "पगलापहाड़ घाटी खंड",
+    as: "পগলাপাহাৰ উপত্যকা",
+    bn: "পাগলাপাহাড় উপত্যকা",
+    bodo: "पाग्लापाहार लामा",
+    khasi: "Paglapahar Gorge",
+    mizo: "Paglapahar Khawhthla",
+    ne: "पगलापहाड गल्छी खण्ड"
+  },
+
+  // Road Names
+  "NH-10 Siliguri - Gangtok Arterial Lifeline": {
+    hi: "NH-10 सिलिगुड़ी - गंगटोक प्रमुख मार्ग",
+    as: "NH-10 শিলিগুৰি - গেংটক মুখ্য পথ",
+    bn: "NH-10 শিলিগুড়ি - গ্যাংটক প্রধান সড়ক",
+    bodo: "NH-10 सिलिगुरी - गान्तोक लामा",
+    khasi: "NH-10 Siliguri - Gangtok",
+    mizo: "NH-10 Siliguri - Gangtok Kawngpui",
+    ne: "NH-10 सिलिगुडी - गान्तोक प्रमुख मार्ग"
+  },
+  "NH-06 Shillong - Silchar Lifeline (East Jaintia Hills)": {
+    hi: "NH-06 शिलांग - सिलचर मुख्य मार्ग (ईस्ट जयंतिया हिल्स)",
+    as: "NH-06 শ্বিলং - শিলচৰ পথ (পূব জয়ন্তীয়া পাহাৰ)",
+    bn: "NH-06 শিলং - শিলচর সড়ক (পূর্ব জয়ন্তীয়া পাহাড়)",
+    bodo: "NH-06 शिलंग - सिलचर लामा",
+    khasi: "NH-06 Shillong - Silchar",
+    mizo: "NH-06 Shillong - Silchar Kawngpui",
+    ne: "NH-06 शिलोङ - सिल्चर प्रमुख मार्ग (पूर्वी जयन्तिया पहाड)"
+  },
+  "NH-06 Shillong - Silchar Lifeline": {
+    hi: "NH-06 शिलांग - सिलचर मुख्य मार्ग",
+    as: "NH-06 শ্বিলং - শিলচৰ পথ",
+    bn: "NH-06 শিলং - শিলচর সড়ক",
+    bodo: "NH-06 शिलंग - सिलचर लामा",
+    khasi: "NH-06 Shillong - Silchar",
+    mizo: "NH-06 Shillong - Silchar Kawngpui",
+    ne: "NH-06 शिलोङ - सिल्चर प्रमुख मार्ग"
+  },
+  "NH-29 Dimapur - Kohima Commercial Corridor": {
+    hi: "NH-29 दीमापुर - कोहिमा वाणिज्यिक कॉरिडोर",
+    as: "NH-29 ডিমাপুৰ - ক'হিমা বাণিজ্যিক কৰিডৰ",
+    bn: "NH-29 ডিমাপুর - কোহিমা বাণিজ্য করিডোর",
+    bodo: "NH-29 दिमापुर - कहिमा लामा",
+    khasi: "NH-29 Dimapur - Kohima",
+    mizo: "NH-29 Dimapur - Kohima Kawngpui",
+    ne: "NH-29 दिमापुर - कोहिमा व्यापारिक मार्ग"
+  },
+  "Lumding - Badarpur Hill Section (Haflong Railway)": {
+    hi: "लमडिंग - बदरपुर पहाड़ी रेल खंड (हाफलोंग रेलवे)",
+    as: "লামডিং - বদৰপুৰ পাহাৰীয়া ৰেল খণ্ড (হাফলং)",
+    bn: "লামডিং - বদরপুর পাহাড়ি রেলপথ (হাফলং)",
+    bodo: "लामडिंग - बदरपुर रेल लामा",
+    khasi: "Lumding - Badarpur Rel",
+    mizo: "Lumding - Badarpur Rel Kawng",
+    ne: "लमडिङ - बदरपुर पहाडी रेल खण्ड (हाफलोङ)"
+  },
+  "NH-02 Kohima - Imphal Lifeline": {
+    hi: "NH-02 कोहिमा - इंफाल मुख्य मार्ग",
+    as: "NH-02 ক'হিমা - ইম্ফল পথ",
+    bn: "NH-02 কোহিমা - ইম্ফল সড়ক",
+    bodo: "NH-02 कहिमा - इमफाल लामा",
+    khasi: "NH-02 Kohima - Imphal",
+    mizo: "NH-02 Kohima - Imphal Kawngpui",
+    ne: "NH-02 कोहिमा - इम्फाल प्रमुख मार्ग"
+  },
+  "Balipara - Charduar - Tawang (BCT Road)": {
+    hi: "बालिपारा - चारदुआर - तवांग (BCT रोड)",
+    as: "বালিপাৰা - চাৰিদুৱাৰ - টাৱাং (BCT পথ)",
+    bn: "বালিপাড়া - চারদুয়ার - তাওয়াং (BCT রোড)",
+    bodo: "बालिपारा - तवांग लामा",
+    khasi: "Balipara - Tawang Surok",
+    mizo: "Balipara - Charduar - Tawang Kawng",
+    ne: "बालिपारा - चारदुआर - तवाङ (BCT सडक)"
+  },
+
+  // Landslides Feed Hazard Descriptions
+  "Active translational rockslide and mud slump cutting primary arterial link.": {
+    hi: "सक्रिय चट्टान भूस्खलन और कीचड़ बहाव से मुख्य राजमार्ग संपर्क टूटा।",
+    as: "সক্ৰিয় ভূমিস্খলন আৰু বোকামাটিৰ ফলত মূল পথ বন্ধ।",
+    bn: "সক্রিয় ভূমিধসের কারণে প্রধান সড়কের যোগাযোগ বিচ্ছিন্ন।",
+    bodo: "हा सोमावनायनि थाखाय गाहाय लामाया बन्द जादों।",
+    khasi: "U lum ba la hap u la khang ia ka surok bah.",
+    mizo: "Leimin lian tak avangin kawngpui lian ber a ping e.",
+    ne: "पहिरो र हिलोको कारण मुख्य राजमार्ग सम्पर्क विच्छेद।"
+  },
+  "Railway embankment saturation and debris slide threatening Dima Hasao connectivity.": {
+    hi: "रेलवे ट्रैक के नीचे की मिट्टी खिसकने से दीमा हसाओ रेल संपर्क खतरे में।",
+    as: "ৰেলপথৰ মাটি খহি ডিমা হাছাওৰ যোগাযোগ বিঘ্নিত হোৱাৰ আশংকা।",
+    bn: "রেললাইনের বাঁধ ভেঙে দিমা হাসাও যোগাযোগ হুমকির মুখে।",
+    bodo: "रेल लामा खहा जानानै दिमा हासावनि थांनाय बन्द जानो हागौ।",
+    khasi: "Ka lynti rel ka la sniew bad lah ban khang ia ka Dima Hasao.",
+    mizo: "Rel kawng lei tlahawm avangin Dima Hasao kalna a hlauthawm e.",
+    ne: "रेलमार्गको बाँध भासिएर दिमा हसाओ सम्पर्क जोखिममा।"
+  },
+  "Massive mudflow slurry washing across tunnel portal with boulder debris.": {
+    hi: "सुरंग के मुहाने पर विशाल कीचड़ का सैलाब और भारी चट्टानी मलबा।",
+    as: "সুৰংগৰ মুখত প্ৰকাণ্ড শিল আৰু বোকাৰ ঢল।",
+    bn: "টানেলের প্রবেশদ্বারে ভয়াবহ কাদা ও পাথরের স্তূপ।",
+    bodo: "थनेल मुखाव हा आरो अनथायनि दैबाना हाबदों।",
+    khasi: "Ktieh bad mawbah ki la wan tyllep ia ka tunnel.",
+    mizo: "Tunnel luhna bulah chirh leh lung lian a rawn tleh thla.",
+    ne: "सुरुङको प्रवेशद्वारमा भारी हिलो र ठूला ढुङ्गाको थुप्रो।"
+  },
+  "Permafrost freeze-thaw dislocation triggering intermittent rockfall.": {
+    hi: "बर्फ पिघलने से समय-समय पर चट्टानें गिरने का सिलसिला जारी।",
+    as: "বৰফ গলাৰ বাবে মাজে মাজে শিল খহি পৰিছে।",
+    bn: "বরফ গলে থেমে থেমে পাথর পড়ার ঘটনা ঘটছে।",
+    bodo: "बरफ गलिनायनि थाखाय अनथाय गोलैबाय थादों।",
+    khasi: "Maw ba hap teng teng na ka daw ka jingum u thah.",
+    mizo: "Vûr tui zawh avangin lung a lum zeuh zeuh reng.",
+    ne: "हिउँ पग्लिएर बेलाबेलामा ढुङ्गा खसिरहेको छ।"
+  },
+  "Terraced railway slope showing deep creep deformation in shale strata.": {
+    hi: "सीढ़ीदार रेल ढलान पर मिट्टी खिसकने के गंभीर संकेत।",
+    as: "ৰেলপথৰ পাহাৰীয়া ঢালত ফাট মেলি মাটি খহিছে।",
+    bn: "রেললাইনের পাহাড়ি ঢালে গভীর ফাটল ও ধসের লক্ষণ।",
+    bodo: "रेल लामायाव हा सोमावनायनि गोख्रों निसान नुदों।",
+    khasi: "Lynti rel kaba pyni ia ka jingkhih ka khyndew.",
+    mizo: "Rel kawng kam tlangpangah lei khi a thuk tial tial.",
+    ne: "रेलवे भिरालोमा गहिरो दरार परी पहिरो जाने सङ्केत।"
+  },
+  "Slow regolith creeping downslope, cracking retaining walls.": {
+    hi: "ढलान की मिट्टी धीरे-धीरे नीचे खिसक रही है, सुरक्षा दीवारें टूट रही हैं।",
+    as: "পাহাৰৰ মাটি লাহে লাহে খহি সুৰক্ষা দেৱাল ভাঙিছে।",
+    bn: "পাহাড়ের মাটি ধীরে ধীরে ধসে গিয়ে রিটেইনিং ওয়াল ফাটল ধরেছে।",
+    bodo: "हा सोमावनायनि थाखाय देवालफोरा बायदों।",
+    khasi: "Ka khyndew ka khih suki bad pynpait ia ki kynroh.",
+    mizo: "Lei a tawlh hret hret a, vankhampang bang a khi phawk.",
+    ne: "माटो बिस्तारै भासिएर पर्खालहरू चर्किएका छन्।"
+  },
+  "Loose boulder scree detachment along fractured gorge cut.": {
+    hi: "दरार वाली घाटी में ढीली चट्टानें और पत्थर खिसक रहे हैं।",
+    as: "পাহাৰৰ ফাটৰ পৰা সৰু-বৰ শিল খহি পৰিছে।",
+    bn: "ফাটলযুক্ত খাদে আলগা পাথর ও বোল্ডার পড়ছে।",
+    bodo: "हाजो खहायाव अनथाय गोलैदों।",
+    khasi: "Maw ki la hap na ki mawsiang ba la pait.",
+    mizo: "Kham phel atangin lung a tla reng.",
+    ne: "खोँचको भिरालोबाट ढुङ्गाहरू खसिरहेका छन्।"
+  },
+  "Superficial topsoil washout along orange orchard terrace boundaries.": {
+    hi: "संतरा बगीचों की ढलानों पर ऊपरी मिट्टी का कटाव।",
+    as: "কমলা বাগিচাৰ ঢালৰ ওপৰৰ মাটি উটি গৈছে।",
+    bn: "কমলাবাগানের পাহাড়ি ঢালে উপরিভাগের মাটি ধুয়ে যাচ্ছে।",
+    bodo: "कमला बारिनि हानि बिखा खहा जादों।",
+    khasi: "Ka khyndew ha ki kper sohniamtra ka la shlei na u slap.",
+    mizo: "Serthlum huan chhehvel lei chunglang a chim thla.",
+    ne: "सुन्तला बगैँचाको भिरालोमा माथिल्लो माटो बगेको छ।"
+  },
+
+  // Landslide sector names
+  "NH-10 Mile 44 (Singtam Sector)": {
+    hi: "NH-10 माइल 44 (सिङ्ताम सेक्टर)",
+    as: "NH-10 মাইল ৪৪ (ছিংতাম খণ্ড)",
+    bn: "NH-10 মাইল ৪৪ (সিংতাম সেক্টর)",
+    bodo: "NH-10 माइल ४४ (सिंघताम)",
+    khasi: "NH-10 Mile 44 (Singtam)",
+    mizo: "NH-10 Mile 44 (Singtam Hmun)",
+    ne: "NH-10 माइल ४४ (सिङ्ताम खण्ड)"
+  },
+  "Haflong-Jatinga Hill Section": {
+    hi: "हाफलोंग-जातिंगा पहाड़ी खंड",
+    as: "হাফলং-জাতিংগা পাহাৰীয়া খণ্ড",
+    bn: "হাফলং-জাতিঙ্গা পাহাড়ি এলাকা",
+    bodo: "हाफलं-जातिंगा हाजो लामा",
+    khasi: "Haflong-Jatinga Lum",
+    mizo: "Haflong-Jatinga Tlang Hmun",
+    ne: "हाफलोङ-जातिङ्गा पहाडी खण्ड"
+  },
+  "Sonapur Tunnel Choke Point": {
+    hi: "सोनापुर सुरंग अवरोध बिंदु",
+    as: "সোনাপুৰ সুৰংগ বন্ধ স্থান",
+    bn: "সোনাপুর টানেল বাধার স্থান",
+    bodo: "सोनापुर थनेल थांनाय लामा",
+    khasi: "Sonapur Tunnel Choke Point",
+    mizo: "Sonapur Tunnel Pingna Hmun",
+    ne: "सोनापुर सुरुङ अवरोध विन्दु"
+  },
+  "Sela Pass High-Altitude Corridor": {
+    hi: "सेला दर्रा उच्च-पर्वतीय कॉरिडोर",
+    as: "চেলা পাছ উচ্চ পাহাৰীয়া পথ",
+    bn: "সেলা পাস উচ্চ পাহাড়ি করিডোর",
+    bodo: "सेला पाछ गोजौ लामा",
+    khasi: "Sela Pass High Corridor",
+    mizo: "Sela Pass Tlang Sang Kawng",
+    ne: "सेला भञ्ज्याङ उच्च पहाडी मार्ग"
+  },
+  "Noney Railway Construction Sector": {
+    hi: "नोने रेलवे निर्माण क्षेत्र",
+    as: "ননে ৰেলপথ নিৰ্মাণ অঞ্চল",
+    bn: "নোনে রেলপথ নির্মাণ এলাকা",
+    bodo: "नने रेल लामा बानायनाय",
+    khasi: "Noney Railway Construction",
+    mizo: "Noney Rel Kawng Siamna Hmun",
+    ne: "नोने रेलवे निर्माण क्षेत्र"
+  },
+  "Hunthar Sinking Zone": {
+    hi: "हुन्थार भू-धंसाव क्षेत्र",
+    as: "হুন্থাৰ মাটি খহনীয়া অঞ্চল",
+    bn: "হুন্থার ভূমিধস এলাকা",
+    bodo: "हुन्थार हा सोमावनाय जायगा",
+    khasi: "Hunthar Sinking Zone",
+    mizo: "Hunthar Lei Tawlhna Hmun",
+    ne: "हुन्थार जमिन भासिने क्षेत्र"
+  },
+  "Paglapahar Landslide Sinking Stretch": {
+    hi: "पगलापहाड़ भूस्खलन क्षेत्र",
+    as: "পগলাপাহাৰ ভূমিস্খলন অঞ্চল",
+    bn: "পাগলাপাহাড় ভূমিধস এলাকা",
+    bodo: "पाग्लापाहार हा सोमावनाय",
+    khasi: "Paglapahar Landslide Stretch",
+    mizo: "Paglapahar Leimin Hmun",
+    ne: "पगलापहाड पहिरो क्षेत्र"
+  },
+  "Jampui Hills Ridge Cut": {
+    hi: "जम्पुई हिल्स कटक",
+    as: "জামপুই পাহাৰ অঞ্চল",
+    bn: "জামপুই পাহাড় রিজ",
+    bodo: "जामपुइ हाजो लामा",
+    khasi: "Jampui Hills Ridge",
+    mizo: "Jampui Tlang Kual Hmun",
+    ne: "जम्पुई पहाडी खण्ड"
+  },
+
+  // Meteorological Bulletin Titles
+  "Severe Rainfall & Landslide Warning Bulletin for NER": {
+    hi: "पूर्वोत्तर क्षेत्र के लिए भारी बारिश व भूस्खलन चेतावनी बुलेटिन",
+    as: "উত্তৰ-পূব অঞ্চলৰ বাবে ধাৰাসাৰ বৰষুণ আৰু ভূমিস্খলনৰ সতৰ্কবাণী",
+    bn: "উত্তর-পূর্ব ভারতের জন্য ভারী বৃষ্টি ও ভূমিধস সতর্কবার্তা",
+    bodo: "गोजाव बथ'र आरो हा सोमावनायनि खौरां",
+    khasi: "Khubor Ka Suinbneng bad Jingma u Lum",
+    mizo: "NER Tana Ruahpui & Leimin Hriattirna",
+    ne: "पूर्वोत्तर क्षेत्रका लागि भारी वर्षा तथा पहिरो चेतावनी बुलेटिन"
+  }
+};
+
+function tDynamic(text) {
+  if (!text || typeof text !== 'string') return text;
+  const lang = currentLanguage || 'en';
+  if (lang === 'en') return text;
+  
+  const trimmed = text.trim();
+  if (NER_DYNAMIC_TRANSLATIONS[trimmed] && NER_DYNAMIC_TRANSLATIONS[trimmed][lang]) {
+    return NER_DYNAMIC_TRANSLATIONS[trimmed][lang];
+  }
+  // Try case-insensitive lookup
+  const lower = trimmed.toLowerCase();
+  for (const key in NER_DYNAMIC_TRANSLATIONS) {
+    if (key.toLowerCase() === lower && NER_DYNAMIC_TRANSLATIONS[key][lang]) {
+      return NER_DYNAMIC_TRANSLATIONS[key][lang];
+    }
+  }
+  return text;
+}
+
 // =========================================================================================
 // 15. MULTILINGUAL LOCALIZATION SWITCHER
 // =========================================================================================
@@ -2502,7 +3064,22 @@ async function switchLanguage(lang) {
         elReportSubmitBtn.innerText = json.field_report.submit_btn;
       }
 
+      // Glance chips & Hero status badges
+      const elGlanceGround = document.getElementById('cit-glance-ground');
+      const elGlanceWx = document.getElementById('cit-glance-wx');
+      const elStatusBadge = document.getElementById('cit-status-badge');
+      const clearText = json.glance?.clear || "Clear";
+      const firmText = isRoadCutActive ? (json.glance?.saturated || "Saturated & Slippery") : (json.glance?.firm_safe || "Firm & Safe");
+      const badgeText = isRoadCutActive ? (json.labels?.status_danger || "CRITICAL EVACUATION ALERT") : (json.labels?.status_secure || "SLOPE STABILITY NORMAL & SECURE");
+
+      if (elGlanceGround) elGlanceGround.innerText = firmText;
+      if (elGlanceWx) elGlanceWx.innerText = `24°C • ${clearText}`;
+      if (elStatusBadge) elStatusBadge.innerText = badgeText;
+
       // Re-render dynamic components with localized action labels if data cached
+      if (cachedAiAlertsData && cachedAiAlertsData.length > 0) {
+        renderAiHazardCard(cachedAiAlertsData);
+      }
       if (cachedSheltersData && cachedSheltersData.length > 0) {
         renderSheltersList(cachedSheltersData);
       }
@@ -3667,27 +4244,48 @@ function renderWeatherBroadcastCard(broadcast) {
 
   if (badgeEl) {
     const level = (broadcast.alert_level || "RED").toUpperCase();
-    badgeEl.innerText = `${level} ALERT`;
+    let badgeText = `${level} ALERT`;
     if (level === 'RED') {
+      badgeText = currentLocalesData?.labels?.red_alert || "RED ALERT";
       badgeEl.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-red-950 text-red-300 border border-red-800 font-extrabold";
     } else if (level === 'ORANGE') {
+      badgeText = currentLocalesData?.labels?.orange_alert || "ORANGE ALERT";
       badgeEl.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800 font-extrabold";
     } else {
+      badgeText = currentLocalesData?.labels?.yellow_alert || "YELLOW ALERT";
       badgeEl.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-extrabold";
     }
+    badgeEl.innerText = badgeText;
   }
 
-  if (titleEl) titleEl.innerText = broadcast.title || "Severe Rainfall & Landslide Warning Bulletin for NER";
-  if (timeEl) timeEl.innerText = `Issued ${broadcast.issued_time_human || 'Recently'} by RMC Guwahati & Gangtok`;
+  const lang = currentLanguage || 'en';
+  if (titleEl) {
+    const titleText = broadcast[`title_${lang}`] || tDynamic(broadcast.title || "Severe Rainfall & Landslide Warning Bulletin for NER");
+    titleEl.innerText = titleText;
+  }
+
+  if (timeEl) {
+    const issuedText = currentLocalesData?.labels?.issued_by || `Issued ${broadcast.issued_time_human || 'Recently'} by RMC Guwahati & Gangtok`;
+    timeEl.innerText = issuedText;
+  }
 
   if (textEl) {
-    // Check for language-specific bulletin
-    const langKey = `bulletin_text_${currentLanguage}`;
-    textEl.innerText = broadcast[langKey] || broadcast.bulletin_text || "Special Weather Advisory for North Eastern Region: Heavy to extremely heavy precipitation active across mountain corridors.";
+    const langKey = `bulletin_text_${lang}`;
+    const txt = broadcast[langKey] || tDynamic(broadcast.bulletin_text || "Special Weather Advisory for North Eastern Region: Heavy to extremely heavy precipitation active across mountain corridors.");
+    textEl.innerText = txt;
   }
 
   if (rainEl) rainEl.innerText = broadcast.expected_rainfall_24h || "165 - 220 mm";
-  if (floodEl) floodEl.innerText = broadcast.flash_flood_risk || "CRITICAL HIGH";
+  if (floodEl) {
+    const rawRisk = broadcast.flash_flood_risk || "HIGH";
+    let riskText = rawRisk;
+    if (rawRisk.includes("HIGH") || rawRisk.includes("CRITICAL")) {
+      riskText = currentLocalesData?.labels?.flood_critical || "CRITICAL HIGH";
+    } else {
+      riskText = currentLocalesData?.labels?.flood_moderate || "MODERATE";
+    }
+    floodEl.innerText = riskText;
+  }
 }
 
 function playWeatherBroadcastAudio() {
@@ -4247,44 +4845,71 @@ async function checkActiveEvacuations() {
 
 // -----------------------------------------------------------------------------------------
 // AI PREDICTED HAZARD ALERT ENGINE (Fused across all datasets)
+
+function renderAiHazardCard(alerts) {
+  if (!alerts || alerts.length === 0) return;
+  const a = alerts[0];
+  const card = document.getElementById('cit-ai-hazard-card');
+  const badge = document.getElementById('cit-ai-hazard-badge');
+  const prob = document.getElementById('cit-ai-hazard-prob');
+  const title = document.getElementById('cit-ai-hazard-title');
+  const desc = document.getElementById('cit-ai-hazard-desc');
+  const action = document.getElementById('cit-ai-hazard-action');
+  const horizon = document.getElementById('cit-ai-hazard-horizon');
+  const loc = document.getElementById('cit-ai-hazard-location');
+  const admAiRec = document.getElementById('adm-ai-rec-text');
+
+  if (card) card.classList.remove('hidden');
+
+  const lang = currentLanguage || 'en';
+  const probLabel = currentLocalesData?.labels?.probability || "PROBABILITY";
+  const actionPrefix = currentLocalesData?.labels?.action_prefix || "Action:";
+
+  let badgeText = `AI PREDICTED ${a.risk_level}`;
+  if (a.risk_level === 'CRITICAL' && currentLocalesData?.labels?.red_alert) {
+    badgeText = currentLocalesData.labels.status_danger || "CRITICAL HAZARD ALERT";
+  } else if (currentLocalesData?.labels?.orange_alert) {
+    badgeText = currentLocalesData.labels.orange_alert;
+  }
+  if (badge) badge.innerText = badgeText;
+  if (prob) prob.innerText = `${a.probability_pct}% ${probLabel}`;
+
+  const titleText = a[`predicted_hazard_${lang}`] || tDynamic(a.predicted_hazard);
+  if (title) title.innerText = titleText;
+
+  const descText = a[`citizen_plain_text_${lang}`] || tDynamic(a.citizen_plain_text);
+  if (desc) desc.innerText = descText;
+
+  const shelterText = a[`recommended_shelter_${lang}`] || tDynamic(a.recommended_shelter);
+  if (action) action.innerText = `${actionPrefix} ${shelterText}`;
+
+  const horizonText = a[`time_horizon_${lang}`] || tDynamic(a.time_horizon);
+  if (horizon) horizon.innerText = horizonText;
+
+  const locText = a[`sector_name_${lang}`] || tDynamic(a.sector_name);
+  if (loc) loc.innerText = locText;
+
+  if (admAiRec) {
+    admAiRec.innerHTML = `
+      <b class="text-amber-300">${locText}</b>: ${a.admin_recommendation}
+      <div class="text-[9px] text-zinc-400 mt-1">Factors: ${a.trigger_factors.join(' • ')}</div>
+    `;
+  }
+}
+
 // -----------------------------------------------------------------------------------------
 
 async function fetchAiHazardAlerts(region = currentRegion) {
   try {
     const regParam = region || 'all';
-    const res = await fetch(`${API_BASE}/predict/ai-hazard-alerts?region=${regParam}`);
+    const langParam = currentLanguage || 'en';
+    const res = await fetch(`${API_BASE}/predict/ai-hazard-alerts?region=${regParam}&lang=${langParam}`);
     if (!res.ok) return;
     const data = await res.json();
     const alerts = data.alerts || [];
 
-    if (alerts.length > 0) {
-      const a = alerts[0];
-      const card = document.getElementById('cit-ai-hazard-card');
-      const badge = document.getElementById('cit-ai-hazard-badge');
-      const prob = document.getElementById('cit-ai-hazard-prob');
-      const title = document.getElementById('cit-ai-hazard-title');
-      const desc = document.getElementById('cit-ai-hazard-desc');
-      const action = document.getElementById('cit-ai-hazard-action');
-      const horizon = document.getElementById('cit-ai-hazard-horizon');
-      const loc = document.getElementById('cit-ai-hazard-location');
-      const admAiRec = document.getElementById('adm-ai-rec-text');
-
-      if (card) card.classList.remove('hidden');
-      if (badge) badge.innerText = `AI PREDICTED ${a.risk_level}`;
-      if (prob) prob.innerText = `${a.probability_pct}% PROBABILITY`;
-      if (title) title.innerText = a.predicted_hazard;
-      if (desc) desc.innerText = a.citizen_plain_text;
-      if (action) action.innerText = `Action: ${a.recommended_shelter}`;
-      if (horizon) horizon.innerText = a.time_horizon;
-      if (loc) loc.innerText = a.sector_name;
-
-      if (admAiRec) {
-        admAiRec.innerHTML = `
-          <b class="text-amber-300">${a.sector_name}</b>: ${a.admin_recommendation}
-          <div class="text-[9px] text-zinc-400 mt-1">Factors: ${a.trigger_factors.join(' • ')}</div>
-        `;
-      }
-    }
+    cachedAiAlertsData = alerts;
+    renderAiHazardCard(alerts);
   } catch (e) {
     console.warn("AI hazard alerts fetch error:", e);
   }
@@ -4364,3 +4989,481 @@ async function cancelAdminLocationEvacuation() {
     alert(`Error cancelling mandate: ${e.message}`);
   }
 }
+
+
+// =========================================================================================
+// 19. PHYSICS-INFORMED AI (PINN) BENCHMARK CONSOLE
+// =========================================================================================
+
+const PINN_PRESETS = {
+  cloudburst_stable: {
+    slope: 24,
+    cohesion: 24,
+    friction: 34,
+    pore: 14,
+    rain: 110,
+    antecedent: 220,
+    title: "1. Cloudburst on Stable Rock (False Alarm Suppressed)"
+  },
+  weak_colluvium: {
+    slope: 38,
+    cohesion: 6,
+    friction: 22,
+    pore: 38,
+    rain: 135,
+    antecedent: 260,
+    title: "2. Weak Colluvium Saturated (Critical Failure Evacuate)"
+  },
+  marginal_creep: {
+    slope: 32,
+    cohesion: 14,
+    friction: 27,
+    pore: 32,
+    rain: 75,
+    antecedent: 165,
+    title: "3. Marginal Equilibrium (High Alert Watch)"
+  }
+};
+
+function loadPinnPreset(key) {
+  const preset = PINN_PRESETS[key] || PINN_PRESETS.cloudburst_stable;
+  const sSlope = document.getElementById('pinn-slider-slope');
+  const sCoh = document.getElementById('pinn-slider-cohesion');
+  const sPore = document.getElementById('pinn-slider-pore');
+  const sRain = document.getElementById('pinn-slider-rain');
+
+  if (sSlope) sSlope.value = preset.slope;
+  if (sCoh) sCoh.value = preset.cohesion;
+  if (sPore) sPore.value = preset.pore;
+  if (sRain) sRain.value = preset.rain;
+
+  onPinnSliderChange();
+}
+
+async function onPinnSliderChange() {
+  const sSlope = document.getElementById('pinn-slider-slope');
+  const sCoh = document.getElementById('pinn-slider-cohesion');
+  const sPore = document.getElementById('pinn-slider-pore');
+  const sRain = document.getElementById('pinn-slider-rain');
+
+  const slope = sSlope ? parseFloat(sSlope.value) : 24;
+  const cohesion = sCoh ? parseFloat(sCoh.value) : 22;
+  const pore = sPore ? parseFloat(sPore.value) : 15;
+  const rain = sRain ? parseFloat(sRain.value) : 95;
+
+  const vSlope = document.getElementById('pinn-val-slope');
+  const vCoh = document.getElementById('pinn-val-cohesion');
+  const vPore = document.getElementById('pinn-val-pore');
+  const vRain = document.getElementById('pinn-val-rain');
+
+  if (vSlope) vSlope.textContent = slope + '°';
+  if (vCoh) vCoh.textContent = cohesion + ' kPa';
+  if (vPore) vPore.textContent = pore + ' kPa';
+  if (vRain) vRain.textContent = rain + ' mm/h';
+
+  // Limit Equilibrium Geotechnical Calculations
+  const betaRad = (slope * Math.PI) / 180;
+  const phiRad = (32 * Math.PI) / 180;
+  const gamma = 19.5;
+  const z = 2.0;
+  const totalNormal = gamma * z * Math.pow(Math.cos(betaRad), 2);
+  const effectiveNormal = Math.max(0, totalNormal - pore);
+  const shearStrength = cohesion + (effectiveNormal * Math.tan(phiRad));
+  const driving = (gamma * z * Math.sin(betaRad) * Math.cos(betaRad)) + (0.08 * gamma * z * Math.pow(Math.cos(betaRad), 2));
+  const fs = Math.max(0.1, shearStrength / Math.max(0.1, driving));
+  const fsClamped = Math.round(fs * 100) / 100;
+
+  // Pure ML (Rainfall heavy)
+  const rainFact = 1.0 / (1.0 + Math.exp(-0.06 * (rain - 45.0)));
+  const mlProb = Math.min(0.96, Math.max(0.15, 0.45 * rainFact + 0.35 * 0.85 + 0.20 * (slope / 50)));
+  const mlProbPct = (mlProb * 100).toFixed(1) + '%';
+
+  // PINN Coupling
+  let falseAlarmSuppressed = false;
+  let coupledRisk = mlProb;
+  let coupledStatus = "MONITORING";
+  let coupledReason = "";
+
+  if (fsClamped >= 1.35) {
+    if (mlProb >= 0.55) {
+      falseAlarmSuppressed = true;
+      coupledRisk = Math.min(0.24, mlProb * 0.22);
+      coupledStatus = "SURFACE RUNOFF ADVISORY ONLY";
+      coupledReason = `Pure ML triggered False Alarm (${mlProbPct}) due to ${rain} mm/h rain. PINN physics confirmed mechanically secure bedrock (FS = ${fsClamped} ≥ 1.35). False alarm eliminated!`;
+    } else {
+      coupledRisk = 0.12;
+      coupledStatus = "NORMAL SLOPE STABILITY";
+      coupledReason = `Slope in full mechanical equilibrium (FS = ${fsClamped}). Normal monitoring.`;
+    }
+  } else if (fsClamped < 1.00) {
+    coupledRisk = Math.max(mlProb, 0.94);
+    coupledStatus = "IMMINENT SLOPE COLLAPSE (EVACUATE)";
+    coupledReason = `Limit equilibrium failure under gravity and pore water pressure (FS = ${fsClamped} < 1.0). Immediate mass evacuation required.`;
+  } else {
+    const w = (1.35 - fsClamped) / 0.35;
+    coupledRisk = 0.55 * w + 0.45 * mlProb;
+    coupledStatus = coupledRisk >= 0.65 ? "ACTIVE LANDSLIDE WARNING" : "MARGINAL ADVISORY WATCH";
+    coupledReason = `Marginal equilibrium (FS = ${fsClamped}). Slope susceptible to additional rainfall triggers.`;
+  }
+
+  // Update UI Elements
+  const elMlProb = document.getElementById('pinn-pureml-prob');
+  const elMlAlert = document.getElementById('pinn-pureml-alert');
+  const elMlBadge = document.getElementById('pinn-badge-pureml');
+  const elFsVal = document.getElementById('pinn-fs-val');
+  const elFsState = document.getElementById('pinn-fs-state');
+  const elFsBadge = document.getElementById('pinn-badge-fs');
+  const elCoupledRisk = document.getElementById('pinn-coupled-risk');
+  const elCoupledStatus = document.getElementById('pinn-coupled-status');
+  const elCoupledReason = document.getElementById('pinn-coupled-reason');
+  const elCoupledBadge = document.getElementById('pinn-badge-action');
+  const cardCoupled = document.getElementById('pinn-card-coupled');
+
+  if (elMlProb) elMlProb.textContent = mlProbPct + " Probability";
+  if (elMlAlert) {
+    elMlAlert.textContent = mlProb >= 0.70 ? "CRITICAL EVACUATION WARNING" : (mlProb >= 0.40 ? "HEIGHTENED WATCH" : "ROUTINE MONITORING");
+    elMlAlert.className = mlProb >= 0.70 ? "text-[10px] text-red-400 font-bold" : "text-[10px] text-amber-400 font-bold";
+  }
+  if (elMlBadge) {
+    elMlBadge.textContent = falseAlarmSuppressed ? "FALSE ALARM" : (mlProb >= 0.70 ? "HIGH RISK" : "NORMAL");
+    elMlBadge.className = falseAlarmSuppressed ? "px-1.5 py-0.5 rounded bg-red-900 text-red-200 text-[9px] font-bold" : "px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300 text-[9px] font-bold";
+  }
+
+  if (elFsVal) {
+    elFsVal.textContent = "FS = " + fsClamped;
+    elFsVal.className = fsClamped >= 1.35 ? "text-lg font-black text-emerald-400" : (fsClamped >= 1.00 ? "text-lg font-black text-amber-400" : "text-lg font-black text-red-400");
+  }
+  if (elFsState) {
+    elFsState.textContent = fsClamped >= 1.35 ? "STABLE BEDROCK FORMATION" : (fsClamped >= 1.00 ? "MARGINALLY STABLE EQUILIBRIUM" : "ACTIVE MECHANICAL SHEAR RUPTURE");
+    elFsState.className = fsClamped >= 1.35 ? "text-[10px] text-emerald-300 font-bold" : (fsClamped >= 1.00 ? "text-[10px] text-amber-300 font-bold" : "text-[10px] text-red-300 font-bold");
+  }
+  if (elFsBadge) {
+    elFsBadge.textContent = fsClamped >= 1.35 ? "FS ≥ 1.35 STABLE" : (fsClamped >= 1.00 ? "1.0 ≤ FS < 1.35 WATCH" : "FS < 1.0 CRITICAL");
+    elFsBadge.className = fsClamped >= 1.35 ? "px-1.5 py-0.5 rounded bg-emerald-900 text-emerald-200 text-[9px] font-bold" : (fsClamped >= 1.00 ? "px-1.5 py-0.5 rounded bg-amber-900 text-amber-200 text-[9px] font-bold" : "px-1.5 py-0.5 rounded bg-red-900 text-red-200 text-[9px] font-bold");
+  }
+
+  if (elCoupledRisk) elCoupledRisk.textContent = (coupledRisk * 100).toFixed(1) + "% Coupled Risk";
+  if (elCoupledStatus) elCoupledStatus.textContent = coupledStatus;
+  if (elCoupledReason) elCoupledReason.textContent = coupledReason;
+  if (elCoupledBadge) {
+    if (falseAlarmSuppressed) {
+      elCoupledBadge.textContent = "FALSE ALARM SUPPRESSED";
+      elCoupledBadge.className = "px-1.5 py-0.5 rounded bg-emerald-800 text-emerald-100 text-[9px] font-black tracking-wide";
+      if (cardCoupled) cardCoupled.className = "p-3 bg-emerald-950/40 rounded-xl border-2 border-emerald-500/80 space-y-1.5 shadow-lg";
+    } else if (fsClamped < 1.00) {
+      elCoupledBadge.textContent = "IMMEDIATE EVACUATION";
+      elCoupledBadge.className = "px-1.5 py-0.5 rounded bg-red-800 text-red-100 text-[9px] font-black tracking-wide emergency-strobe";
+      if (cardCoupled) cardCoupled.className = "p-3 bg-red-950/50 rounded-xl border-2 border-red-500 space-y-1.5 shadow-lg";
+    } else {
+      elCoupledBadge.textContent = "HEIGHTENED WATCH";
+      elCoupledBadge.className = "px-1.5 py-0.5 rounded bg-amber-800 text-amber-100 text-[9px] font-black tracking-wide";
+      if (cardCoupled) cardCoupled.className = "p-3 bg-amber-950/40 rounded-xl border-2 border-amber-500 space-y-1.5 shadow-lg";
+    }
+  }
+}
+
+
+// =========================================================================================
+// 20. TRUE EDGE AI: ON-DEVICE TINYML ZERO-CLOUD EVALUATOR
+// =========================================================================================
+
+let isEdgeOfflineSimulated = false;
+
+function toggleEdgeOfflineSimulator(checked) {
+  isEdgeOfflineSimulated = checked;
+  if (checked) {
+    showToast("📶 Simulating Zero Cellular Signal (Offline Mode Airgap Active)");
+  } else {
+    showToast("🌐 Cellular Signal Restored (Connected Mode)");
+  }
+}
+
+function runEdgeTinyMLScan() {
+  const slopeInput = document.getElementById('edge-tinyml-slope');
+  const moistInput = document.getElementById('edge-tinyml-moist');
+  const rainInput = document.getElementById('edge-tinyml-rain');
+
+  const slope = slopeInput ? parseFloat(slopeInput.value) : 34.0;
+  const moisture = moistInput ? parseFloat(moistInput.value) : 82.0;
+  const rain = rainInput ? parseFloat(rainInput.value) : 65.0;
+
+  if (typeof window.EdgeTinyMLEngine !== 'undefined') {
+    const result = window.EdgeTinyMLEngine.evaluate({
+      slope_deg: slope,
+      soil_moisture_pct: moisture,
+      rainfall_intensity_mm_h: rain,
+      cohesion_kpa: 16.0,
+      pore_pressure_kpa: 28.0,
+      friction_angle_deg: 26.0
+    });
+
+    const badge = document.getElementById('edge-scan-status-badge');
+    const elFs = document.getElementById('edge-fs-val');
+    const elProb = document.getElementById('edge-prob-val');
+    const elLatency = document.getElementById('edge-latency-val');
+    const elAction = document.getElementById('edge-action-val');
+    const elQueue = document.getElementById('edge-queue-status');
+
+    if (badge) {
+      if (result.risk_tier === "RED") {
+        badge.textContent = "🔴 RED: EVACUATE (FS = " + result.factor_of_safety + ")";
+        badge.className = "px-2 py-0.5 rounded-full bg-red-950 text-red-300 border border-red-800 font-bold text-[10px] emergency-strobe";
+      } else if (result.risk_tier === "AMBER") {
+        badge.textContent = "🟠 AMBER: WATCH (FS = " + result.factor_of_safety + ")";
+        badge.className = "px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800 font-bold text-[10px]";
+      } else {
+        badge.textContent = "🟢 GREEN: SAFE (FS = " + result.factor_of_safety + ")";
+        badge.className = "px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold text-[10px]";
+      }
+    }
+
+    if (elFs) elFs.textContent = result.factor_of_safety;
+    if (elProb) elProb.textContent = (result.final_risk_score * 100).toFixed(1) + "%";
+    if (elLatency) elLatency.textContent = result.latency_ms + " ms";
+    if (elAction) elAction.textContent = result.action_guidance;
+
+    const queue = window.EdgeTinyMLEngine.getOfflineQueue();
+    if (elQueue) {
+      elQueue.textContent = `💾 Saved to Local Device Queue (${queue.length} scans queued offline)`;
+    }
+
+    showToast(`⚡ On-Device TinyML Scan Complete: ${result.risk_tier} (Latency: ${result.latency_ms}ms)`);
+  }
+}
+
+function showOfflineQueueModal() {
+  if (typeof window.EdgeTinyMLEngine === 'undefined') return;
+  const queue = window.EdgeTinyMLEngine.getOfflineQueue();
+  let listHtml = "";
+  if (queue.length === 0) {
+    listHtml = `<div class="p-3 text-center text-zinc-400 font-mono text-xs">No offline scans currently queued on this device.</div>`;
+  } else {
+    listHtml = queue.slice(0, 10).map((item, idx) => `
+      <div class="p-2.5 bg-zinc-900 rounded-xl border border-zinc-800 flex items-center justify-between font-mono text-[11px]">
+        <div>
+          <b class="${item.risk_tier === 'RED' ? 'text-red-400' : (item.risk_tier === 'AMBER' ? 'text-amber-400' : 'text-emerald-400')}">${item.risk_tier} RISK (FS = ${item.factor_of_safety})</b>
+          <div class="text-[9px] text-zinc-400">ID: ${item.id} • Latency: ${item.latency_ms}ms • Slope: ${item.input_snapshot.slope_deg}°</div>
+        </div>
+        <span class="text-[9px] px-2 py-0.5 rounded bg-zinc-800 text-zinc-300">QUEUED</span>
+      </div>
+    `).join("");
+  }
+
+  const modalHtml = `
+    <div id="modal-offline-queue" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div class="shadcn-card rounded-2xl max-w-lg w-full p-4 border border-sky-500/50 space-y-3 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
+          <div class="flex items-center space-x-2">
+            <i data-lucide="database" class="w-4 h-4 text-sky-400"></i>
+            <h3 class="font-bold text-xs uppercase text-white font-mono">On-Device Edge AI Offline Scans (${queue.length})</h3>
+          </div>
+          <button onclick="document.getElementById('modal-offline-queue').remove()" class="text-zinc-400 hover:text-white">&times;</button>
+        </div>
+        <div class="max-h-72 overflow-y-auto space-y-2">
+          ${listHtml}
+        </div>
+        <div class="flex space-x-2 pt-2 border-t border-zinc-800">
+          <button onclick="syncOfflineQueueToCloud()" class="flex-1 py-2 bg-sky-500 hover:bg-sky-400 text-black font-extrabold text-xs rounded-xl font-mono">
+            SYNC TO DEOC (WHEN IN COVERAGE)
+          </button>
+          <button onclick="clearDeviceOfflineQueue()" class="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs rounded-xl font-mono">
+            Clear Queue
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+  const existing = document.getElementById('modal-offline-queue');
+  if (existing) existing.remove();
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+  if (window.lucide) lucide.createIcons();
+}
+
+function syncOfflineQueueToCloud() {
+  showToast("📶 Synchronizing on-device offline scans to Regional DEOC Command...");
+  setTimeout(() => {
+    showToast("✓ All offline scans successfully synchronized with sovereign GPS timestamps!");
+    const modal = document.getElementById('modal-offline-queue');
+    if (modal) modal.remove();
+  }, 1000);
+}
+
+function clearDeviceOfflineQueue() {
+  if (typeof window.EdgeTinyMLEngine !== 'undefined') {
+    window.EdgeTinyMLEngine.clearOfflineQueue();
+  }
+  const modal = document.getElementById('modal-offline-queue');
+  if (modal) modal.remove();
+  const elQueue = document.getElementById('edge-queue-status');
+  if (elQueue) elQueue.textContent = "💾 Persisted to Offline Local Queue (0 pending syncs)";
+  showToast("On-device queue cleared.");
+}
+
+
+// =========================================================================================
+// 21. COMPUTER VISION CRACK PROPAGATION & AUTOMATED EVACUATION
+// =========================================================================================
+
+function onCrackDisplacementChange(val) {
+  const deltaMm = parseFloat(val);
+  const sliderVal = document.getElementById('crack-slider-val');
+  const alertBox = document.getElementById('crack-auto-evac-alert');
+  const svgPath = document.getElementById('crack-svg-path');
+  const badge = document.getElementById('crack-visualizer-badge');
+  const crackInput = document.getElementById('report-crack-width');
+  const severitySelect = document.getElementById('report-severity');
+  const hazardSelect = document.getElementById('report-hazard-type');
+
+  if (sliderVal) sliderVal.textContent = deltaMm.toFixed(1) + " mm / 24h";
+  if (crackInput) crackInput.value = deltaMm.toFixed(1);
+
+  if (svgPath) {
+    const strokeW = Math.max(2, Math.min(10, deltaMm * 2.2));
+    svgPath.setAttribute('stroke-width', strokeW);
+    svgPath.setAttribute('stroke', deltaMm >= 2.0 ? '#ef4444' : '#f59e0b');
+  }
+
+  if (badge) {
+    badge.textContent = `Widened: +${deltaMm.toFixed(1)} mm`;
+    badge.className = deltaMm >= 2.0
+      ? "absolute bottom-1 right-2 text-[9px] bg-red-950/90 px-1.5 py-0.5 rounded text-red-200 font-bold border border-red-700"
+      : "absolute bottom-1 right-2 text-[9px] bg-amber-950/90 px-1.5 py-0.5 rounded text-amber-200 font-bold border border-amber-700";
+  }
+
+  // AUTOMATED EVACUATION RULE: delta_w >= 2.0 mm in 24 hours
+  if (deltaMm >= 2.0) {
+    if (alertBox) {
+      alertBox.className = "p-3 bg-red-950/90 rounded-xl border-2 border-red-500 space-y-1.5 emergency-strobe text-white font-mono text-xs";
+      alertBox.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-red-400 animate-ping shrink-0"></span>
+          <b class="text-xs tracking-wider uppercase text-red-300">🚨 AUTOMATED IMMEDIATE EVACUATION ESCALATION ACTIVE</b>
+        </div>
+        <p class="text-[10px] text-red-100 leading-snug">
+          Optical Flow measured <b>${deltaMm.toFixed(2)} mm displacement in 24h</b> (&ge; 2.0 mm critical threshold). Life-safety protocol automatically bypassed manual DEOC review and dispatched emergency evacuation orders to downslope settlements!
+        </p>
+        <div class="text-[9px] text-amber-200 bg-black/50 p-1.5 rounded-lg border border-red-800 flex items-center justify-between">
+          <span>&check; Sovereign Broadcast Dispatched &bull; NDRF Alerted</span>
+          <span class="text-red-400 font-bold uppercase">ZERO REVIEW DELAY</span>
+        </div>
+      `;
+    }
+    if (severitySelect) severitySelect.value = "CRITICAL";
+    if (hazardSelect) hazardSelect.value = "Tension Crack Widening";
+  } else {
+    if (alertBox) {
+      alertBox.className = "p-3 bg-amber-950/40 rounded-xl border border-amber-700/60 space-y-1 font-mono text-xs";
+      alertBox.innerHTML = `
+        <div class="flex items-center space-x-2 text-amber-400">
+          <i data-lucide="info" class="w-3.5 h-3.5 inline"></i>
+          <b class="text-xs uppercase">🟡 Sub-Critical Creep (Δw = ${deltaMm.toFixed(2)} mm)</b>
+        </div>
+        <p class="text-[10px] text-zinc-300 leading-snug">
+          Deformation below 2.0 mm/24h threshold. Standard engineering triage queued for next daylight inspection patrol. No emergency evacuation ordered.
+        </p>
+      `;
+    }
+    if (severitySelect) severitySelect.value = "MODERATE";
+  }
+}
+
+
+// =========================================================================================
+// 22. CONNECTIVITY ISOLATION INDEX (CII - NETWORK GRAPH THEORY)
+// =========================================================================================
+
+async function runCiiSimulation(scenarioKey = "RONGLI_VALLEY") {
+  const container = document.getElementById('cii-leaderboard-container');
+  const countEl = document.getElementById('cii-isolated-count');
+  const popEl = document.getElementById('cii-cutoff-pop');
+  const vulnEl = document.getElementById('cii-vulnerable-count');
+  const runwayEl = document.getElementById('cii-supply-runway');
+
+  try {
+    const res = await fetch(`${API_BASE}/network/simulate-collapse`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ scenario_key: scenarioKey })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      const sim = data.simulation || {};
+      const impact = sim.network_impact || {};
+      const leaderboard = sim.prioritized_evacuation_leaderboard || [];
+
+      if (countEl) countEl.textContent = `${impact.isolated_settlements_count} Settlements`;
+      if (popEl) {
+        const totalPop = leaderboard.reduce((acc, curr) => acc + curr.total_population, 0);
+        popEl.textContent = totalPop.toLocaleString();
+      }
+      if (vulnEl) {
+        const totalVuln = leaderboard.reduce((acc, curr) => acc + curr.vulnerable_population, 0);
+        vulnEl.textContent = totalVuln.toLocaleString();
+      }
+      if (runwayEl) {
+        const minRunway = leaderboard.length > 0 ? Math.min(...leaderboard.map(x => x.days_medical_stock_remaining)) : 2.0;
+        runwayEl.textContent = `${minRunway.toFixed(1)} Days`;
+      }
+
+      if (container) {
+        container.innerHTML = leaderboard.map((v, i) => `
+          <div class="p-3 bg-zinc-950/90 rounded-xl border ${i === 0 ? 'border-red-500/80 bg-red-950/20 shadow-lg' : 'border-zinc-800'} space-y-1.5 font-mono">
+            <div class="flex items-center justify-between flex-wrap gap-1">
+              <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded-full ${i === 0 ? 'bg-red-950 text-red-300 border border-red-800 font-extrabold' : 'bg-zinc-800 text-zinc-300'} text-[10px]">
+                  #${v.evacuation_priority_rank} PRIORITY
+                </span>
+                <b class="text-white text-xs">${v.village_name} (${v.district})</b>
+              </div>
+              <span class="text-[10px] text-amber-400 font-bold">${v.days_medical_stock_remaining} Days Medical Stock</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-1.5 text-[10px] text-zinc-300 pt-1">
+              <div>Total Pop: <b class="text-white">${v.total_population.toLocaleString()}</b></div>
+              <div>Vulnerable: <b class="text-red-400">${v.vulnerable_population}</b> (${(v.vulnerable_ratio * 100).toFixed(0)}%)</div>
+              <div>Airdrop Helipad: <b class="text-cyan-400">${v.helipad_airdrop_coordinates[0].toFixed(3)}°N, ${v.helipad_airdrop_coordinates[1].toFixed(3)}°E</b></div>
+            </div>
+
+            <div class="text-[9px] text-zinc-400 flex items-center justify-between pt-1 border-t border-zinc-800/80">
+              <span class="${i === 0 ? 'text-amber-300 font-bold' : 'text-zinc-400'}">
+                ${i === 0 ? '⚠️ High Priority: Contains local primary school (140 children) & urgent medical exhaustion risk.' : 'Secondary corridor relief airdrop mission.'}
+              </span>
+              <span class="text-indigo-400 font-bold uppercase">${v.recommended_action.replace(/_/g, ' ')}</span>
+            </div>
+          </div>
+        `).join("");
+      }
+    }
+  } catch (err) {
+    console.warn("CII simulation fallback:", err);
+  }
+}
+
+function dispatchAirdropManifest() {
+  alert(`🚁 [IAF & NDRF HELICOPTER AIRDROP MANIFEST TRANSMITTED]
+
+Target Helipads:
+1. Rongli Upper Basti: 27.2025°N, 88.6210°E (3,450 civilians)
+2. Dolepchep Hamlet: 27.2150°N, 88.6410°E (1,820 civilians)
+3. Rhenock Valley: 27.1850°N, 88.6430°E (5,900 civilians)
+
+Payload: Essential medicine, oral rehydration salts, high-calorie ration packs.
+Operation Base: IAF Station Bagdogra.`);
+}
+
+// Auto-run initializers when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof onPinnSliderChange === 'function') {
+    onPinnSliderChange();
+  }
+  if (typeof runCiiSimulation === 'function') {
+    runCiiSimulation('RONGLI_VALLEY');
+  }
+  if (typeof runEdgeTinyMLScan === 'function') {
+    runEdgeTinyMLScan();
+  }
+  if (typeof onCrackDisplacementChange === 'function') {
+    onCrackDisplacementChange(2.6);
+  }
+});

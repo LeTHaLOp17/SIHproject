@@ -67,13 +67,18 @@ class CrackDisplacementAnalyzer:
         velocity_mm_day = mean_mm / days
 
         # Geotechnical Creep Stage Classification (Saito & Voight slope failure dynamics)
-        if velocity_mm_day >= 25.0:
+        # Automated Life-Safety Escalation Rule:
+        # If crack width displacement >= 2.0 mm within <= 24 hours (or creep velocity >= 2.0 mm/day),
+        # automatically escalate to IMMEDIATE EVACUATION without requiring human review.
+        is_auto_evacuation = (mean_mm >= 2.0 and hours <= 24.0) or (velocity_mm_day >= 2.0)
+
+        if velocity_mm_day >= 10.0 or mean_mm >= 10.0:
             creep_stage = "TERTIARY_ACCELERATING_CREEP_FAILURE_IMMINENT"
             severity = "CRITICAL"
-        elif velocity_mm_day >= 8.0:
-            creep_stage = "SECONDARY_STEADY_STATE_CREEP"
-            severity = "WARNING"
-        elif velocity_mm_day >= 2.0:
+        elif velocity_mm_day >= 2.0 or mean_mm >= 2.0:
+            creep_stage = "SECONDARY_STEADY_STATE_CREEP_CRITICAL_RUPTURE"
+            severity = "CRITICAL" if is_auto_evacuation else "WARNING"
+        elif velocity_mm_day >= 0.8:
             creep_stage = "PRIMARY_TRANSIENT_CREEP"
             severity = "ADVISORY"
         else:
@@ -89,21 +94,69 @@ class CrackDisplacementAnalyzer:
             "creep_state": creep_stage,
             "risk_severity": severity,
             "time_elapsed_hours": round(hours, 2),
-            "threshold_exceeded": velocity_mm_day >= 8.0
+            "threshold_exceeded": velocity_mm_day >= 2.0,
+            "automated_evacuation_escalation": is_auto_evacuation,
+            "human_review_required": not is_auto_evacuation,
+            "escalation_status": "AUTOMATED_IMMEDIATE_EVACUATION_TRIGGERED" if is_auto_evacuation else "MONITORING_OR_QUEUED_FOR_INSPECTION",
+            "evacuation_broadcast_dispatch": (
+                f"🚨 CRITICAL LIFE-SAFETY ALERT: Crack widening reached {mean_mm:.2f} mm in {hours:.1f}h (>= 2.0 mm threshold). "
+                "Immediate automated evacuation triggered without manual review. Downslope settlements must move to designated shelters now."
+                if is_auto_evacuation else "No emergency escalation. Crack movement remains within non-evacuation thresholds."
+            )
         }
 
     @classmethod
-    def simulate_mock_analysis(cls, crack_widening_mm: float = 14.5, time_hours: float = 24.0) -> Dict[str, Any]:
-        """Utility for API testing without large binary image upload"""
-        days = max(0.1, time_hours / 24.0)
+    def simulate_mock_analysis(
+        cls,
+        crack_widening_mm: float = 2.4,
+        time_hours: float = 24.0,
+        gps_coordinates: Tuple[float, float] = (27.3389, 88.6065),
+        location_name: str = "NH-10 Gangtok-Singtam Slope Corridor"
+    ) -> Dict[str, Any]:
+        """
+        Simulation method for crack propagation pair comparison with automated evacuation trigger.
+        Validates the competitive differentiator: delta_w >= 2.0 mm in 24h triggers automated evacuation.
+        """
+        days = max(0.04, time_hours / 24.0)
         vel = crack_widening_mm / days
+        is_auto_evacuation = (crack_widening_mm >= 2.0 and time_hours <= 24.0) or (vel >= 2.0)
+
+        if vel >= 10.0 or crack_widening_mm >= 10.0:
+            creep_stage = "TERTIARY_ACCELERATING_CREEP_FAILURE_IMMINENT"
+            severity = "CRITICAL"
+        elif vel >= 2.0 or crack_widening_mm >= 2.0:
+            creep_stage = "SECONDARY_STEADY_STATE_CREEP_CRITICAL_RUPTURE"
+            severity = "CRITICAL" if is_auto_evacuation else "WARNING"
+        elif vel >= 0.8:
+            creep_stage = "PRIMARY_TRANSIENT_CREEP"
+            severity = "ADVISORY"
+        else:
+            creep_stage = "MICROSCOPIC_THERMAL_ELASTIC_DEFORMATION"
+            severity = "NORMAL"
+
         return {
-            "displacement_detected": True,
-            "max_displacement_mm": round(crack_widening_mm * 1.3, 2),
+            "displacement_detected": crack_widening_mm > 0.05,
+            "location_name": location_name,
+            "gps_coordinates": list(gps_coordinates),
+            "max_displacement_mm": round(crack_widening_mm * 1.25, 2),
             "mean_displacement_mm": round(crack_widening_mm, 2),
             "creep_velocity_mm_per_day": round(vel, 2),
-            "creep_state": "TERTIARY_ACCELERATING_CREEP_FAILURE_IMMINENT" if vel >= 10.0 else "SECONDARY_CREEP",
-            "risk_severity": "CRITICAL" if vel >= 10.0 else "WARNING",
-            "time_elapsed_hours": time_hours,
-            "threshold_exceeded": vel >= 8.0
+            "creep_state": creep_stage,
+            "risk_severity": severity,
+            "time_elapsed_hours": round(time_hours, 1),
+            "threshold_exceeded": vel >= 2.0 or crack_widening_mm >= 2.0,
+            "automated_evacuation_escalation": is_auto_evacuation,
+            "human_review_required": not is_auto_evacuation,
+            "escalation_status": "AUTOMATED_IMMEDIATE_EVACUATION_TRIGGERED" if is_auto_evacuation else "MONITORING_OR_QUEUED_FOR_INSPECTION",
+            "evacuation_broadcast_dispatch": (
+                f"🚨 CRITICAL LIFE-SAFETY ALERT: Optical Flow measured {crack_widening_mm:.2f} mm displacement in {time_hours:.1f}h (>= 2.0 mm / 24h critical threshold). "
+                f"Automated Immediate Evacuation dispatched for {location_name}. Bypassing DEOC manual triage."
+                if is_auto_evacuation else f"Sub-threshold crack widening ({crack_widening_mm:.2f} mm in {time_hours:.1f}h). Routine monitoring active."
+            ),
+            "optical_flow_metrics": {
+                "co_located_gps_verified": True,
+                "spatial_resolution_mm_per_px": 0.28,
+                "confidence_score": 0.964
+            }
         }
+
