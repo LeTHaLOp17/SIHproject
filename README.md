@@ -1,17 +1,16 @@
-# MDoNER AI Landslide Early Warning & Multi-Hazard Risk Monitoring Platform
-### Ministry of Development of North Eastern Region (MDoNER) • Problem Statement ID: 26001
+# NER LandGuard • North Eastern Region Landslide Warning & Mountain Safety Platform
+### Smart Landslide Risk Monitoring System • North Eastern Region (NER) • Problem Statement ID: 26001
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-emerald.svg)](https://opensource.org/licenses/MIT)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI%200.110-009688.svg)](https://fastapi.tiangolo.com)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org)
-[![Three.js](https://img.shields.io/badge/3D%20Digital%20Twin-Three.js%20WebGL-black.svg)](https://threejs.org)
 [![Leaflet](https://img.shields.io/badge/GIS%20Mapping-Leaflet%201.9-green.svg)](https://leafletjs.com)
 [![AI Architecture](https://img.shields.io/badge/AI%20Architecture-Hybrid%20XGBoost%20%2B%20LSTM%20(Option%20D)-orange.svg)]()
 [![Life-Safety Recall](https://img.shields.io/badge/Life--Safety%20Recall-99.92%25%20(12K%20NER%20Samples)-brightgreen.svg)]()
 
-An enterprise-grade, physics-informed AI Landslide Early Warning System (EWS) and Digital Twin engineered specifically for the 8 states of India's North Eastern Region (NER): **Sikkim, Assam, Meghalaya, Arunachal Pradesh, Manipur, Mizoram, Nagaland, and Tripura**.
+An enterprise-grade, physics-informed AI Landslide Early Warning System (EWS) engineered specifically for the 8 states of India's North Eastern Region (NER): **Sikkim, Assam, Meghalaya, Arunachal Pradesh, Manipur, Mizoram, Nagaland, and Tripura**.
 
-The platform is trained on a **balanced 12,000-sample North East India landslide dataset** across all 8 states (1,500 samples per state) with zero legacy dummy data. It ingests **100% real-time environmental intelligence** from sovereign Indian and global satellite/Doppler radar feeds—streaming live telemetry from **Ambee Disasters**, **WeatherAndRadar.in**, **IMD Doppler Radar Network (via RainViewer)**, and **ISRO VEDAS**.
+The platform is trained on a **balanced 16,800-sample North East India landslide dataset** across all 8 states with zero legacy dummy data. It ingests **100% real-time environmental intelligence** from sovereign Indian and global satellite/Doppler radar feeds—streaming live telemetry from **Ambee Disasters**, **WeatherAndRadar.in**, **IMD Doppler Radar Network (via RainViewer)**, and **ISRO VEDAS**.
 
 ---
 
@@ -20,7 +19,7 @@ The platform is trained on a **balanced 12,000-sample North East India landslide
 2. [Live Data & Radar API Comparison](#-live-data--radar-api-comparison)
 3. [Sovereign & Global Satellite Constellations (12 Systems • 20+ Active Spacecraft)](#-sovereign--global-satellite-constellations-12-systems--20-active-spacecraft)
 4. [AI & Physics Modeling Architecture](#-ai--physics-modeling-architecture)
-5. [3D Mountain Digital Twin & Google Earth 3D Topographic Integration](#-3d-mountain-digital-twin--google-earth-3d-topographic-integration)
+5. [Sovereign GIS Corridors & KML Integration](#-sovereign-gis-corridors--kml-integration)
 6. [Dual-Portal Interface](#-dual-portal-interface)
 7. [Prerequisites & System Requirements](#-prerequisites--system-requirements)
 8. [Step-by-Step Installation & Git Clone](#-step-by-step-installation--git-clone)
@@ -34,8 +33,6 @@ The platform is trained on a **balanced 12,000-sample North East India landslide
 ## 🌟 Key Features Overview
 
 - **100% Real-Time Hazard Telemetry (Zero Dummy Data)**: Live disaster and squall incidents streamed directly from Ambee Disasters API across the Himalayan belt.
-- **3D Mountain Digital Twin (Three.js WebGL + Google Earth 3D)**: Real-time interactive 3D terrain simulation with live rain particles, river gorges, landslide shear wedges, flash flood debris torrents, soil erosion rills, and Google Earth 3D Topographic photogrammetric view with corridor presets.
-- **Live Stream Mode via WeatherAndRadar.in**: The 3D Digital Twin can stream live precipitation rates, 15-minute nowcast trends, temperature, and humidity directly from `https://www.weatherandradar.in/`.
 - **Live Doppler Weather Radar (Zoom Earth & IMD)**: Full animated time-lapse Doppler radar overlay on Leaflet GIS maps, powered by the RainViewer tile engine that aggregates IMD Doppler Radar stations across India.
 - **Coupled Disaster Risk Equation**: Dynamic risk monitoring computing:
   $$\text{Risk} = \text{Hazard} \times \text{Exposure} = f(P(\text{Landslide}), \text{DEI})$$
@@ -185,24 +182,9 @@ flowchart TD
 
 ---
 
-## 🏔️ 3D Mountain Digital Twin & Google Earth 3D Topographic Integration
+## 🗺️ Sovereign GIS Corridors & KML Integration
 
-The platform provides an immersive **3D Mountain Digital Twin** coupled with **Google Earth 3D Topographic View**, providing district authorities, geotechnical engineers, and disaster response teams with photorealistic spatial situational awareness.
-
-### 1. Three.js WebGL Interactive Physics Engine
-- **Procedural High-Relief Mountain Terrain**: Rendered with dynamic contour wireframing, river gorges, road cut corridors, and retaining structures.
-- **Physics-Driven Multi-Hazard Failure Simulation**:
-  - **Landslide Shear Wedge (Rotational Slip Surface)**: Displaces dynamically downward and outward when the Factor of Safety drops below critical equilibrium ($FS < 1.0$).
-  - **Flash Flood / Mudflow Torrent**: Dynamic particle cascades simulating saturated soil liquefaction and debris flow through gorge channels.
-  - **Soil Erosion Rills**: Gully incision geometry responding to surface runoff intensity.
-- **Virtual Geotechnical Instrumentation HUD**:
-  - **Vibrating Wire Piezometers**: Sub-surface pore-water pressure ($u$) monitoring points with color-coded safety warnings.
-  - **Borehole Inclinometers**: Measuring deep shear plane lateral displacement vectors ($\Delta d$).
-  - **Drone Flyover Orbit Mode**: Automated cinematic orbital camera sweeping the slope for aerial damage assessments.
-- **Live Precipitation Streaming**: Integrates with `WeatherAndRadar.in` to inject live 15-minute precipitation rates directly into the 3D physics simulator.
-
-### 2. Google Earth 3D Topographic View & Spatial Corridors
-District disaster commissioners can toggle instantly to **Google Earth 3D Topographic Satellite View**, featuring pre-configured 3D camera viewpoints and downloadable 3D Geotechnical KML layers across all 8 Northeast India disaster corridors:
+The platform provides district authorities, geotechnical engineers, and disaster response teams with comprehensive spatial situational awareness across all 8 Northeast India disaster corridors:
 
 1. **NH-10 Sevoke–Gangtok / Singtam Gorge (Sikkim)**: `27.2345° N, 88.4987° E` (Active phyllite cut-slope slump)
 2. **NH-6 Sonapur Highway Tunnel (Meghalaya)**: `25.1128° N, 92.3619° E` (Limestone karst mudflow channel)

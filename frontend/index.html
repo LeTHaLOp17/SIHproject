@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>MDoNER • AI Landslide Early Warning & Risk Monitoring System</title>
+  <title>NER LandGuard • North Eastern Region Landslide Warning & Mountain Safety</title>
   
   <!-- Modern Typography: Inter + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,10 +23,6 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Three.js & OrbitControls for 3D Digital Twin Mountain Visualizer -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="terrain3d.js"></script>
   <!-- Edge TinyML On-Device Offline Inference Engine -->
   <script src="tinyml_engine.js"></script>
 
@@ -211,30 +207,257 @@
     #citizen-content-container.hidden,
     #admin-content-container.hidden,
     #view-citizen.hidden,
-    #view-admin.hidden {
+    #view-admin.hidden,
+    #mobile-view-bar.hidden {
       display: none !important;
     }
 
+    /* Citizen Portal: Natural Full-Width Hub (Default) or Full Interactive Map (When Toggled) */
+    #citizen-content-container:not(.hidden) {
+      display: block !important;
+      width: 100% !important;
+      height: 100% !important;
+      overflow-y: auto !important;
+      flex: 1 1 0% !important;
+    }
+
+    #citizen-map-container:not(.hidden) {
+      display: flex !important;
+      flex-direction: column !important;
+      width: 100% !important;
+      height: 100% !important;
+      flex: 1 1 0% !important;
+      min-height: 350px !important;
+    }
+
+    /* DEOC Incident Command: Tactical Split-Screen on Desktop, Stacked/Toggled on Mobile */
     @media (min-width: 1024px) {
-      #view-citizen:not(.hidden) #citizen-map-container,
-      #view-citizen:not(.hidden) #citizen-content-container,
-      #view-admin:not(.hidden) #admin-map-container,
-      #view-admin:not(.hidden) #admin-content-container {
+      #view-admin:not(.hidden) #admin-map-container:not(.hidden) {
         display: flex !important;
+        flex-direction: column !important;
+      }
+      #view-admin:not(.hidden) #admin-content-container:not(.hidden) {
+        display: flex !important;
+        flex-direction: column !important;
       }
     }
     @media (max-width: 1023px) {
-      #citizen-map-container:not(.hidden),
       #admin-map-container:not(.hidden),
-      #citizen-content-container:not(.hidden),
       #admin-content-container:not(.hidden) {
         display: flex !important;
+        flex-direction: column !important;
         width: 100% !important;
         height: 100% !important;
         max-height: 100% !important;
         flex: 1 1 0% !important;
         min-height: 0 !important;
       }
+    }
+
+    /* =================================================================================== */
+    /* NIGHT MODE (DARK THEME) STYLING - CYBERNETIC DEEP SPACE MIDNIGHT OBSIDIAN (#070c16) */
+    /* Only targets dark mode (body:not(.light-theme)). Day mode remains 100% untouched.   */
+    /* =================================================================================== */
+    body:not(.light-theme) {
+      background-color: #060a12 !important;
+      color: #f8fafc !important;
+    }
+
+    body:not(.light-theme) header,
+    body:not(.light-theme) #region-bar-container,
+    body:not(.light-theme) .bg-\[\#0c0c0e\]\/95,
+    body:not(.light-theme) .bg-\[\#0c0c0e\],
+    body:not(.light-theme) .bg-\[\#0e0e11\],
+    body:not(.light-theme) .bg-\[\#09090b\],
+    body:not(.light-theme) .bg-\[\#070a12\],
+    body:not(.light-theme) #citizen-content-container,
+    body:not(.light-theme) #admin-content-container {
+      background-color: #080d1a !important;
+      border-color: rgba(30, 41, 59, 0.9) !important;
+      color: #f8fafc !important;
+    }
+
+    /* Elevated Glass Cards in Dark Mode */
+    body:not(.light-theme) .shadcn-card {
+      background: rgba(13, 22, 38, 0.92) !important;
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.14) !important;
+      box-shadow: 0 8px 32px -4px rgba(2, 6, 23, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+      color: #f8fafc !important;
+    }
+    body:not(.light-theme) .shadcn-card:hover {
+      border-color: rgba(56, 189, 248, 0.3) !important;
+      box-shadow: 0 12px 36px -4px rgba(2, 6, 23, 0.9), 0 0 16px rgba(56, 189, 248, 0.08) !important;
+    }
+
+    /* Sub-containers, glance tiles & inner panels */
+    body:not(.light-theme) [class*="bg-zinc-950"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
+    body:not(.light-theme) [class*="bg-zinc-900"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
+    body:not(.light-theme) [class*="bg-zinc-850"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
+    body:not(.light-theme) [class*="bg-slate-950"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
+    body:not(.light-theme) [class*="bg-slate-900"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
+    body:not(.light-theme) [class*="bg-slate-800"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
+    body:not(.light-theme) [class*="bg-black"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *):not(#toast-container *):not([id$="-modal"]) {
+      background-color: #0a1120 !important;
+      border-color: #1e293b !important;
+      color: #f8fafc !important;
+    }
+
+    /* Region Pill Styling in Dark Mode */
+    body:not(.light-theme) #region-bar-container {
+      background-color: #080d1a !important;
+      border-color: #1e293b !important;
+    }
+    body:not(.light-theme) [id^="tab-reg-"]:not(.active-region):not([class*="bg-amber-500"]) {
+      background-color: #0d1628 !important;
+      border: 1px solid #1e293b !important;
+      color: #94a3b8 !important;
+      font-weight: 600 !important;
+    }
+    body:not(.light-theme) [id^="tab-reg-"]:not(.active-region):hover {
+      background-color: #142038 !important;
+      border-color: #334155 !important;
+      color: #f1f5f9 !important;
+    }
+    body:not(.light-theme) [id^="tab-reg-"].active-region,
+    body:not(.light-theme) [id^="tab-reg-"][class*="bg-amber-500"] {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      border: 1px solid #fbbf24 !important;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.45) !important;
+    }
+    body:not(.light-theme) [id^="tab-reg-"].active-region *,
+    body:not(.light-theme) [id^="tab-reg-"][class*="bg-amber-500"] * {
+      color: #000000 !important;
+    }
+
+    /* Active Subtabs in Dark Mode */
+    body:not(.light-theme) [id^="cit-subtab-"].active-cit-subtab,
+    body:not(.light-theme) [id^="cit-subtab-"][class*="bg-emerald-600"] {
+      background-color: #059669 !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.35) !important;
+    }
+    body:not(.light-theme) [id^="cit-subtab-"]:not(.active-cit-subtab):not([class*="bg-emerald-600"]) {
+      color: #94a3b8 !important;
+      background-color: transparent !important;
+    }
+    body:not(.light-theme) [id^="cit-subtab-"]:not(.active-cit-subtab):hover {
+      color: #f8fafc !important;
+      background-color: rgba(30, 41, 59, 0.6) !important;
+    }
+
+    body:not(.light-theme) [id^="adm-tab-btn-"].active-adm-tab,
+    body:not(.light-theme) [id^="adm-tab-btn-"][class*="bg-amber-500"] {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.35) !important;
+    }
+    body:not(.light-theme) [id^="adm-tab-btn-"].active-adm-tab *,
+    body:not(.light-theme) [id^="adm-tab-btn-"][class*="bg-amber-500"] * {
+      color: #000000 !important;
+    }
+    body:not(.light-theme) [id^="adm-tab-btn-"]:not(.active-adm-tab):not([class*="bg-amber-500"]) {
+      color: #94a3b8 !important;
+      background-color: transparent !important;
+    }
+    body:not(.light-theme) [id^="adm-tab-btn-"]:not(.active-adm-tab):hover {
+      color: #f8fafc !important;
+      background-color: rgba(30, 41, 59, 0.6) !important;
+    }
+
+    /* Inputs, Selects & Textareas in Dark Mode */
+    body:not(.light-theme) input,
+    body:not(.light-theme) select,
+    body:not(.light-theme) textarea {
+      background-color: #09101d !important;
+      color: #f8fafc !important;
+      border-color: #1e293b !important;
+    }
+    body:not(.light-theme) input:focus,
+    body:not(.light-theme) select:focus,
+    body:not(.light-theme) textarea:focus {
+      border-color: #0284c7 !important;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.25) !important;
+      outline: none !important;
+    }
+    body:not(.light-theme) input::placeholder,
+    body:not(.light-theme) textarea::placeholder {
+      color: #64748b !important;
+    }
+
+    /* High Contrast Typography in Dark Mode */
+    body:not(.light-theme) h1,
+    body:not(.light-theme) h2,
+    body:not(.light-theme) h3,
+    body:not(.light-theme) h4 {
+      color: #f8fafc !important;
+    }
+    body:not(.light-theme) .text-zinc-100,
+    body:not(.light-theme) .text-zinc-200 {
+      color: #f8fafc !important;
+    }
+    body:not(.light-theme) .text-zinc-300,
+    body:not(.light-theme) .text-slate-300 {
+      color: #cbd5e1 !important;
+    }
+    body:not(.light-theme) .text-zinc-400,
+    body:not(.light-theme) .text-slate-400 {
+      color: #94a3b8 !important;
+    }
+    body:not(.light-theme) .text-zinc-500,
+    body:not(.light-theme) .text-slate-500 {
+      color: #64748b !important;
+    }
+
+    /* Borders & Scrollbars in Dark Mode */
+    body:not(.light-theme) [class*="border-zinc-800"],
+    body:not(.light-theme) [class*="border-zinc-700"],
+    body:not(.light-theme) [class*="border-slate-800"],
+    body:not(.light-theme) [class*="border-slate-700"] {
+      border-color: #1e293b !important;
+    }
+    body:not(.light-theme) ::-webkit-scrollbar-track {
+      background: #060a12;
+    }
+    body:not(.light-theme) ::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    body:not(.light-theme) ::-webkit-scrollbar-thumb:hover {
+      background: #334155;
+    }
+
+    /* Floating Map Controls in Dark Mode */
+    body:not(.light-theme) #citizen-map-container .shadcn-card,
+    body:not(.light-theme) #admin-map-container .shadcn-card {
+      background: rgba(10, 17, 30, 0.94) !important;
+      border-color: #1e293b !important;
+      color: #f8fafc !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6) !important;
+    }
+
+    /* Mobile switcher in dark mode */
+    body:not(.light-theme) #btn-mobile-show-map.bg-amber-500,
+    body:not(.light-theme) #btn-mobile-show-content.bg-amber-500 {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+    }
+    body:not(.light-theme) #btn-mobile-show-map.bg-emerald-600,
+    body:not(.light-theme) #btn-mobile-show-content.bg-emerald-600 {
+      background-color: #059669 !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+    }
+    body:not(.light-theme) #btn-mobile-show-map:not(.bg-amber-500):not(.bg-emerald-600),
+    body:not(.light-theme) #btn-mobile-show-content:not(.bg-emerald-600):not(.bg-amber-500) {
+      background-color: #0d1628 !important;
+      border: 1px solid #1e293b !important;
+      color: #94a3b8 !important;
     }
 
     /* =================================================================================== */
@@ -271,7 +494,7 @@
       box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08) !important;
     }
 
-    /* Sub-containers, chips, glance tiles & inner panels using robust attribute matching */
+    /* Sub-containers, chips, glance tiles & inner panels */
     body.light-theme [class*="bg-slate-950"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
     body.light-theme [class*="bg-slate-900"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
     body.light-theme [class*="bg-slate-800"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
@@ -284,7 +507,67 @@
       color: #0f172a !important;
     }
 
-    /* Inactive and Active Region Buttons in Light Theme */
+    /* Header Nav Switcher in Light Mode */
+    body.light-theme #header-nav-switcher {
+      background-color: #f1f5f9 !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+    }
+    body.light-theme #header-nav-switcher button:not(.bg-emerald-600):not(.bg-amber-500) {
+      background-color: transparent !important;
+      color: #475569 !important;
+      border: 1px solid transparent !important;
+    }
+    body.light-theme #header-nav-switcher button:not(.bg-emerald-600):not(.bg-amber-500):hover {
+      background-color: #ffffff !important;
+      color: #0f172a !important;
+      border: 1px solid #cbd5e1 !important;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04) !important;
+    }
+    body.light-theme #header-nav-switcher #nav-btn-citizen.bg-emerald-600 {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+      border: 1px solid #047857 !important;
+      box-shadow: 0 1px 3px rgba(16, 185, 129, 0.35) !important;
+    }
+    body.light-theme #header-nav-switcher #nav-btn-admin.bg-amber-500 {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      border: 1px solid #b45309 !important;
+      box-shadow: 0 1px 3px rgba(245, 158, 11, 0.35) !important;
+    }
+
+    
+    /* View Mode Bar for Citizen Portal */
+    body.light-theme #cit-view-mode-bar {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+    body.light-theme #cit-view-mode-bar .bg-zinc-900 {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-theme #btn-cit-mode-hub:not(.bg-emerald-600),
+    body.light-theme #btn-cit-mode-map:not(.bg-emerald-600) {
+      color: #475569 !important;
+      background-color: transparent !important;
+    }
+    body.light-theme #btn-cit-mode-hub:not(.bg-emerald-600):hover,
+    body.light-theme #btn-cit-mode-map:not(.bg-emerald-600):hover {
+      color: #0f172a !important;
+      background-color: #ffffff !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-theme #btn-cit-mode-hub.bg-emerald-600,
+    body.light-theme #btn-cit-mode-map.bg-emerald-600 {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+    }
+
+    /* Region Bar Buttons in Light Theme */
     body.light-theme #region-bar-container {
       background-color: #ffffff !important;
       border-color: #e2e8f0 !important;
@@ -312,100 +595,179 @@
       color: #000000 !important;
     }
 
-    /* Keep button colors & gradients intact with pristine white text */
-    body.light-theme .bg-emerald-600,
-    body.light-theme .bg-emerald-700,
-    body.light-theme .bg-rose-600,
-    body.light-theme .bg-rose-700,
-    body.light-theme .bg-red-600,
-    body.light-theme .bg-red-700,
-    body.light-theme .bg-cyan-600,
-    body.light-theme .bg-cyan-700,
-    body.light-theme .bg-sky-600,
-    body.light-theme .bg-sky-700,
-    body.light-theme .bg-blue-600,
-    body.light-theme [class*="from-emerald-"],
-    body.light-theme [class*="from-rose-"],
-    body.light-theme [class*="from-red-"],
-    body.light-theme [class*="from-cyan-"],
-    body.light-theme [class*="from-sky-"] {
+    /* Citizen Subtab Switcher in Light Mode */
+    body.light-theme #citizen-content-container .border-b {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+    }
+    body.light-theme #citizen-content-container .grid-cols-4 {
+      background-color: #f1f5f9 !important;
+      border: 1px solid #cbd5e1 !important;
+      padding: 4px !important;
+      border-radius: 1rem !important;
+    }
+    body.light-theme [id^="cit-subtab-"]:not(.active-cit-subtab):not([class*="bg-emerald-600"]) {
+      background-color: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      color: #475569 !important;
+      font-weight: 700 !important;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+    }
+    body.light-theme [id^="cit-subtab-"]:not(.active-cit-subtab):hover {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-theme [id^="cit-subtab-"].active-cit-subtab,
+    body.light-theme [id^="cit-subtab-"][class*="bg-emerald-600"] {
+      background: linear-gradient(135deg, #10b981, #059669) !important;
+      color: #ffffff !important;
+      font-weight: 800 !important;
+      border: 1px solid #047857 !important;
+      box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35) !important;
+    }
+    body.light-theme [id^="cit-subtab-"].active-cit-subtab *,
+    body.light-theme [id^="cit-subtab-"][class*="bg-emerald-600"] * {
       color: #ffffff !important;
     }
 
-    body.light-theme .bg-emerald-600 *,
-    body.light-theme .bg-rose-600 *,
-    body.light-theme .bg-red-600 *,
-    body.light-theme .bg-cyan-600 *,
-    body.light-theme .bg-sky-600 *,
-    body.light-theme [class*="from-emerald-"] *,
-    body.light-theme [class*="from-rose-"] *,
-    body.light-theme [class*="from-red-"] *,
-    body.light-theme [class*="from-cyan-"] *,
-    body.light-theme [class*="from-sky-"] * {
+    /* Citizen Quick Action Cards (4 Grid) in Light Mode */
+    body.light-theme #cit-pane-safety .grid-cols-2.sm\:grid-cols-4 button {
+      background-color: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+    }
+    body.light-theme #cit-pane-safety .grid-cols-2.sm\:grid-cols-4 button:hover {
+      background-color: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08) !important;
+    }
+    body.light-theme #cit-pane-safety .grid-cols-2.sm\:grid-cols-4 button .text-white,
+    body.light-theme #cit-pane-safety .grid-cols-2.sm\:grid-cols-4 button span.text-xs {
+      color: #0f172a !important;
+      font-weight: 800 !important;
+    }
+    body.light-theme #cit-pane-safety .grid-cols-2.sm\:grid-cols-4 button span[class*="text-zinc-400"] {
+      color: #64748b !important;
+      font-weight: 600 !important;
+    }
+
+    /* DEOC Admin Tab Buttons in Light Mode */
+    body.light-theme #admin-content-container .grid-cols-6 {
+      background-color: #f1f5f9 !important;
+      border: 1px solid #cbd5e1 !important;
+      padding: 4px !important;
+      border-radius: 0.75rem !important;
+    }
+    body.light-theme [id^="adm-tab-btn-"]:not(.active-adm-tab):not([class*="bg-amber-500"]) {
+      background-color: #ffffff !important;
+      border: 1px solid #e2e8f0 !important;
+      color: #475569 !important;
+      font-weight: 700 !important;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03) !important;
+    }
+    body.light-theme [id^="adm-tab-btn-"]:not(.active-adm-tab):hover {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.light-theme [id^="adm-tab-btn-"].active-adm-tab,
+    body.light-theme [id^="adm-tab-btn-"][class*="bg-amber-500"] {
+      background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+      color: #000000 !important;
+      font-weight: 800 !important;
+      border: 1px solid #b45309 !important;
+      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.35) !important;
+    }
+    body.light-theme [id^="adm-tab-btn-"].active-adm-tab *,
+    body.light-theme [id^="adm-tab-btn-"][class*="bg-amber-500"] * {
+      color: #000000 !important;
+    }
+
+    /* Eliminate Pitch Black Action Buttons in Light Mode */
+    body.light-theme button[onclick*="cancelAdminLocationEvacuation"],
+    body.light-theme button[onclick*="restoreRoads"] {
+      background-color: #f1f5f9 !important;
+      border: 1.5px solid #cbd5e1 !important;
+      color: #1e293b !important;
+      font-weight: 700 !important;
+    }
+    body.light-theme button[onclick*="cancelAdminLocationEvacuation"]:hover,
+    body.light-theme button[onclick*="restoreRoads"]:hover {
+      background-color: #e2e8f0 !important;
+      border-color: #94a3b8 !important;
+      color: #0f172a !important;
+    }
+
+    /* Tarjan Cut-Vertex 4 Stat Cards in Light Mode */
+    body.light-theme #adm-tab-content-roads .grid-cols-2.sm\:grid-cols-4 > div {
+      background-color: #ffffff !important;
+      border: 1.5px solid #cbd5e1 !important;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+    }
+    body.light-theme #adm-tab-content-roads .grid-cols-2.sm\:grid-cols-4 > div span {
+      color: #475569 !important;
+      font-weight: 700 !important;
+    }
+    body.light-theme #adm-tab-content-roads .grid-cols-2.sm\:grid-cols-4 > div b {
+      color: #0f172a !important;
+      font-size: 0.95rem !important;
+      white-space: nowrap !important;
+    }
+    body.light-theme #adm-tab-content-roads #cii-isolated-count {
+      font-size: 0.82rem !important;
+      white-space: nowrap !important;
+    }
+    body.light-theme #adm-tab-content-roads #cii-vulnerable-count {
+      color: #b45309 !important;
+    }
+    body.light-theme #adm-tab-content-roads #cii-supply-runway {
+      color: #dc2626 !important;
+    }
+
+    /* Floating Map Controls in Light Mode (Frosted Glass) */
+    body.light-theme #citizen-map-container .shadcn-card,
+    body.light-theme #admin-map-container .shadcn-card {
+      background: rgba(255, 255, 255, 0.94) !important;
+      backdrop-filter: blur(12px) !important;
+      border: 1px solid #cbd5e1 !important;
+      color: #0f172a !important;
+      box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.12) !important;
+    }
+    body.light-theme #citizen-map-container .shadcn-card *,
+    body.light-theme #admin-map-container .shadcn-card * {
+      color: #0f172a !important;
+    }
+    body.light-theme #btn-sat-cit.bg-zinc-800,
+    body.light-theme #btn-ter-cit.bg-zinc-800,
+    body.light-theme #btn-sat-adm.bg-zinc-800,
+    body.light-theme #btn-ter-adm.bg-zinc-800,
+    body.light-theme #btn-dark-adm.bg-zinc-800 {
+      background-color: #0f172a !important;
+      color: #ffffff !important;
+    }
+    body.light-theme #btn-sat-cit.bg-zinc-800 *,
+    body.light-theme #btn-ter-cit.bg-zinc-800 *,
+    body.light-theme #btn-sat-adm.bg-zinc-800 *,
+    body.light-theme #btn-ter-adm.bg-zinc-800 *,
+    body.light-theme #btn-dark-adm.bg-zinc-800 * {
       color: #ffffff !important;
     }
 
-    /* Amber / Yellow buttons get bold dark text */
-    body.light-theme .bg-amber-500,
-    body.light-theme .bg-amber-400,
-    body.light-theme [class*="from-amber-"],
-    body.light-theme [class*="from-yellow-"] {
-      color: #000000 !important;
-    }
-    body.light-theme .bg-amber-500 *,
-    body.light-theme .bg-amber-400 *,
-    body.light-theme [class*="from-amber-"] * {
-      color: #000000 !important;
-    }
-
-    /* Soft Alert / Badge Surfaces */
-    body.light-theme [class*="bg-emerald-950"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
-    body.light-theme [class*="bg-emerald-900"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *) {
-      background-color: #ecfdf5 !important;
-      border-color: #a7f3d0 !important;
-      color: #047857 !important;
-    }
-
-    body.light-theme [class*="bg-amber-950"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
-    body.light-theme [class*="bg-amber-900"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
-    body.light-theme .bg-amber-500\/10 {
-      background-color: #fffbeb !important;
-      border-color: #fde68a !important;
-      color: #92400e !important;
-    }
-
-    body.light-theme [class*="bg-red-950"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
-    body.light-theme [class*="bg-red-900"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
-    body.light-theme [class*="bg-rose-950"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *),
-    body.light-theme [class*="bg-rose-900"]:not(.emergency-strobe *):not(#admin-evacuation-broadcast-banner *) {
-      background-color: #fef2f2 !important;
-      border-color: #fecaca !important;
-      color: #991b1b !important;
-    }
-
-    body.light-theme [class*="bg-cyan-950"],
-    body.light-theme [class*="bg-sky-950"],
-    body.light-theme [class*="bg-blue-950"],
-    body.light-theme [class*="bg-indigo-950"] {
-      background-color: #f0f9ff !important;
-      border-color: #bae6fd !important;
-      color: #0369a1 !important;
-    }
-
-    /* High contrast text overrides for content panels (excluding colored buttons) */
+    /* High Contrast Typography Overrides */
     body.light-theme h1,
     body.light-theme h2,
     body.light-theme h3,
     body.light-theme h4 {
       color: #0f172a !important;
     }
-
-    body.light-theme .text-white:not(button):not(button *):not([class*="bg-emerald-"]):not([class*="bg-rose-"]):not([class*="bg-red-"]):not([class*="bg-cyan-"]):not([class*="from-"]):not([class*="emergency-strobe"] *):not(#admin-evacuation-broadcast-banner *),
+    body.light-theme .text-white:not(button):not(button *):not([class*="bg-emerald-"]):not([class*="bg-rose-"]):not([class*="bg-red-"]):not([class*="bg-cyan-"]):not([class*="from-"]):not([class*="emergency-strobe"] *):not(#admin-evacuation-broadcast-banner *) {
+      color: #0f172a !important;
+    }
     body.light-theme .text-zinc-100:not(button):not(button *):not([class*="emergency-strobe"] *):not(#admin-evacuation-broadcast-banner *),
     body.light-theme .text-zinc-200:not(button):not(button *):not([class*="emergency-strobe"] *):not(#admin-evacuation-broadcast-banner *) {
       color: #0f172a !important;
     }
-
     body.light-theme .text-zinc-300:not([class*="emergency-strobe"] *):not(#admin-evacuation-broadcast-banner *),
     body.light-theme .text-slate-300 {
       color: #334155 !important;
@@ -419,6 +781,7 @@
       color: #64748b !important;
     }
 
+    /* Saturated status text colors */
     body.light-theme .text-emerald-400,
     body.light-theme .text-emerald-300 {
       color: #059669 !important;
@@ -442,15 +805,7 @@
       color: #0284c7 !important;
     }
 
-    /* Borders */
-    body.light-theme [class*="border-zinc-800"],
-    body.light-theme [class*="border-zinc-700"],
-    body.light-theme [class*="border-slate-800"],
-    body.light-theme [class*="border-slate-700"] {
-      border-color: #e2e8f0 !important;
-    }
-
-    /* Form Controls */
+    /* Form Inputs in Light Mode */
     body.light-theme input,
     body.light-theme select,
     body.light-theme textarea {
@@ -461,134 +816,6 @@
     body.light-theme input::placeholder,
     body.light-theme textarea::placeholder {
       color: #94a3b8 !important;
-    }
-
-    /* Citizen Subtab Buttons in Light Mode */
-    body.light-theme [id^="cit-subtab-"]:not(.active-cit-subtab):not([class*="bg-emerald-600"]) {
-      color: #475569 !important;
-      background-color: transparent !important;
-    }
-    body.light-theme [id^="cit-subtab-"]:not(.active-cit-subtab):hover {
-      color: #0f172a !important;
-      background-color: #e2e8f0 !important;
-    }
-    body.light-theme [id^="cit-subtab-"].active-cit-subtab,
-    body.light-theme [id^="cit-subtab-"][class*="bg-emerald-600"] {
-      background-color: #059669 !important;
-      color: #ffffff !important;
-      font-weight: 700 !important;
-    }
-    body.light-theme [id^="cit-subtab-"].active-cit-subtab *,
-    body.light-theme [id^="cit-subtab-"][class*="bg-emerald-600"] * {
-      color: #ffffff !important;
-    }
-
-    /* DEOC Admin Tab Buttons in Light Mode */
-    body.light-theme [id^="adm-tab-btn-"]:not(.active-adm-tab):not([class*="bg-amber-500"]) {
-      color: #475569 !important;
-      background-color: transparent !important;
-    }
-    body.light-theme [id^="adm-tab-btn-"]:not(.active-adm-tab):hover {
-      color: #0f172a !important;
-      background-color: #e2e8f0 !important;
-    }
-    body.light-theme [id^="adm-tab-btn-"].active-adm-tab,
-    body.light-theme [id^="adm-tab-btn-"][class*="bg-amber-500"] {
-      background-color: #f59e0b !important;
-      color: #000000 !important;
-      font-weight: 800 !important;
-    }
-    body.light-theme [id^="adm-tab-btn-"].active-adm-tab *,
-    body.light-theme [id^="adm-tab-btn-"][class*="bg-amber-500"] * {
-      color: #000000 !important;
-    }
-
-    /* DEOC Active Mandates Cards in Light Mode */
-    body.light-theme #adm-active-mandates-list > div {
-      background-color: #ffffff !important;
-      border-color: #cbd5e1 !important;
-      box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.08) !important;
-    }
-    body.light-theme #adm-active-mandates-list * {
-      color: #1e293b !important;
-    }
-    body.light-theme #adm-active-mandates-list .text-white,
-    body.light-theme #adm-active-mandates-list .font-extrabold {
-      color: #0f172a !important;
-      font-weight: 800 !important;
-    }
-    body.light-theme #adm-active-mandates-list .text-zinc-500 {
-      color: #475569 !important;
-      font-weight: 700 !important;
-    }
-    body.light-theme #adm-active-mandates-list .text-amber-400,
-    body.light-theme #adm-active-mandates-list .text-amber-300 {
-      color: #b45309 !important;
-      font-weight: 800 !important;
-    }
-    body.light-theme #adm-active-mandates-list button[onclick*="approveAdminEvacuation"] {
-      background-color: #059669 !important;
-      color: #ffffff !important;
-      font-weight: 800 !important;
-      border: 1px solid #047857 !important;
-    }
-    body.light-theme #adm-active-mandates-list button[onclick*="approveAdminEvacuation"] * {
-      color: #ffffff !important;
-    }
-    body.light-theme #adm-active-mandates-list button[onclick*="dismissAdminEvacuation"] {
-      background-color: #ffffff !important;
-      border: 1.5px solid #fca5a5 !important;
-      color: #dc2626 !important;
-      font-weight: 700 !important;
-    }
-    body.light-theme #adm-active-mandates-list button[onclick*="dismissAdminEvacuation"] * {
-      color: #dc2626 !important;
-    }
-    body.light-theme #adm-active-mandates-list button[onclick*="dismissAdminEvacuation"]:hover {
-      background-color: #fef2f2 !important;
-    }
-
-    /* DEOC AI Recommendation Box & Global Action Buttons in Light Mode */
-    body.light-theme #adm-ai-rec-box {
-      background-color: #fffbeb !important;
-      border-color: #fde68a !important;
-      color: #1e293b !important;
-    }
-    body.light-theme #adm-ai-rec-box * {
-      color: #0f172a !important;
-    }
-    body.light-theme #adm-ai-rec-box .text-amber-400,
-    body.light-theme #adm-ai-rec-box .text-amber-300,
-    body.light-theme #adm-ai-rec-box b {
-      color: #b45309 !important;
-      font-weight: 800 !important;
-    }
-    body.light-theme #adm-ai-rec-box .text-zinc-400,
-    body.light-theme #adm-ai-rec-box .text-zinc-300,
-    body.light-theme #adm-ai-rec-box #adm-ai-rec-text {
-      color: #334155 !important;
-    }
-    body.light-theme button[onclick*="approveAdminEvacuation('all')"] {
-      background-color: #059669 !important;
-      color: #ffffff !important;
-      border: 1px solid #047857 !important;
-    }
-    body.light-theme button[onclick*="approveAdminEvacuation('all')"] * {
-      color: #ffffff !important;
-    }
-    body.light-theme button[onclick*="dismissAdminEvacuation('all')"] {
-      background-color: #ffffff !important;
-      color: #dc2626 !important;
-      border: 1px solid #fca5a5 !important;
-    }
-    body.light-theme button[onclick*="dismissAdminEvacuation('all')"] * {
-      color: #dc2626 !important;
-    }
-    body.light-theme #adm-mandate-status-label {
-      color: #334155 !important;
-    }
-    body.light-theme #adm-session-updated-time {
-      color: #b45309 !important;
     }
 
     /* Mobile switcher in light mode */
@@ -611,46 +838,6 @@
       color: #475569 !important;
     }
 
-    /* Floating Map Layer Controls in Light Mode */
-    body.light-theme #citizen-map-container .shadcn-card,
-    body.light-theme #admin-map-container .shadcn-card {
-      background: rgba(255, 255, 255, 0.96) !important;
-      border: 1px solid #cbd5e1 !important;
-      color: #0f172a !important;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
-    }
-    body.light-theme #citizen-map-container .shadcn-card *,
-    body.light-theme #admin-map-container .shadcn-card * {
-      color: #0f172a !important;
-    }
-    body.light-theme #citizen-map-container .shadcn-card [class*="text-red-"],
-    body.light-theme #admin-map-container .shadcn-card [class*="text-red-"] {
-      color: #dc2626 !important;
-    }
-    body.light-theme #citizen-map-container .shadcn-card [class*="text-cyan-"],
-    body.light-theme #admin-map-container .shadcn-card [class*="text-cyan-"] {
-      color: #0284c7 !important;
-    }
-    body.light-theme #citizen-map-container .shadcn-card [class*="text-amber-"],
-    body.light-theme #admin-map-container .shadcn-card [class*="text-amber-"] {
-      color: #b45309 !important;
-    }
-    body.light-theme #btn-sat-cit.bg-zinc-800,
-    body.light-theme #btn-ter-cit.bg-zinc-800,
-    body.light-theme #btn-sat-adm.bg-zinc-800,
-    body.light-theme #btn-ter-adm.bg-zinc-800,
-    body.light-theme #btn-dark-adm.bg-zinc-800 {
-      background-color: #0f172a !important;
-      color: #ffffff !important;
-    }
-    body.light-theme #btn-sat-cit.bg-zinc-800 *,
-    body.light-theme #btn-ter-cit.bg-zinc-800 *,
-    body.light-theme #btn-sat-adm.bg-zinc-800 *,
-    body.light-theme #btn-ter-adm.bg-zinc-800 *,
-    body.light-theme #btn-dark-adm.bg-zinc-800 * {
-      color: #ffffff !important;
-    }
-
     /* Interactive Element Highlights */
     body.light-theme #btn-theme-toggle,
     body.light-theme #btn-text-size {
@@ -664,22 +851,21 @@
       color: #0f172a !important;
     }
 
-    /* Hero Card & Hazard Card light surfaces */
+    /* Citizen Status Card in Light Mode */
     body.light-theme #citizen-status-card {
       background: #ffffff !important;
       background-image: none !important;
-      border: 1.5px solid #a7f3d0 !important;
-      box-shadow: 0 4px 20px -2px rgba(16, 185, 129, 0.08) !important;
+      border: 2px solid #a7f3d0 !important;
+      box-shadow: 0 4px 20px -2px rgba(16, 185, 129, 0.12) !important;
     }
-
     body.light-theme #cit-ai-hazard-card {
       background: #fffbeb !important;
       background-image: none !important;
-      border: 1.5px solid #fde68a !important;
-      box-shadow: 0 4px 16px -2px rgba(245, 158, 11, 0.08) !important;
+      border: 2px solid #fde68a !important;
+      box-shadow: 0 4px 16px -2px rgba(245, 158, 11, 0.12) !important;
     }
 
-    /* Emergency Strobe & Evacuation Banner in Light Mode */
+    /* Emergency Evacuation Strobe Banner */
     body.light-theme .emergency-strobe,
     body.light-theme #admin-evacuation-broadcast-banner {
       background-color: #dc2626 !important;
@@ -747,20 +933,20 @@
         <i data-lucide="mountain" class="w-3.5 sm:w-5 h-3.5 sm:h-5 text-amber-400 stroke-[2.2]"></i>
       </div>
       <div>
-        <h1 class="font-extrabold text-xs sm:text-sm tracking-tight text-zinc-100" id="header-title" data-i18n="app.title">MDoNER EWS</h1>
-        <p class="hidden xl:block text-[10px] text-zinc-400" id="header-subtitle" data-i18n="app.subtitle">AI-Based Early Warning & Landslide Risk Monitoring • North Eastern Region</p>
+        <h1 class="font-extrabold text-xs sm:text-sm tracking-tight text-zinc-100" id="header-title" data-i18n="app.title">NER LandGuard</h1>
+        <p class="hidden xl:block text-[10px] text-zinc-400" id="header-subtitle" data-i18n="app.subtitle">North Eastern Region Landslide Warning & Mountain Safety</p>
       </div>
     </div>
 
     <!-- Center: ROUTING SWITCHER (Always Clearly Visible: Citizen Safety vs DEOC Admin) -->
-    <div class="flex items-center space-x-0.5 sm:space-x-1 bg-zinc-900 border border-zinc-800 p-0.5 sm:p-1 rounded-xl text-xs font-semibold shrink-0">
+    <div id="header-nav-switcher" class="flex items-center space-x-0.5 sm:space-x-1 bg-zinc-900 border border-zinc-800 p-0.5 sm:p-1 rounded-xl text-xs font-semibold shrink-0">
       <button onclick="navigateTo('citizen')" id="nav-btn-citizen" class="px-2 sm:px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-extrabold shadow-sm flex items-center space-x-1 sm:space-x-1.5 transition" title="Citizen Safety Portal">
         <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
-        <span id="txt-nav-citizen">Citizen</span>
+        <span id="txt-nav-citizen">Citizen Portal</span>
       </button>
       <button onclick="navigateTo('admin')" id="nav-btn-admin" class="px-2 sm:px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white font-extrabold flex items-center space-x-1 sm:space-x-1.5 transition" title="DEOC Incident Command Portal">
         <i data-lucide="lock" class="w-3.5 h-3.5 text-amber-400"></i>
-        <span id="txt-nav-admin">DEOC Cmd</span>
+        <span id="txt-nav-admin">DEOC Command</span>
       </button>
     </div>
 
@@ -857,7 +1043,7 @@
   </div>
 
   <!-- Mobile View Switcher (Visible only on < lg screens) -->
-  <div class="lg:hidden bg-zinc-950 border-b border-zinc-800 px-2 sm:px-3 py-1.5 flex items-center justify-center space-x-2 text-xs font-semibold z-20 shrink-0">
+  <div id="mobile-view-bar" class="hidden lg:hidden bg-zinc-950 border-b border-zinc-800 px-2 sm:px-3 py-1.5 flex items-center justify-center space-x-2 text-xs font-semibold z-20 shrink-0">
     <button onclick="toggleMobileCitizenView('map')" id="btn-mobile-show-map" class="flex-1 py-1.5 rounded-lg bg-amber-500 text-black font-extrabold flex items-center justify-center space-x-1.5 shadow-sm transition">
       <i data-lucide="map" class="w-3.5 h-3.5 text-black"></i>
       <span>GIS Map</span>
@@ -869,720 +1055,810 @@
   </div>
 
   <!-- =================================================================================== -->
-  <!-- VIEW CONTAINER A: CITIZEN SAFETY PORTAL (DECLUTTERED & RESPONSIVE) -->
+  <!-- VIEW CONTAINER A: CITIZEN SAFETY PORTAL (SIMPLIFIED & RESPONSIVE) -->
   <!-- =================================================================================== -->
-  <div id="view-citizen" class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+  <div id="view-citizen" class="flex-1 flex flex-col overflow-hidden relative">
     
-    <!-- Left: Interactive Map Container (58% on desktop) -->
-    <div id="citizen-map-container" class="flex-1 relative flex flex-col min-h-[350px] lg:min-h-full w-full">
-      
-      <!-- Floating Map Layer Controls (Simplified & Decluttered) -->
-      <div class="absolute top-3 left-3 z-[1000] flex items-center space-x-2 max-w-[95vw] overflow-x-auto no-scrollbar">
-        <!-- Map Type Toggle -->
-        <div class="shadcn-card rounded-xl p-1 flex items-center space-x-1 shrink-0">
-          <button onclick="changeBaseMap('satellite', 'citizen')" id="btn-sat-cit" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-zinc-800 text-white transition">Satellite</button>
-          <button onclick="changeBaseMap('terrain', 'citizen')" id="btn-ter-cit" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">Relief</button>
-        </div>
-
-        <!-- Quick Overlays -->
-        <div class="shadcn-card rounded-xl px-2.5 py-1.5 text-xs flex items-center space-x-2 text-zinc-300 shrink-0">
-          <label class="flex items-center space-x-1 cursor-pointer hover:text-white">
-            <input type="checkbox" id="cit-layer-heatmap" checked onchange="toggleRiskHeatmap(this.checked)" class="accent-red-500 rounded">
-            <span class="font-semibold text-red-400">Risk Zones</span>
-          </label>
-          <span class="text-zinc-600">|</span>
-          <label class="flex items-center space-x-1 cursor-pointer hover:text-white">
-            <input type="checkbox" id="cit-layer-shelters" checked onchange="toggleCitizenShelters(this.checked)" class="accent-sky-500 rounded">
-            <span>Shelters</span>
-          </label>
-        </div>
-
-        <!-- 3D Mountain Button -->
-        <button onclick="open3dTerrainModal('nh10')" id="btn-cit-3d" class="shadcn-card rounded-xl px-3 py-1.5 text-xs font-bold text-cyan-400 hover:text-white transition flex items-center space-x-1.5 border border-cyan-500/30 shrink-0 shadow-sm" title="Launch 3D Mountain Digital Twin">
-          <i data-lucide="box" class="w-3.5 h-3.5 text-cyan-400"></i>
-          <span>3D View</span>
+    <!-- Top Citizen View Switcher Ribbon (Toggle between Simplified Safety Hub & Live GIS Map) -->
+    <div id="cit-view-mode-bar" class="bg-zinc-950/90 border-b border-zinc-800/80 px-3 sm:px-6 py-2 flex items-center justify-between z-20 shrink-0">
+      <div class="flex items-center space-x-1 sm:space-x-2 bg-zinc-900 border border-zinc-800 p-1 rounded-xl text-xs font-bold">
+        <button onclick="setCitizenViewMode('hub')" id="btn-cit-mode-hub" class="px-3 sm:px-4 py-1.5 rounded-lg bg-emerald-600 text-white font-extrabold shadow-sm flex items-center space-x-1.5 transition" title="Simplified Citizen Safety Hub">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span>Simplified Safety Hub</span>
+        </button>
+        <button onclick="setCitizenViewMode('map')" id="btn-cit-mode-map" class="px-3 sm:px-4 py-1.5 rounded-lg text-zinc-400 hover:text-white font-bold flex items-center space-x-1.5 transition" title="Full Screen Interactive GIS Map">
+          <i data-lucide="map" class="w-4 h-4"></i>
+          <span>Live Corridor Map</span>
         </button>
       </div>
 
-            <!-- Floating Doppler Weather Radar Player HUD -->
-      <div id="floating-radar-hud" class="hidden absolute top-12 left-3 z-[1200] p-2 sm:p-2.5 bg-black/90 backdrop-blur-md rounded-2xl border border-sky-500/60 text-xs font-mono text-zinc-200 shadow-2xl flex items-center space-x-2.5 flex-wrap gap-2 max-w-[95vw]">
-        <div class="flex items-center space-x-1.5">
-          <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
-          <span class="font-bold text-sky-300 text-[11px]">IMD Doppler Radar</span>
-        </div>
-        <div class="flex items-center space-x-1.5 bg-zinc-900 px-2 py-0.5 rounded-lg border border-zinc-700">
-          <button onclick="playPauseRadarPlayback()" class="text-white hover:text-sky-400 p-0.5" title="Play / Pause Time-Lapse">
-            <i data-lucide="play" id="icon-radar-play" class="w-3 h-3 fill-current"></i>
-          </button>
-          <input type="range" id="radar-time-slider" min="0" max="12" value="12" oninput="onRadarSliderChange(this.value)" class="w-20 sm:w-28 accent-sky-400 cursor-pointer">
-          <span id="radar-hud-time" class="text-sky-400 font-bold text-[10px] w-14 text-right">Latest IST</span>
-        </div>
-        <button onclick="openZoomEarthDirect()" class="px-2 py-0.5 bg-sky-500/20 hover:bg-sky-500/40 text-sky-200 border border-sky-400/50 rounded-lg text-[10px] font-extrabold flex items-center space-x-1 transition" title="Open in Zoom Earth">
-          <i data-lucide="external-link" class="w-2.5 h-2.5 text-sky-400"></i>
-          <span>Zoom Earth</span>
+      <!-- Quick Emergency Helpline Pill -->
+      <div class="flex items-center space-x-2">
+        <button onclick="openSosModal()" class="px-3 py-1.5 bg-rose-600/20 hover:bg-rose-600/30 text-rose-400 border border-rose-500/40 rounded-xl text-xs font-bold flex items-center space-x-1.5 transition shadow-sm">
+          <i data-lucide="phone-call" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span class="hidden sm:inline">Disaster Helpline:</span>
+          <span>1077</span>
         </button>
       </div>
-
-      <!-- Leaflet Map Element -->
-      <div id="map-citizen" class="flex-1 w-full h-full bg-[#05070c]"></div>
-
-      <!-- Friendly Legend -->
-      <div class="absolute bottom-3 left-3 z-[1000] shadcn-card rounded-xl p-2 hidden sm:flex items-center space-x-3 text-xs font-semibold">
-        <div class="flex items-center space-x-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-          <span>Safe Route</span>
-        </div>
-        <div class="flex items-center space-x-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-red-500 pulsing-radar"></span>
-          <span>Danger Zone</span>
-        </div>
-        <div class="flex items-center space-x-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
-          <span>Relief Shelter</span>
-        </div>
-        <div class="flex items-center space-x-1.5">
-          <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
-          <span>Critical Infra</span>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Right: Decluttered Citizen Information & Action Panel (42% on desktop) -->
-    <div id="citizen-content-container" class="w-full lg:w-[500px] xl:w-[540px] bg-[#0c0c0e] border-t lg:border-t-0 lg:border-l border-zinc-800 flex flex-col h-[58vh] lg:h-full z-20">
+    <!-- Main Citizen View Body -->
+    <div class="flex-1 flex flex-col overflow-hidden relative w-full">
       
-      <!-- Sub-Tab Header Switcher (Eliminates Clutter: 4 Clean Tabs) -->
-      <div class="p-2 border-b border-zinc-800/80 bg-zinc-950/80">
-        <div class="grid grid-cols-4 gap-1 bg-zinc-900 p-1 rounded-xl text-xs font-semibold">
-          <button onclick="switchCitizenSubTab('safety')" id="cit-subtab-safety" class="py-1.5 rounded-lg bg-emerald-600 text-white transition text-center shadow-sm flex items-center justify-center space-x-1.5" title="Area Safety">
-            <i data-lucide="shield" class="w-3.5 h-3.5"></i>
-            <span class="hidden sm:inline truncate">Safety</span>
-          </button>
-          <button onclick="switchCitizenSubTab('report')" id="cit-subtab-report" class="py-1.5 rounded-lg text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1.5" title="Report Hazard">
-            <i data-lucide="camera" class="w-3.5 h-3.5 text-amber-400"></i>
-            <span class="hidden sm:inline truncate">Report</span>
-          </button>
-          <button onclick="switchCitizenSubTab('roads')" id="cit-subtab-roads" class="py-1.5 rounded-lg text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1.5" title="Road Matrix">
-            <i data-lucide="navigation" class="w-3.5 h-3.5 text-cyan-400"></i>
-            <span class="hidden sm:inline truncate">Roads</span>
-          </button>
-          <button onclick="switchCitizenSubTab('shelters')" id="cit-subtab-shelters" class="py-1.5 rounded-lg text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1.5" title="Safe Shelters">
-            <i data-lucide="home" class="w-3.5 h-3.5 text-sky-400"></i>
-            <span class="hidden sm:inline truncate">Shelters</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Sub-Tab Container 1: Area Safety & Plain-Language Guidance -->
-      <div id="cit-pane-safety" class="flex-1 overflow-y-auto p-3 sm:p-4 pb-4 space-y-3.5">
+      <!-- Container 1: Simplified Citizen Safety Hub (Spacious, Full-Width / Centered) -->
+      <div id="citizen-content-container" class="flex-1 overflow-y-auto w-full bg-[#0c0c0e]">
         
-        <!-- Clean, Friendly Citizen Hero Status Banner -->
-        <div id="citizen-status-card" class="shadcn-card rounded-2xl p-4 sm:p-5 border border-emerald-500/30 bg-gradient-to-br from-emerald-950/25 via-slate-900/80 to-slate-950 space-y-3.5 shadow-xl">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2.5">
-              <span class="relative flex h-3.5 w-3.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-500"></span>
-              </span>
-              <span class="text-xs font-black font-mono uppercase tracking-wider text-emerald-400" id="cit-status-badge">SLOPE STABILITY NORMAL & SECURE</span>
-            </div>
-            <span class="info-btn" onclick="showInlineInfo(event, 'user_slope_stability')" title="Slope Info">i</span>
-          </div>
-
-          <div>
-            <h2 class="text-lg sm:text-xl font-black text-white tracking-tight" id="cit-status-title">All Nearby Mountain Slopes Normal & Stable</h2>
-            <p class="text-xs text-slate-300 mt-1 leading-relaxed" id="cit-status-desc">
-              Continuous radar and satellite monitoring active. All arterial mountain highways are passable. No immediate evacuation is required.
-            </p>
-          </div>
-
-          <!-- 3 Plain-Language Glance Chips -->
-          <div class="grid grid-cols-3 gap-2 text-center pt-1 font-mono">
-            <div class="p-2 bg-slate-950/80 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 block uppercase" data-i18n="glance.weather">Weather</span>
-              <b class="text-xs text-white" id="cit-glance-wx">24°C • Clear</b>
-            </div>
-            <div class="p-2 bg-slate-950/80 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 block uppercase" data-i18n="glance.rain_24h">24h Rain</span>
-              <b class="text-xs text-cyan-400" id="cit-glance-rain">38.4 mm</b>
-            </div>
-            <div class="p-2 bg-slate-950/80 rounded-xl border border-slate-800">
-              <span class="text-[10px] text-slate-400 block uppercase" data-i18n="glance.ground">Ground</span>
-              <b class="text-xs text-emerald-400" id="cit-glance-ground" data-i18n="glance.firm_safe">Firm & Safe</b>
-            </div>
-          </div>
-
-          <!-- Audio & SOS Helpline Bar -->
-          <div class="pt-2 border-t border-slate-800/80 flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center space-x-1.5">
-              <button onclick="startAudioAdvisory()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow transition flex items-center space-x-1.5">
-                <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
-                <span id="btn-txt-listen-advisory" data-i18n="labels.listen_advisory">Listen Advisory</span>
+        <!-- Sub-Tab Header Switcher -->
+        <div class="p-3 border-b border-zinc-800/80 bg-zinc-950/80 sticky top-0 z-30 backdrop-blur-md">
+          <div class="max-w-4xl mx-auto flex items-center justify-between">
+            <div class="grid grid-cols-4 gap-1.5 sm:gap-2 bg-zinc-900 p-1.5 rounded-2xl text-xs font-bold w-full sm:w-auto sm:min-w-[500px]">
+              <button onclick="switchCitizenSubTab('safety')" id="cit-subtab-safety" class="py-2 px-3 rounded-xl bg-emerald-600 text-white transition text-center shadow-sm flex items-center justify-center space-x-1.5" title="Area Safety & Alerts">
+                <i data-lucide="shield" class="w-4 h-4"></i>
+                <span class="truncate">Safety</span>
               </button>
-              <span class="info-btn" onclick="showInlineInfo(event, 'audio_listen')" title="Audio Advisory Info">i</span>
+              <button onclick="switchCitizenSubTab('report')" id="cit-subtab-report" class="py-2 px-3 rounded-xl text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1.5" title="Report Road Hazard">
+                <i data-lucide="camera" class="w-4 h-4 text-amber-400"></i>
+                <span class="truncate">Report</span>
+              </button>
+              <button onclick="switchCitizenSubTab('roads')" id="cit-subtab-roads" class="py-2 px-3 rounded-xl text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1.5" title="Road Status">
+                <i data-lucide="navigation" class="w-4 h-4 text-cyan-400"></i>
+                <span class="truncate">Roads</span>
+              </button>
+              <button onclick="switchCitizenSubTab('shelters')" id="cit-subtab-shelters" class="py-2 px-3 rounded-xl text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1.5" title="Safe Shelters">
+                <i data-lucide="home" class="w-4 h-4 text-sky-400"></i>
+                <span class="truncate">Shelters</span>
+              </button>
             </div>
-            <button onclick="openSosModal()" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center space-x-1.5">
-              <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
-              <span data-i18n="labels.call_helpline">Call 1077 Helpline</span>
-            </button>
-          </div>
-
-          <div class="pt-1 flex items-center justify-between text-[10px] text-slate-400 font-mono">
-            <span><span id="lbl-last-evaluated-prefix" data-i18n="labels.last_evaluated">Last Evaluated:</span> <b class="text-slate-200" id="cit-status-updated-time">08 Sep 2026 • 21:30 IST</b></span>
-            <span class="text-emerald-400 font-bold" id="lbl-confidence-metric" data-i18n="labels.high_confidence">● High Confidence (98.3% Recall)</span>
           </div>
         </div>
 
-        
-        <!-- AI PREDICTED IMPENDING HAZARD ALERT CARD (Fused from GSI + VEDAS + Ambee + W&R) -->
-        <div id="cit-ai-hazard-card" class="hidden shadcn-card rounded-2xl p-4 sm:p-5 border-2 border-amber-500/70 bg-gradient-to-br from-amber-950/40 via-zinc-950 to-zinc-900 space-y-3 shadow-xl">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-              <span class="w-3 h-3 rounded-full bg-amber-400 animate-ping shrink-0"></span>
-              <span class="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center space-x-1.5">
+        <!-- Sub-Tab Container 1: Area Safety & Plain-Language Guidance -->
+        <div id="cit-pane-safety" class="py-6 px-4 sm:px-8 space-y-6 max-w-4xl mx-auto">
+          
+          <!-- Friendly Citizen Hero Status Card -->
+          <div id="citizen-status-card" class="shadcn-card rounded-3xl p-5 sm:p-7 border-2 border-emerald-500/40 bg-gradient-to-br from-emerald-950/30 via-slate-900/90 to-slate-950 space-y-5 shadow-2xl">
+            
+            <!-- Live Status Beacon & Header -->
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-3">
+                <span class="relative flex h-4 w-4">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500"></span>
+                </span>
+                <span class="text-xs font-black uppercase tracking-wider text-emerald-400" id="cit-status-badge">SLOPE STABILITY NORMAL & SECURE</span>
+              </div>
+              <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_slope_stability')" title="Safety Info">i</span>
+            </div>
+
+            <!-- Plain-Language Main Headline & Description -->
+            <div>
+              <h2 class="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug" id="cit-status-title">All Nearby Mountain Slopes Normal & Stable</h2>
+              <p class="text-sm text-slate-300 mt-2 leading-relaxed" id="cit-status-desc">
+                Continuous radar and satellite monitoring active. All arterial mountain highways are passable. No immediate evacuation is required.
+              </p>
+            </div>
+
+            <!-- 3 Plain-Language Glance Chips (Clean, Spacious) -->
+            <div class="grid grid-cols-3 gap-3 text-center pt-1 font-sans">
+              <div class="p-3 bg-slate-950/80 rounded-2xl border border-slate-800/80 flex flex-col justify-center shadow-sm">
+                <span class="text-[11px] text-slate-400 block uppercase font-semibold" data-i18n="glance.weather">Weather</span>
+                <b class="text-sm text-white mt-1" id="cit-glance-wx">24°C • Clear</b>
+              </div>
+              <div class="p-3 bg-slate-950/80 rounded-2xl border border-slate-800/80 flex flex-col justify-center shadow-sm">
+                <span class="text-[11px] text-slate-400 block uppercase font-semibold" data-i18n="glance.rain_24h">24h Rain</span>
+                <b class="text-sm text-cyan-400 mt-1" id="cit-glance-rain">38.4 mm</b>
+              </div>
+              <div class="p-3 bg-slate-950/80 rounded-2xl border border-slate-800/80 flex flex-col justify-center shadow-sm">
+                <span class="text-[11px] text-slate-400 block uppercase font-semibold" data-i18n="glance.ground">Ground</span>
+                <b class="text-sm text-emerald-400 mt-1" id="cit-glance-ground" data-i18n="glance.firm_safe">Firm & Safe</b>
+              </div>
+            </div>
+
+            <!-- Primary Audio & SOS Helpline Action Bar -->
+            <div class="pt-3 border-t border-slate-800/80 flex items-center justify-between flex-wrap gap-3">
+              <div class="flex items-center space-x-2">
+                <button onclick="startAudioAdvisory()" class="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center space-x-2">
+                  <i data-lucide="volume-2" class="w-4 h-4"></i>
+                  <span id="btn-txt-listen-advisory" data-i18n="labels.listen_advisory">Listen Advisory</span>
+                </button>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'audio_listen')" title="Audio Advisory Info">i</span>
+              </div>
+              <button onclick="openSosModal()" class="px-4 py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-rose-600/30 transition flex items-center space-x-2">
+                <i data-lucide="phone-call" class="w-4 h-4"></i>
+                <span data-i18n="labels.call_helpline">Call 1077 Helpline</span>
+              </button>
+            </div>
+
+            <!-- Reassurance Footer -->
+            <div class="pt-1 flex items-center justify-between text-[11px] text-slate-400 font-sans">
+              <span><span id="lbl-last-evaluated-prefix" data-i18n="labels.last_evaluated">Last Evaluated:</span> <b class="text-slate-200" id="cit-status-updated-time">08 Sep 2026 • 21:30 IST</b></span>
+              <span class="text-emerald-400 font-bold" id="lbl-confidence-metric" data-i18n="labels.high_confidence">● High Confidence (98.3% Recall)</span>
+            </div>
+          </div>
+
+          <!-- 4 Large Quick Non-Technical Citizen Action Cards -->
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+            <button onclick="switchCitizenSubTab('roads')" class="p-4 rounded-3xl bg-zinc-900/90 border border-zinc-800 hover:border-cyan-500/60 hover:bg-zinc-850 transition flex flex-col items-center text-center space-y-2 group shadow-md">
+              <div class="w-11 h-11 rounded-2xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center group-hover:scale-105 transition">
+                <i data-lucide="navigation" class="w-5 h-5"></i>
+              </div>
+              <span class="text-xs font-black text-white">Road Status</span>
+              <span class="text-[11px] text-zinc-400 font-medium leading-tight">Live Highway Matrix</span>
+            </button>
+            
+            <button onclick="switchCitizenSubTab('shelters')" class="p-4 rounded-3xl bg-zinc-900/90 border border-zinc-800 hover:border-emerald-500/60 hover:bg-zinc-850 transition flex flex-col items-center text-center space-y-2 group shadow-md">
+              <div class="w-11 h-11 rounded-2xl bg-emerald-500/15 text-emerald-400 flex items-center justify-center group-hover:scale-105 transition">
+                <i data-lucide="home" class="w-5 h-5"></i>
+              </div>
+              <span class="text-xs font-black text-white">Safe Shelters</span>
+              <span class="text-[11px] text-zinc-400 font-medium leading-tight">Nearby Relief Centers</span>
+            </button>
+            
+            <button onclick="switchCitizenSubTab('report')" class="p-4 rounded-3xl bg-zinc-900/90 border border-zinc-800 hover:border-amber-500/60 hover:bg-zinc-850 transition flex flex-col items-center text-center space-y-2 group shadow-md">
+              <div class="w-11 h-11 rounded-2xl bg-amber-500/15 text-amber-400 flex items-center justify-center group-hover:scale-105 transition">
+                <i data-lucide="camera" class="w-5 h-5"></i>
+              </div>
+              <span class="text-xs font-black text-white">Report Hazard</span>
+              <span class="text-[11px] text-zinc-400 font-medium leading-tight">Upload Field Photo</span>
+            </button>
+            
+            <button onclick="openSmsSubscribeModal()" class="p-4 rounded-3xl bg-zinc-900/90 border border-zinc-800 hover:border-cyan-500/60 hover:bg-zinc-850 transition flex flex-col items-center text-center space-y-2 group shadow-md">
+              <div class="w-11 h-11 rounded-2xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center group-hover:scale-105 transition">
+                <i data-lucide="bell" class="w-5 h-5"></i>
+              </div>
+              <span class="text-xs font-black text-white">Free SMS</span>
+              <span class="text-[11px] text-zinc-400 font-medium leading-tight">Instant Text Alerts</span>
+            </button>
+          </div>
+
+          <!-- Interactive Area Map Card (Clean Preview with 1-Click Expansion) -->
+          <div class="shadcn-card rounded-3xl p-5 border border-zinc-800 space-y-3.5 shadow-xl">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-2xl bg-cyan-500/15 text-cyan-400 flex items-center justify-center shrink-0">
+                  <i data-lucide="map-pin" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <h3 class="text-sm font-extrabold text-white">Live Mountain Corridor Safety Map</h3>
+                  <p class="text-xs text-zinc-400">View safe corridors, relief camps, and checkpoints on the interactive map.</p>
+                </div>
+              </div>
+              <button onclick="setCitizenViewMode('map')" class="px-4 py-2 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white text-xs font-extrabold rounded-xl shadow transition flex items-center space-x-1.5 shrink-0">
+                <i data-lucide="maximize-2" class="w-4 h-4"></i>
+                <span>Open Interactive Map</span>
+              </button>
+            </div>
+            <div class="flex items-center space-x-4 pt-1 text-xs font-medium text-zinc-400">
+              <span class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span><span class="text-zinc-300">Open Roads</span></span>
+              <span class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span><span class="text-zinc-300">Safe Shelters</span></span>
+              <span class="flex items-center space-x-1.5"><span class="w-2.5 h-2.5 rounded-full bg-red-500"></span><span class="text-zinc-300">Hazard Zones</span></span>
+            </div>
+          </div>
+
+          <!-- AI PREDICTED IMPENDING HAZARD ALERT CARD (Hidden until alert triggered) -->
+          <div id="cit-ai-hazard-card" class="hidden shadcn-card rounded-3xl p-5 border-2 border-amber-500/80 bg-gradient-to-br from-amber-950/40 via-zinc-950 to-zinc-900 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <span class="w-3.5 h-3.5 rounded-full bg-amber-400 animate-ping shrink-0"></span>
+                <span class="text-xs font-black uppercase tracking-wider text-amber-400 flex items-center space-x-1.5">
+                  <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+                  <span id="cit-ai-hazard-badge">AI PREDICTED HAZARD ALERT</span>
+                </span>
+              </div>
+              <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-700 font-bold" id="cit-ai-hazard-prob">89% PROBABILITY</span>
+            </div>
+
+            <div>
+              <h3 class="text-base sm:text-lg font-extrabold text-white tracking-tight" id="cit-ai-hazard-title">Impending Landslide / Debris Flow Predicted</h3>
+              <p class="text-xs sm:text-sm text-zinc-300 mt-1.5 leading-relaxed" id="cit-ai-hazard-desc">
+                AI multi-hazard fusion of live Doppler radar, continuous mountain rainfall, and ground saturation indicates high probability of slope failure along NH-10 in the next 2-4 hours.
+              </p>
+            </div>
+
+            <!-- Plain Language Action Directive -->
+            <div class="p-3.5 bg-black/60 rounded-2xl border border-amber-500/40 flex items-center justify-between flex-wrap gap-2">
+              <div class="flex items-center space-x-2.5 text-xs text-amber-200 font-medium">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400 shrink-0"></i>
+                <span id="cit-ai-hazard-action">Recommended: Avoid NH-10 transit; proceed to designated shelter if living near steep slopes.</span>
+              </div>
+              <button onclick="switchCitizenSubTab('shelters')" class="px-3.5 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-xl shadow transition flex items-center space-x-1">
+                <i data-lucide="home" class="w-3.5 h-3.5"></i>
+                <span data-i18n="labels.nearest_shelter">Nearest Shelter</span>
+              </button>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] font-mono text-zinc-400 pt-1 border-t border-zinc-800 flex-wrap gap-2">
+              <span><span id="lbl-horizon-prefix" data-i18n="labels.forecast_horizon">Forecast Horizon:</span> <b class="text-amber-400" id="cit-ai-hazard-horizon">Next 2 - 4 Hours</b></span>
+              <span><span id="lbl-target-prefix" data-i18n="labels.target_corridor">Target Corridor:</span> <b class="text-zinc-200" id="cit-ai-hazard-location">NH-10 Mile 44 (Singtam-Rangpo)</b></span>
+            </div>
+          </div>
+
+          <!-- IMD Live Weather Broadcast Card -->
+          <div id="citizen-weather-broadcast-card" class="shadcn-card rounded-3xl p-5 border-l-4 border-emerald-500 bg-gradient-to-br from-emerald-950/15 via-zinc-950 to-zinc-900 space-y-4 shadow-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
+                  <i data-lucide="radio" class="w-4 h-4 text-emerald-400"></i>
+                  <span id="wx-bc-badge">LIVE IMD WEATHER BROADCAST</span>
+                </span>
+              </div>
+              <div class="flex items-center space-x-1.5">
+                <span id="wx-bc-alert-level" class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-extrabold">ADVISORY</span>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_weather_broadcast')" title="Weather Info">i</span>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-base font-extrabold text-white leading-snug" id="wx-bc-title">Regional Meteorological Observation Bulletin</h3>
+              <p class="text-xs text-zinc-400 font-mono mt-1 flex items-center space-x-1.5">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-zinc-500 inline"></i>
+                <span id="wx-bc-time">Active Stream • RMC Guwahati & Gangtok</span>
+              </p>
+            </div>
+
+            <div class="bg-black/70 p-3.5 rounded-2xl border border-zinc-800 text-xs sm:text-sm text-zinc-200 leading-relaxed font-sans" id="wx-bc-text">
+              Continuous Doppler radar telemetry active. Monsoon airmass inflow monitored across mountain highway corridors. Drive carefully along hillside roads.
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 text-xs font-mono">
+              <div class="bg-zinc-950/90 p-3 rounded-xl border border-zinc-800">
+                <span class="text-zinc-400" data-i18n="weather_broadcast.projected_rain">24H PROJECTED RAIN:</span>
+                <span class="text-cyan-400 font-bold ml-1.5" id="wx-bc-rain">35 - 55 mm</span>
+              </div>
+              <div class="bg-zinc-950/90 p-3 rounded-xl border border-zinc-800">
+                <span class="text-zinc-400" data-i18n="weather_broadcast.flood_risk">FLASH FLOOD RISK:</span>
+                <span class="text-emerald-400 font-bold ml-1.5" id="wx-bc-flood">LOW / NORMAL</span>
+              </div>
+            </div>
+
+            <div class="pt-1 flex items-center justify-between gap-3">
+              <button onclick="playWeatherBroadcastAudio()" id="btn-play-wx-audio" class="flex-1 py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-2">
+                <i data-lucide="volume-2" class="w-4 h-4"></i>
+                <span id="txt-listen-weather-bulletin">Listen Weather Bulletin</span>
+              </button>
+              <button onclick="stopWeatherBroadcastAudio()" id="btn-stop-wx-audio" class="hidden px-4 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-bold text-xs rounded-xl border border-zinc-700 transition flex items-center space-x-1.5">
+                <i data-lucide="square" class="w-3.5 h-3.5 fill-current text-red-400"></i>
+                <span id="txt-stop-weather-bulletin">Stop</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Community SMS Early Warning Subscription Card -->
+          <div class="shadcn-card rounded-3xl p-5 border border-cyan-500/40 bg-cyan-950/20 space-y-3">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <i data-lucide="message-square" class="w-5 h-5 text-cyan-400"></i>
+                <span class="text-sm font-bold text-white" id="txt-sms-title">Community SMS Early Warnings</span>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_sms_alerts')" title="SMS Alerts Info">i</span>
+              </div>
+              <span class="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-cyan-900/60 text-cyan-300 border border-cyan-700 font-bold">NDMA SACHET</span>
+            </div>
+            <p class="text-xs text-zinc-300 leading-relaxed" id="txt-sms-desc">
+              Receive automated SMS & audio IVR alerts on your mobile phone for flash floods, mudflows, and road blocks in your local language.
+            </p>
+            <button onclick="openSmsSubscribeModal()" class="w-full py-2.5 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white text-xs font-extrabold rounded-xl shadow transition flex items-center justify-center space-x-2">
+              <i data-lucide="bell" class="w-4 h-4"></i>
+              <span id="btn-subscribe-sms">SUBSCRIBE MOBILE TO FREE SMS ALERTS</span>
+            </button>
+          </div>
+
+          <!-- Today's Weather & Ground Saturation -->
+          <div class="shadcn-card rounded-3xl p-5 space-y-3.5">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-xs sm:text-sm text-white flex items-center space-x-2">
+                <i data-lucide="cloud-rain" class="w-4 h-4 text-cyan-400"></i>
+                <span id="txt-weather-title">Today's Regional Rainfall & Saturation</span>
+              </h3>
+              <span class="text-[10px] font-mono text-cyan-400">IMD Doppler Feed</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3.5 pt-1">
+              <div class="bg-zinc-950/80 p-3.5 rounded-2xl border border-zinc-800">
+                <div class="flex justify-between items-center text-[10px] font-mono text-zinc-400 uppercase">
+                  <span>24-Hour Rainfall</span>
+                  <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_rainfall_metric')" title="Rainfall Info">i</span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-black text-cyan-400 font-mono mt-1" id="cit-rain-val">142.6 mm</div>
+                <span class="text-[11px] text-amber-400 font-medium">Moderate Inflow</span>
+              </div>
+              <div class="bg-zinc-950/80 p-3.5 rounded-2xl border border-zinc-800">
+                <div class="flex justify-between items-center text-[10px] font-mono text-zinc-400 uppercase">
+                  <span>Ground Saturation</span>
+                  <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_ground_saturation')" title="Saturation Info">i</span>
+                </div>
+                <div class="text-2xl sm:text-3xl font-black text-emerald-400 font-mono mt-1" id="cit-ground-val">Stable</div>
+                <span class="text-[11px] text-emerald-300 font-medium">Normal Drainage</span>
+              </div>
+            </div>
+            <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[11px] text-zinc-400 font-mono">
+              <span>Doppler Radar Feed As Of: <b class="text-cyan-300" id="cit-weather-updated-time">08 Sep 2026 • 21:30 IST</b></span>
+              <span class="text-zinc-500">IMD RMC Network</span>
+            </div>
+          </div>
+
+          <!-- IMD 72-Hour Weather-Linked Risk Forecast Horizon -->
+          <div class="shadcn-card rounded-3xl p-5 space-y-3.5">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
+                <h3 class="font-extrabold text-xs sm:text-sm text-white" id="txt-forecast-title">IMD 72-Hour Weather-Linked Risk Forecast</h3>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_72h_forecast')" title="Forecast Info">i</span>
+              </div>
+              <span class="text-[10px] font-mono text-amber-400">Precipitation Horizon</span>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-zinc-400 font-mono pb-1.5 border-b border-zinc-800/80">
+              <span>GFS Model Horizon Run: <b class="text-amber-300" id="cit-forecast-updated-time">08 Sep 2026 • 21:00 IST</b></span>
+              <span class="text-zinc-500">72-Hour Cycle</span>
+            </div>
+            <div id="cit-forecast-container" class="space-y-2 text-xs font-mono">
+              <!-- Dynamically populated by app.js -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Sub-Tab Container 2: Citizen Hazard Reporting & Offline Field Gateway -->
+        <div id="cit-pane-report" class="hidden py-6 px-4 sm:px-8 space-y-6 max-w-4xl mx-auto">
+          
+          <!-- Header & Offline Queue Button -->
+          <div class="flex items-center justify-between px-1">
+            <div>
+              <h3 class="text-base font-extrabold text-white">Report a Road Hazard or Landslide</h3>
+              <p class="text-xs text-zinc-400">Send photos & alerts directly to the district disaster room.</p>
+            </div>
+            <button onclick="openMyReportsModal()" class="text-xs text-amber-400 hover:text-amber-300 font-bold flex items-center space-x-1.5 py-1.5 px-3 rounded-xl bg-amber-500/10 border border-amber-500/30 transition shrink-0">
+              <i data-lucide="folder-check" class="w-4 h-4"></i>
+              <span id="btn-my-reports">My Reports</span>
+            </button>
+          </div>
+
+          <!-- Clean, Friendly Citizen Report Form -->
+          <div class="shadcn-card rounded-3xl p-5 sm:p-7 space-y-5 border border-zinc-800 shadow-xl">
+
+            <!-- Step 1: Reporter Contact Details -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center justify-between text-xs font-semibold text-zinc-300">
+                  <span class="flex items-center space-x-1.5">
+                    <i data-lucide="user" class="w-4 h-4 text-amber-400"></i>
+                    <span data-i18n="field_report.name_label">Your Full Name *</span>
+                  </span>
+                  <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'report_reporter_info')" title="Name Info">i</span>
+                </div>
+                <input type="text" id="report-reporter-name" placeholder="Enter your name" data-i18n-placeholder="field_report.name_placeholder" class="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 outline-none transition mt-1.5" required>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between text-xs font-semibold text-zinc-300">
+                  <span class="flex items-center space-x-1.5">
+                    <i data-lucide="phone" class="w-4 h-4 text-amber-400"></i>
+                    <span data-i18n="field_report.phone_label">10-Digit Mobile *</span>
+                  </span>
+                  <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'report_phone_info')" title="Phone Info">i</span>
+                </div>
+                <input type="tel" id="report-reporter-phone" maxlength="10" placeholder="e.g. 9876543210" data-i18n-placeholder="field_report.phone_placeholder" class="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-white text-xs font-mono placeholder:text-zinc-500 outline-none transition mt-1.5" required>
+              </div>
+            </div>
+
+            <input type="hidden" id="report-crack-width" value="15.0">
+
+            <!-- Step 2: Location & Landmark (Non-Technical, No GPS coordinates required) -->
+            <div>
+              <div class="flex items-center justify-between text-xs font-semibold text-amber-300">
+                <span class="flex items-center space-x-1.5">
+                  <i data-lucide="map-pin" class="w-4 h-4 text-amber-400"></i>
+                  <span id="lbl-report-location">Hazard Location & Landmark *</span>
+                </span>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'report_location')" title="Location Info">i</span>
+              </div>
+              <div class="mt-1.5 space-y-2.5">
+                <input type="text" id="report-location-name" placeholder="Where is the hazard? e.g. Near Singtam Bridge, Mile 44" class="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-500 rounded-xl px-3.5 py-2.5 text-white text-xs placeholder:text-zinc-500 outline-none transition" required>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="text-[11px] text-zinc-400 font-medium" id="lbl-report-state">State / Region</label>
+                    <select id="report-region-select" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white text-xs mt-1 focus:border-amber-500 outline-none">
+                      <option value="sikkim">Sikkim</option>
+                      <option value="assam">Assam</option>
+                      <option value="meghalaya">Meghalaya</option>
+                      <option value="arunachal">Arunachal Pradesh</option>
+                      <option value="manipur">Manipur</option>
+                      <option value="mizoram">Mizoram</option>
+                      <option value="nagaland">Nagaland</option>
+                      <option value="tripura">Tripura</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="text-[11px] text-zinc-400 font-medium" id="lbl-report-landmark">Nearest Landmark</label>
+                    <input type="text" id="report-landmark" placeholder="e.g. Near Police Checkpost" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-white text-xs mt-1 placeholder:text-zinc-500 focus:border-amber-500 outline-none">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3: What problem do you see? & Danger Level -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="text-xs font-semibold text-zinc-300" data-i18n="field_report.hazard_type_label">What problem do you see? *</label>
+                <select id="report-hazard-type" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-xs mt-1.5 focus:border-amber-500 outline-none">
+                  <option value="Blocked Highway / Rockfall">🪨 Rocks / Boulders on Road</option>
+                  <option value="Slope Slump / Mudflow">🌊 Mudslide / Flowing Mud</option>
+                  <option value="Tension Crack Widening">💥 Ground / Road Cracking</option>
+                  <option value="Sinking Road Embankment">🚧 Road Sinking / Wall Damage</option>
+                  <option value="Flash Flood Debris Flow / Culvert Jam">⚠️ Flash Flood / Culvert Overflow</option>
+                  <option value="Fallen Tree / Powerline">🌲 Fallen Tree / Power Pole</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-xs font-semibold text-zinc-300" data-i18n="field_report.severity_label">Danger Level *</label>
+                <select id="report-severity" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2.5 text-white text-xs mt-1.5 focus:border-amber-500 outline-none">
+                  <option value="CRITICAL">🚨 High Danger / Road Blocked</option>
+                  <option value="MODERATE">⚠️ Moderate / Single Lane Open</option>
+                  <option value="ADVISORY">ℹ️ Low / Warning Sign (Passable)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Observation Details -->
+            <div>
+              <label class="text-xs font-semibold text-zinc-300">Description or Details (Optional)</label>
+              <textarea id="report-desc" rows="2" placeholder="Describe what happened or any urgent assistance needed..." class="w-full bg-zinc-900 border border-zinc-700 rounded-xl p-3 text-white text-xs mt-1.5 placeholder:text-zinc-500 focus:border-amber-500 outline-none"></textarea>
+            </div>
+
+            <!-- Step 4: Photo / Video Attachment -->
+            <div>
+              <label class="text-xs font-semibold text-zinc-300">Attach Field Photograph or Video</label>
+              <div class="mt-1.5 flex items-center space-x-2">
+                <input type="file" id="report-photo-input" accept="image/*,video/*" capture="environment" onchange="handlePhotoSelect(event)" class="text-xs text-zinc-400 file:mr-2 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-zinc-800 file:text-amber-400 hover:file:bg-zinc-700 cursor-pointer">
+              </div>
+
+              <!-- Image & Video Live Preview Container -->
+              <div id="report-photo-preview-container" class="hidden mt-3 p-3 bg-zinc-950 rounded-2xl border border-zinc-800 flex items-center space-x-3">
+                <img id="report-photo-preview-img" src="" alt="Photo Preview" class="w-16 h-16 object-cover rounded-xl border border-amber-500/40 shrink-0">
+                <video id="report-video-preview" controls class="hidden w-20 h-16 object-cover rounded-xl border border-amber-500/40 bg-black shrink-0"></video>
+                <div class="flex-1 min-w-0 text-xs">
+                  <div class="font-bold text-white truncate" id="report-photo-preview-name">media.jpg</div>
+                  <div class="text-[10px] text-zinc-400 font-mono" id="report-photo-preview-size">0 KB</div>
+                  <span class="text-[10px] text-emerald-400 font-mono font-semibold flex items-center space-x-1 mt-0.5">
+                    <i data-lucide="check-circle" class="w-3 h-3 inline"></i>
+                    <span>Media Attached & Ready</span>
+                  </span>
+                </div>
+                <button type="button" onclick="clearPhotoAttachment()" class="text-zinc-400 hover:text-red-400 text-xs p-2 rounded-xl hover:bg-zinc-800 transition" title="Remove Media">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <p class="text-xs text-amber-400/90 flex items-center space-x-1.5 pt-1">
+              <i data-lucide="shield-check" class="w-4 h-4 text-amber-400 inline shrink-0"></i>
+              <span id="txt-report-verification-notice">Reports are verified by DEOC Control Room before alerting all citizens.</span>
+            </p>
+
+            <!-- Submit Button -->
+            <button onclick="submitCitizenFieldReport()" class="w-full py-3.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-black font-extrabold text-xs rounded-2xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-2">
+              <i data-lucide="send" class="w-4 h-4"></i>
+              <span id="btn-txt-submit-report">SUBMIT HAZARD REPORT FOR VERIFICATION</span>
+            </button>
+
+          </div>
+
+          <!-- COLLAPSIBLE: Field Officer & Technical Tools (Edge TinyML & DIC Crack Scanner) -->
+          <details class="shadcn-card rounded-3xl p-5 border border-sky-500/40 bg-sky-950/20 group transition">
+            <summary class="flex items-center justify-between cursor-pointer font-bold text-xs text-sky-400 hover:text-sky-300 list-none">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="cpu" class="w-4 h-4 text-sky-400"></i>
+                <span>🔬 Field Officer Tools (Edge TinyML & Crack Optical Flow)</span>
+              </div>
+              <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-bold group-open:hidden">TAP TO EXPAND</span>
+              <span class="text-[10px] font-mono px-2.5 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-bold hidden group-open:inline">COLLAPSE</span>
+            </summary>
+            
+            <div class="pt-4 space-y-4">
+              
+              <!-- Edge TinyML 100% Offline / Zero-Cloud Scanner -->
+              <div class="p-4 bg-zinc-950/80 rounded-2xl border border-sky-500/30 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-sky-400 flex items-center space-x-1.5">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                    <span>EDGE TINYML ON-DEVICE SCANNER (ZERO-CLOUD)</span>
+                  </span>
+                  <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-bold">&lt; 15ms LATENCY</span>
+                </div>
+                <p class="text-xs text-zinc-300 leading-relaxed">
+                  Runs quantized neural inference on phone hardware without cloud API calls during total mountain network blackouts.
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-mono">
+                  <div class="p-3 bg-zinc-900/90 rounded-xl border border-zinc-800">
+                    <span class="text-[10px] text-zinc-400 block">Slope Incline:</span>
+                    <div class="flex items-center justify-between mt-1">
+                      <span class="text-white font-bold" id="edge-tinyml-slope-val">34°</span>
+                      <input type="range" id="edge-tinyml-slope" min="10" max="65" value="34" oninput="document.getElementById('edge-tinyml-slope-val').textContent = this.value + '°'" class="w-24 accent-sky-400">
+                    </div>
+                  </div>
+
+                  <div class="p-3 bg-zinc-900/90 rounded-xl border border-zinc-800">
+                    <span class="text-[10px] text-zinc-400 block">Soil Moisture:</span>
+                    <div class="flex items-center justify-between mt-1">
+                      <span class="text-white font-bold" id="edge-tinyml-moist-val">82%</span>
+                      <input type="range" id="edge-tinyml-moist" min="20" max="100" value="82" oninput="document.getElementById('edge-tinyml-moist-val').textContent = this.value + '%'" class="w-24 accent-sky-400">
+                    </div>
+                  </div>
+
+                  <div class="p-3 bg-zinc-900/90 rounded-xl border border-zinc-800">
+                    <span class="text-[10px] text-zinc-400 block">Rain Intensity:</span>
+                    <div class="flex items-center justify-between mt-1">
+                      <span class="text-white font-bold" id="edge-tinyml-rain-val">65 mm/h</span>
+                      <input type="range" id="edge-tinyml-rain" min="0" max="150" value="65" oninput="document.getElementById('edge-tinyml-rain-val').textContent = this.value + ' mm/h'" class="w-24 accent-sky-400">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
+                  <button type="button" onclick="runEdgeTinyMLScan()" class="flex-1 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-black font-extrabold text-xs rounded-xl shadow transition flex items-center justify-center space-x-1.5">
+                    <i data-lucide="cpu" class="w-4 h-4"></i>
+                    <span>CALCULATE RISK ON-DEVICE (&lt; 15ms)</span>
+                  </button>
+                  <label class="flex items-center space-x-2 text-xs font-mono text-zinc-300 cursor-pointer p-2 bg-zinc-900 rounded-xl border border-zinc-800">
+                    <input type="checkbox" id="edge-offline-simulator-toggle" onchange="toggleEdgeOfflineSimulator(this.checked)" class="accent-sky-400 rounded">
+                    <span>Simulate Zero Signal (Airgap)</span>
+                  </label>
+                </div>
+
+                <!-- On-Device Result Display -->
+                <div id="edge-tinyml-result-card" class="p-3.5 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2.5 font-mono text-xs">
+                  <div class="flex items-center justify-between">
+                    <span class="text-[10px] text-zinc-400">ON-DEVICE INFERENCE ENGINE:</span>
+                    <span id="edge-scan-status-badge" class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold text-[10px]">🟢 GREEN: SAFE (FS = 1.62)</span>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 text-center text-[10px] pt-1">
+                    <div class="bg-black/50 p-2 rounded-lg">
+                      <span class="text-zinc-500 block text-[9px]">Factor of Safety</span>
+                      <b class="text-emerald-400 text-xs" id="edge-fs-val">1.62</b>
+                    </div>
+                    <div class="bg-black/50 p-2 rounded-lg">
+                      <span class="text-zinc-500 block text-[9px]">Neural Risk</span>
+                      <b class="text-sky-400 text-xs" id="edge-prob-val">24.5%</b>
+                    </div>
+                    <div class="bg-black/50 p-2 rounded-lg">
+                      <span class="text-zinc-500 block text-[9px]">Latency</span>
+                      <b class="text-emerald-300 text-xs" id="edge-latency-val">4.2 ms</b>
+                    </div>
+                  </div>
+                  <p class="text-xs text-zinc-300" id="edge-action-val">
+                    Slope mechanically secure (FS &gt; 1.35). Normal conditions. Routine monitoring active.
+                  </p>
+                  <div class="text-[10px] text-zinc-400 pt-1.5 border-t border-zinc-800/80 flex items-center justify-between">
+                    <span id="edge-queue-status">💾 Persisted to Offline Local Queue (0 pending syncs)</span>
+                    <button type="button" onclick="showOfflineQueueModal()" class="text-sky-400 hover:underline">View Queue</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Digital Image Correlation (DIC) Crack Displacement Visualizer -->
+              <div class="p-4 bg-zinc-950/80 rounded-2xl border border-rose-500/30 space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-rose-400 flex items-center space-x-1.5">
+                    <i data-lucide="scan" class="w-3.5 h-3.5"></i>
+                    <span>DIGITAL IMAGE CORRELATION (DIC) CRACK DISPLACEMENT</span>
+                  </span>
+                  <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold">OPTICAL FLOW Δw</span>
+                </div>
+                <p class="text-xs text-zinc-300 leading-relaxed">
+                  Temporal Pair Comparison calculates displacement between photographs. If Δw &ge; 2.0 mm/24h, system triggers automatic evacuation.
+                </p>
+
+                <!-- Dual Photo Comparison Frame -->
+                <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+                  <div class="p-2 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-1">
+                    <div class="flex justify-between items-center text-zinc-400">
+                      <span>DAY 1: BASELINE</span>
+                      <span class="text-emerald-400">24h Ago</span>
+                    </div>
+                    <div class="w-full h-24 bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800 relative overflow-hidden">
+                      <svg viewBox="0 0 100 60" class="w-full h-full text-zinc-700">
+                        <line x1="10" y1="30" x2="90" y2="30" stroke="currentColor" stroke-dasharray="2,2"/>
+                        <path d="M 20 28 Q 50 25 80 32" stroke="#10b981" stroke-width="1.5" fill="none"/>
+                      </svg>
+                      <span class="absolute bottom-1 right-2 text-[9px] text-zinc-500 font-mono">w0 = 12.4 mm</span>
+                    </div>
+                  </div>
+
+                  <div class="p-2 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-1">
+                    <div class="flex justify-between items-center text-zinc-400">
+                      <span>DAY 2: CURRENT</span>
+                      <span class="text-rose-400">Live Field</span>
+                    </div>
+                    <div id="crack-visualizer-box" class="w-full h-24 bg-zinc-950 rounded-lg flex items-center justify-center border border-rose-500/50 relative overflow-hidden">
+                      <svg viewBox="0 0 100 60" class="w-full h-full text-zinc-700">
+                        <line x1="10" y1="30" x2="90" y2="30" stroke="currentColor" stroke-dasharray="2,2"/>
+                        <path id="crack-svg-path" d="M 20 25 Q 50 18 80 35" stroke="#ef4444" stroke-width="3" fill="none"/>
+                      </svg>
+                      <span id="crack-visualizer-badge" class="absolute bottom-1 right-2 text-[9px] text-rose-400 font-mono font-bold">w1 = 15.1 mm (Δ +2.7mm)</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Crack Displacement Interactive Demo Slider -->
+                <div class="p-3 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-1.5">
+                  <div class="flex justify-between items-center text-xs font-mono">
+                    <span class="text-zinc-400">Simulate Crack Displacement Rate (Δw):</span>
+                    <b class="text-rose-400" id="crack-slider-val">+2.7 mm / 24h</b>
+                  </div>
+                  <input type="range" id="crack-displacement-slider" min="0.2" max="6.0" step="0.1" value="2.7" oninput="onCrackSliderChange(this.value)" class="w-full accent-rose-500">
+                  <div class="flex justify-between text-[10px] text-zinc-500 font-mono">
+                    <span>0.2 mm (Micro-creep)</span>
+                    <span class="text-amber-400">1.5 mm (Threshold)</span>
+                    <span class="text-rose-400">6.0 mm (Rupture)</span>
+                  </div>
+                </div>
+
+                <!-- Automated Evacuation Mandate Alert Box -->
+                <div id="crack-auto-evac-alert" class="p-3 bg-red-950/80 rounded-xl border border-red-600/80 text-xs text-red-200 space-y-1">
+                  <div class="flex items-center space-x-1.5 text-red-400 font-black">
+                    <i data-lucide="alert-octagon" class="w-4 h-4"></i>
+                    <span>CRITICAL DISPLACEMENT: MANDATORY EVACUATION TRIGGERED</span>
+                  </div>
+                  <p class="text-xs text-zinc-300 leading-snug" id="crack-auto-evac-desc">
+                    Crack widened by &ge; 2.0 mm within 24 hours. Automated civil evacuation protocol initiated with immediate district alert.
+                  </p>
+                </div>
+
+                <!-- AI Optical Flow Scan Action Button -->
+                <div class="pt-1">
+                  <button onclick="testAiCrackScan()" type="button" class="w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5">
+                    <i data-lucide="scan" class="w-4 h-4"></i>
+                    <span>Test AI Optical Flow Crack Scan (Edge TinyML)</span>
+                  </button>
+                  <div id="ai-scan-result" class="hidden mt-2 p-2.5 bg-zinc-950 rounded-xl border border-zinc-800 text-xs font-mono text-zinc-300"></div>
+                </div>
+
+              </div>
+
+            </div>
+          </details>
+
+        </div>
+
+        <!-- Sub-Tab Container 3: Arterial Road Status & Active Landslides -->
+        <div id="cit-pane-roads" class="hidden py-6 px-4 sm:px-8 space-y-6 max-w-4xl mx-auto">
+          
+          <!-- Road Connectivity Status Matrix with Search Filter -->
+          <div class="shadcn-card rounded-3xl p-5 sm:p-7 space-y-4">
+            <!-- Instant Search Filter -->
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 text-zinc-500 absolute left-3.5 top-3"></i>
+              <input type="text" id="filter-roads-input" oninput="filterRoadsList(this.value)" placeholder="Search roads (e.g. NH-10, Haflong, Sela, blocked)..." class="w-full bg-zinc-950 border border-zinc-800 focus:border-cyan-500 rounded-xl pl-10 pr-3 py-2 text-xs text-white placeholder:text-zinc-500 outline-none transition font-sans">
+            </div>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="git-commit" class="w-4 h-4 text-cyan-400"></i>
+                <h3 class="font-extrabold text-xs sm:text-sm text-white" id="txt-roads-matrix-title">Arterial Road Connectivity Status Matrix</h3>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_road_conditions')" title="Road Conditions Info">i</span>
+              </div>
+              <span class="text-[10px] font-mono text-cyan-400" id="cit-roads-header-time">Updated: 08 Sep 2026 • 21:25 IST</span>
+            </div>
+            <div id="citizen-roads-matrix" class="space-y-2.5 text-xs font-mono">
+              <!-- Populated by app.js -->
+            </div>
+          </div>
+
+          <!-- Active Landslides with GPS -->
+          <div class="shadcn-card rounded-3xl p-5 sm:p-7 space-y-4">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
                 <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
-                <span id="cit-ai-hazard-badge">AI PREDICTED HAZARD ALERT</span>
-              </span>
-            </div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-700 font-bold" id="cit-ai-hazard-prob">89% PROBABILITY</span>
-          </div>
-
-          <div>
-            <h3 class="text-base font-extrabold text-white tracking-tight" id="cit-ai-hazard-title">Impending Landslide / Debris Flow Predicted</h3>
-            <p class="text-xs text-zinc-300 mt-1 leading-relaxed" id="cit-ai-hazard-desc">
-              AI multi-hazard fusion of live Doppler radar, continuous mountain rainfall, and ground saturation indicates high probability of slope failure along NH-10 in the next 2-4 hours.
-            </p>
-          </div>
-
-          <!-- Plain Language Action Directive -->
-          <div class="p-3 bg-black/60 rounded-xl border border-amber-500/40 flex items-center justify-between flex-wrap gap-2">
-            <div class="flex items-center space-x-2 text-xs text-amber-200 font-medium">
-              <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400 shrink-0"></i>
-              <span id="cit-ai-hazard-action">Recommended: Avoid NH-10 transit; proceed to designated shelter if living near steep slopes.</span>
-            </div>
-            <button onclick="switchCitizenSubTab('shelters')" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-black font-extrabold text-xs rounded-xl shadow transition flex items-center space-x-1">
-              <i data-lucide="home" class="w-3.5 h-3.5"></i>
-              <span data-i18n="labels.nearest_shelter">Nearest Shelter</span>
-            </button>
-          </div>
-
-          <div class="flex items-center justify-between text-[10px] font-mono text-zinc-400 pt-1 border-t border-zinc-800 flex-wrap gap-1">
-            <span><span id="lbl-horizon-prefix" data-i18n="labels.forecast_horizon">Forecast Horizon:</span> <b class="text-amber-400" id="cit-ai-hazard-horizon">Next 2 - 4 Hours</b></span>
-            <span><span id="lbl-target-prefix" data-i18n="labels.target_corridor">Target Corridor:</span> <b class="text-zinc-200" id="cit-ai-hazard-location">NH-10 Mile 44 (Singtam-Rangpo)</b></span>
-          </div>
-        </div>
-
-
-
-
-        <!-- IMD Live Weather Broadcast Card (Problem Statement 26001 Requirement) -->
-        <div id="citizen-weather-broadcast-card" class="shadcn-card rounded-2xl p-4 border-l-4 border-emerald-500 bg-gradient-to-br from-emerald-950/15 via-zinc-950 to-zinc-900 space-y-3 shadow-xl">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span class="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
-                <i data-lucide="radio" class="w-3.5 h-3.5 text-emerald-400"></i>
-                <span id="wx-bc-badge">LIVE IMD WEATHER BROADCAST</span>
-              </span>
-            </div>
-            <div class="flex items-center space-x-1.5">
-              <span id="wx-bc-alert-level" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-extrabold">ADVISORY</span>
-              <span class="info-btn" onclick="showInlineInfo(event, 'user_weather_broadcast')" title="Weather Broadcast Info">i</span>
-            </div>
-          </div>
-
-          <div>
-            <h3 class="text-sm sm:text-base font-extrabold text-white leading-snug" id="wx-bc-title">Regional Meteorological Observation Bulletin</h3>
-            <p class="text-[11px] text-zinc-400 font-mono mt-0.5 flex items-center space-x-1.5">
-              <i data-lucide="clock" class="w-3 h-3 text-zinc-500 inline"></i>
-              <span id="wx-bc-time">Active Stream • RMC Guwahati & Gangtok</span>
-            </p>
-          </div>
-
-          <div class="bg-black/70 p-3 rounded-xl border border-zinc-800 text-xs text-zinc-200 leading-relaxed font-sans" id="wx-bc-text">
-            Continuous Doppler radar telemetry active. Monsoon airmass inflow monitored across mountain highway corridors. Drive carefully along hillside roads.
-          </div>
-
-          <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-            <div class="bg-zinc-950/90 p-2 rounded-lg border border-zinc-800">
-              <span class="text-zinc-400" data-i18n="weather_broadcast.projected_rain">24H PROJECTED RAIN:</span>
-              <span class="text-cyan-400 font-bold ml-1" id="wx-bc-rain">35 - 55 mm</span>
-            </div>
-            <div class="bg-zinc-950/90 p-2 rounded-lg border border-zinc-800">
-              <span class="text-zinc-400" data-i18n="weather_broadcast.flood_risk">FLASH FLOOD RISK:</span>
-              <span class="text-emerald-400 font-bold ml-1" id="wx-bc-flood">LOW / NORMAL</span>
-            </div>
-          </div>
-
-          <div class="pt-1 flex items-center justify-between gap-2">
-            <button onclick="playWeatherBroadcastAudio()" id="btn-play-wx-audio" class="flex-1 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center space-x-1.5">
-              <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
-              <span id="txt-listen-weather-bulletin">Listen Weather Bulletin</span>
-            </button>
-            <button onclick="stopWeatherBroadcastAudio()" id="btn-stop-wx-audio" class="hidden px-3.5 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white font-bold text-xs rounded-xl border border-zinc-700 transition flex items-center space-x-1">
-              <i data-lucide="square" class="w-3 h-3 fill-current text-red-400"></i>
-              <span id="txt-stop-weather-bulletin">Stop</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Community SMS Early Warning Subscription Card -->
-        <div class="shadcn-card rounded-2xl p-4 border border-cyan-500/40 bg-cyan-950/20 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-              <i data-lucide="message-square" class="w-4 h-4 text-cyan-400"></i>
-              <span class="text-xs font-bold text-white" id="txt-sms-title">Community SMS Early Warnings</span>
-              <span class="info-btn" onclick="showInlineInfo(event, 'user_sms_alerts')" title="SMS Alerts Info">i</span>
-            </div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-900/60 text-cyan-300 border border-cyan-700">NDMA SACHET</span>
-          </div>
-          <p class="text-xs text-zinc-300" id="txt-sms-desc">
-            Receive automated SMS & audio IVR alerts on your mobile phone for flash floods, mudflows, and road blocks in your local language.
-          </p>
-          <button onclick="openSmsSubscribeModal()" class="w-full py-2 bg-gradient-to-r from-cyan-600 to-emerald-600 hover:from-cyan-500 hover:to-emerald-500 text-white text-xs font-extrabold rounded-xl shadow transition flex items-center justify-center space-x-1.5">
-            <i data-lucide="bell" class="w-3.5 h-3.5"></i>
-            <span id="btn-subscribe-sms">SUBSCRIBE MOBILE TO FREE SMS ALERTS</span>
-          </button>
-        </div>
-
-        <!-- Today's Weather & Ground Saturation -->
-        <div class="shadcn-card rounded-2xl p-4 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <h3 class="font-extrabold text-xs text-white flex items-center space-x-1.5">
-              <i data-lucide="cloud-rain" class="w-4 h-4 text-cyan-400"></i>
-              <span id="txt-weather-title">Today's Regional Rainfall & Saturation</span>
-            </h3>
-            <span class="text-[10px] font-mono text-cyan-400">IMD Doppler Feed</span>
-          </div>
-          <div class="grid grid-cols-2 gap-3 pt-1">
-            <div class="bg-zinc-950/80 p-3 rounded-xl border border-zinc-800">
-              <div class="flex justify-between items-center text-[10px] font-mono text-zinc-400 uppercase">
-                <span>24-Hour Rainfall</span>
-                <span class="info-btn" onclick="showInlineInfo(event, 'user_rainfall_metric')" title="Rainfall Info">i</span>
+                <h3 class="font-extrabold text-xs sm:text-sm text-white" id="txt-active-landslides-title">Active Landslide Alerts with Exact GPS</h3>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'realtime_landslides')" title="Active Alerts Info">i</span>
               </div>
-              <div class="text-2xl font-black text-cyan-400 font-mono mt-0.5" id="cit-rain-val">142.6 mm</div>
-              <span class="text-[10px] text-amber-400 font-medium">Moderate Inflow</span>
+              <span class="text-[10px] font-mono text-amber-400" id="cit-landslides-header-time">Updated: 08 Sep 2026 • 21:30 IST</span>
             </div>
-            <div class="bg-zinc-950/80 p-3 rounded-xl border border-zinc-800">
-              <div class="flex justify-between items-center text-[10px] font-mono text-zinc-400 uppercase">
-                <span>Ground Saturation</span>
-                <span class="info-btn" onclick="showInlineInfo(event, 'user_ground_saturation')" title="Saturation Info">i</span>
-              </div>
-              <div class="text-2xl font-black text-emerald-400 font-mono mt-0.5" id="cit-ground-val">Stable</div>
-              <span class="text-[10px] text-emerald-300 font-medium">Normal Drainage</span>
+            <div id="citizen-landslides-list" class="space-y-2.5 text-xs font-mono">
+              <!-- Populated by app.js -->
             </div>
           </div>
-          <div class="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-[10px] text-zinc-400 font-mono">
-            <span>Doppler Radar Feed As Of: <b class="text-cyan-300" id="cit-weather-updated-time">08 Sep 2026 • 21:30 IST</b></span>
-            <span class="text-zinc-500">IMD RMC Network</span>
-          </div>
+
         </div>
 
-        <!-- IMD 72-Hour Weather-Linked Risk Forecast Horizon -->
-        <div class="shadcn-card rounded-2xl p-4 space-y-3">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-1.5">
-              <i data-lucide="calendar" class="w-4 h-4 text-amber-400"></i>
-              <h3 class="font-extrabold text-xs text-white" id="txt-forecast-title">IMD 72-Hour Weather-Linked Risk Forecast</h3>
-              <span class="info-btn" onclick="showInlineInfo(event, 'user_72h_forecast')" title="Forecast Info">i</span>
+        <!-- Sub-Tab Container 4: Safe Emergency Relief Shelters -->
+        <div id="cit-pane-shelters" class="hidden py-6 px-4 sm:px-8 space-y-6 max-w-4xl mx-auto">
+          
+          <div class="shadcn-card rounded-3xl p-5 sm:p-7 space-y-4">
+            <!-- Instant Search Filter -->
+            <div class="relative">
+              <i data-lucide="search" class="w-4 h-4 text-zinc-500 absolute left-3.5 top-3"></i>
+              <input type="text" id="filter-shelters-input" oninput="filterSheltersList(this.value)" placeholder="Filter shelters by school, village, or capacity..." class="w-full bg-zinc-950 border border-zinc-800 focus:border-emerald-500 rounded-xl pl-10 pr-3 py-2 text-xs text-white placeholder:text-zinc-500 outline-none transition font-sans">
             </div>
-            <span class="text-[10px] font-mono text-amber-400">Precipitation Horizon</span>
+
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <i data-lucide="home" class="w-4 h-4 text-emerald-400"></i>
+                <h3 class="font-extrabold text-xs sm:text-sm text-white" id="txt-safe-shelters-title">Safe Emergency Relief Shelters Nearby</h3>
+                <span class="info-btn cursor-pointer" onclick="showInlineInfo(event, 'user_evac_shelters')" title="Shelters Info">i</span>
+              </div>
+              <span class="text-[10px] font-mono text-emerald-400" id="cit-shelters-header-time">Audited: 08 Sep 2026 • 18:00 IST</span>
+            </div>
+            <div class="space-y-2.5 text-xs font-mono" id="citizen-shelters-list">
+              <!-- Populated by app.js -->
+            </div>
           </div>
-          <div class="flex items-center justify-between text-[10px] text-zinc-400 font-mono pb-1 border-b border-zinc-800/80">
-            <span>GFS Model Horizon Run: <b class="text-amber-300" id="cit-forecast-updated-time">08 Sep 2026 • 21:00 IST</b></span>
-            <span class="text-zinc-500">72-Hour Cycle</span>
-          </div>
-          <div id="cit-forecast-container" class="space-y-2 text-xs font-mono">
-            <!-- Dynamically populated by app.js -->
-          </div>
+
         </div>
 
       </div>
 
-      <!-- Sub-Tab Container 2: Citizen / Field Official Hazard Report & Upload -->
-      <div id="cit-pane-report" class="hidden flex-1 overflow-y-auto p-4 pb-4 space-y-3.5">
+      <!-- Container 2: Full Screen Interactive GIS Map (Shown when 'Live Corridor Map' clicked) -->
+      <div id="citizen-map-container" class="hidden flex-1 relative flex flex-col h-full w-full">
         
-        <!-- Offline Queue & Submitted Reports Action Header -->
-        <div class="flex items-center justify-between px-1">
-          <span class="text-[11px] font-mono text-zinc-400">Citizen Telemetry Gateway</span>
-          <button onclick="openMyReportsModal()" class="text-xs text-amber-400 hover:text-amber-300 font-mono font-bold underline flex items-center space-x-1.5 py-1 px-2.5 rounded-lg bg-amber-500/10 border border-amber-500/30 transition">
-            <i data-lucide="folder-check" class="w-3.5 h-3.5"></i>
-            <span id="btn-my-reports">My Reports & Offline Queue</span>
-          </button>
-        </div>
+        <!-- Floating Back Button on Map -->
+        <button onclick="setCitizenViewMode('hub')" class="absolute top-3 right-3 z-[1100] px-3.5 py-2 rounded-xl bg-zinc-900/95 backdrop-blur-md border border-zinc-700 text-white text-xs font-extrabold shadow-2xl flex items-center space-x-1.5 hover:bg-zinc-800 transition">
+          <i data-lucide="arrow-left" class="w-4 h-4 text-emerald-400"></i>
+          <span>Back to Safety Hub</span>
+        </button>
 
-        
-        <!-- Game-Changer 2: True Edge AI (100% Offline / Zero-Cloud TinyML Scanner) -->
-        <div class="shadcn-card rounded-2xl p-4 border-2 border-sky-500/60 bg-gradient-to-br from-sky-950/30 via-zinc-950 to-zinc-900 space-y-3 shadow-xl">
-          <div class="flex items-center justify-between flex-wrap gap-1">
-            <div class="flex items-center space-x-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-sky-400 animate-pulse"></span>
-              <h3 class="font-black text-xs uppercase tracking-wider text-sky-400">EDGE TINYML ON-DEVICE FIELD SCANNER (ZERO-CLOUD)</h3>
-            </div>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-800 font-bold">100% OFFLINE PURE JS</span>
+        <!-- Floating Map Layer Controls (Simplified & Decluttered) -->
+        <div class="absolute top-3 left-3 z-[1000] flex items-center space-x-2 max-w-[95vw] overflow-x-auto no-scrollbar">
+          <!-- Map Type Toggle -->
+          <div class="shadcn-card rounded-xl p-1 flex items-center space-x-1 shrink-0">
+            <button onclick="changeBaseMap('satellite', 'citizen')" id="btn-sat-cit" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-zinc-800 text-white transition">Satellite</button>
+            <button onclick="changeBaseMap('terrain', 'citizen')" id="btn-ter-cit" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">Relief</button>
           </div>
 
-          <p class="text-[11px] text-zinc-300 leading-relaxed">
-            <b class="text-white">Field Officer Zero-Signal Mode:</b> In remote Himalayan villages with zero cellular reception, this scanner runs quantized neural inference and infinite slope limit equilibrium directly on your phone's processor. No cloud API calls.
-          </p>
-
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-mono">
-            <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800">
-              <span class="text-[10px] text-zinc-400 block">Slope Incline:</span>
-              <div class="flex items-center justify-between mt-1">
-                <span class="text-white font-bold" id="edge-tinyml-slope-val">34°</span>
-                <input type="range" id="edge-tinyml-slope" min="10" max="65" value="34" oninput="document.getElementById('edge-tinyml-slope-val').textContent = this.value + '°'" class="w-24 accent-sky-400">
-              </div>
-            </div>
-
-            <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800">
-              <span class="text-[10px] text-zinc-400 block">Soil Moisture:</span>
-              <div class="flex items-center justify-between mt-1">
-                <span class="text-white font-bold" id="edge-tinyml-moist-val">82%</span>
-                <input type="range" id="edge-tinyml-moist" min="20" max="100" value="82" oninput="document.getElementById('edge-tinyml-moist-val').textContent = this.value + '%'" class="w-24 accent-sky-400">
-              </div>
-            </div>
-
-            <div class="p-2.5 bg-zinc-900/90 rounded-xl border border-zinc-800">
-              <span class="text-[10px] text-zinc-400 block">Rain Intensity:</span>
-              <div class="flex items-center justify-between mt-1">
-                <span class="text-white font-bold" id="edge-tinyml-rain-val">65 mm/h</span>
-                <input type="range" id="edge-tinyml-rain" min="0" max="150" value="65" oninput="document.getElementById('edge-tinyml-rain-val').textContent = this.value + ' mm/h'" class="w-24 accent-sky-400">
-              </div>
-            </div>
-          </div>
-
-          <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
-            <button type="button" onclick="runEdgeTinyMLScan()" class="flex-1 py-2.5 bg-gradient-to-r from-sky-500 to-cyan-500 hover:from-sky-400 hover:to-cyan-400 text-black font-extrabold text-xs rounded-xl shadow-lg shadow-sky-500/25 transition flex items-center justify-center space-x-1.5">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-              <span>CALCULATE RISK ON-DEVICE (&lt; 15ms)</span>
-            </button>
-            <label class="flex items-center space-x-2 text-[11px] font-mono text-zinc-300 cursor-pointer p-1.5 bg-zinc-900 rounded-xl border border-zinc-800">
-              <input type="checkbox" id="edge-offline-simulator-toggle" onchange="toggleEdgeOfflineSimulator(this.checked)" class="accent-sky-400 rounded">
-              <span>Simulate Zero Signal (Airgap)</span>
+          <!-- Quick Overlays -->
+          <div class="shadcn-card rounded-xl px-2.5 py-1.5 text-xs flex items-center space-x-2 text-zinc-300 shrink-0">
+            <label class="flex items-center space-x-1 cursor-pointer hover:text-white">
+              <input type="checkbox" id="cit-layer-heatmap" checked onchange="toggleRiskHeatmap(this.checked)" class="accent-red-500 rounded">
+              <span class="font-semibold text-red-400">Risk Zones</span>
+            </label>
+            <span class="text-zinc-600">|</span>
+            <label class="flex items-center space-x-1 cursor-pointer hover:text-white">
+              <input type="checkbox" id="cit-layer-shelters" checked onchange="toggleCitizenShelters(this.checked)" class="accent-sky-500 rounded">
+              <span>Shelters</span>
             </label>
           </div>
-
-          <!-- On-Device Result Display -->
-          <div id="edge-tinyml-result-card" class="p-3 bg-zinc-950 rounded-xl border border-zinc-800 space-y-2 font-mono text-xs">
-            <div class="flex items-center justify-between">
-              <span class="text-[10px] text-zinc-400">ON-DEVICE INFERENCE ENGINE:</span>
-              <span id="edge-scan-status-badge" class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-bold text-[10px]">🟢 GREEN: SAFE (FS = 1.62)</span>
-            </div>
-            <div class="grid grid-cols-3 gap-2 text-center text-[10px] pt-1">
-              <div class="bg-black/50 p-1.5 rounded-lg">
-                <span class="text-zinc-500 block text-[9px]">Factor of Safety</span>
-                <b class="text-emerald-400 text-xs" id="edge-fs-val">1.62</b>
-              </div>
-              <div class="bg-black/50 p-1.5 rounded-lg">
-                <span class="text-zinc-500 block text-[9px]">Neural Risk</span>
-                <b class="text-sky-400 text-xs" id="edge-prob-val">24.5%</b>
-              </div>
-              <div class="bg-black/50 p-1.5 rounded-lg">
-                <span class="text-zinc-500 block text-[9px]">Latency</span>
-                <b class="text-emerald-300 text-xs" id="edge-latency-val">4.2 ms</b>
-              </div>
-            </div>
-            <p class="text-[11px] text-zinc-300" id="edge-action-val">
-              Slope mechanically secure (FS &gt; 1.35). Normal conditions. Routine monitoring active.
-            </p>
-            <div class="text-[10px] text-zinc-400 pt-1 border-t border-zinc-800/80 flex items-center justify-between">
-              <span id="edge-queue-status">💾 Persisted to Offline Local Queue (0 pending syncs)</span>
-              <button type="button" onclick="showOfflineQueueModal()" class="text-sky-400 hover:underline">View Queue</button>
-            </div>
-          </div>
         </div>
 
-        <div class="shadcn-card rounded-2xl p-4 border-l-4 border-amber-500 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <h3 class="font-extrabold text-xs text-white flex items-center space-x-1.5">
-              <i data-lucide="camera" class="w-4 h-4 text-amber-400"></i>
-              <span>Report Hazard / Upload Field Photos</span>
-            </h3>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950 text-amber-400 border border-amber-800 font-bold">100% OFFLINE-READY</span>
+        <!-- Floating Doppler Weather Radar Player HUD -->
+        <div id="floating-radar-hud" class="hidden absolute top-12 left-3 z-[1200] p-2 sm:p-2.5 bg-black/90 backdrop-blur-md rounded-2xl border border-sky-500/60 text-xs font-mono text-zinc-200 shadow-2xl flex items-center space-x-2.5 flex-wrap gap-2 max-w-[95vw]">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+            <span class="font-bold text-sky-300 text-[11px]">IMD Doppler Radar</span>
           </div>
-          <p class="text-xs text-zinc-300 leading-relaxed">
-            Report tension cracks, slope bulges, or blocked roads. Reports with photos are immediately geo-tagged and queued in local SQLite if offline.
-          </p>
-        </div>
-
-        <!-- Field Upload Form -->
-        <div class="shadcn-card rounded-2xl p-4 space-y-3">
-
-          <!-- Reporter Name and 10-Digit Contact Mobile (Citizen Data Parity with DEOC Admin Review) -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-            <div>
-              <div class="flex items-center justify-between text-[11px] font-mono uppercase text-zinc-400">
-                <span class="flex items-center space-x-1 text-zinc-200 font-semibold">
-                  <i data-lucide="user" class="w-3.5 h-3.5 text-amber-400"></i>
-                  <span data-i18n="field_report.name_label">Reporter Full Name *</span>
-                </span>
-                <span class="info-btn" onclick="showInlineInfo(event, 'report_reporter_info')" title="Reporter Name Info">i</span>
-              </div>
-              <input type="text" id="report-reporter-name" placeholder="Your name (e.g. Tashi Bhutia)" data-i18n-placeholder="field_report.name_placeholder" class="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-500 rounded-xl px-3 py-2 text-white text-xs placeholder:text-zinc-500 outline-none transition mt-1" required>
-            </div>
-
-            <div>
-              <div class="flex items-center justify-between text-[11px] font-mono uppercase text-zinc-400">
-                <span class="flex items-center space-x-1 text-zinc-200 font-semibold">
-                  <i data-lucide="phone" class="w-3.5 h-3.5 text-amber-400"></i>
-                  <span data-i18n="field_report.phone_label">10-Digit Mobile Number *</span>
-                </span>
-                <span class="info-btn" onclick="showInlineInfo(event, 'report_phone_info')" title="Contact Phone Info">i</span>
-              </div>
-              <input type="tel" id="report-reporter-phone" maxlength="10" placeholder="9876543210" data-i18n-placeholder="field_report.phone_placeholder" class="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-500 rounded-xl px-3 py-2 text-white text-xs font-mono placeholder:text-zinc-500 outline-none transition mt-1" required>
-            </div>
-          </div>
-
-          <input type="hidden" id="report-crack-width" value="15.0">
-          
-          <!-- Photo/Video Attachment Input -->
-          <div>
-            <label class="text-[11px] font-mono uppercase text-zinc-400">Attach Field Photograph or Video</label>
-            <div class="mt-1 flex items-center space-x-2">
-              <input type="file" id="report-photo-input" accept="image/*,video/*" capture="environment" onchange="handlePhotoSelect(event)" class="text-xs text-zinc-400 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-amber-400 hover:file:bg-zinc-700 cursor-pointer">
-            </div>
-
-            <!-- Image & Video Live Preview Container -->
-            <div id="report-photo-preview-container" class="hidden mt-2 p-2.5 bg-zinc-950 rounded-xl border border-zinc-800 flex items-center space-x-3">
-              <img id="report-photo-preview-img" src="" alt="Photo Preview" class="w-16 h-16 object-cover rounded-lg border border-amber-500/40 shrink-0">
-              <video id="report-video-preview" controls class="hidden w-20 h-16 object-cover rounded-lg border border-amber-500/40 bg-black shrink-0"></video>
-              <div class="flex-1 min-w-0 text-xs">
-                <div class="font-bold text-white truncate" id="report-photo-preview-name">media.jpg</div>
-                <div class="text-[10px] text-zinc-400 font-mono" id="report-photo-preview-size">0 KB</div>
-                <span class="text-[10px] text-emerald-400 font-mono font-semibold flex items-center space-x-1">
-                  <i data-lucide="check-circle" class="w-3 h-3 inline"></i>
-                  <span>Media Geo-Tagged & Ready</span>
-                </span>
-              </div>
-              <button type="button" onclick="clearPhotoAttachment()" class="text-zinc-400 hover:text-red-400 text-xs p-1.5 rounded-lg hover:bg-zinc-800 transition" title="Remove Media">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-
-          <!-- Location & Landmark Input (Citizen Writes Location, No Lat/Long/GPS Required) -->
-          <div>
-            <div class="flex items-center justify-between text-[11px] font-mono uppercase text-zinc-400">
-              <span class="flex items-center space-x-1 text-amber-300 font-semibold">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 text-amber-400"></i>
-                <span id="lbl-report-location">Hazard Location & Landmark</span>
-              </span>
-              <span class="info-btn" onclick="showInlineInfo(event, 'report_location')" title="Location Information">i</span>
-            </div>
-            <div class="mt-1 space-y-2">
-              <input type="text" id="report-location-name" placeholder="Write location: e.g. NH-10 Mile 44, Near Singtam Bridge" class="w-full bg-zinc-900 border border-zinc-700 focus:border-amber-500 rounded-xl px-3 py-2 text-white text-xs placeholder:text-zinc-500 outline-none transition" required>
-              <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="text-[10px] text-zinc-400 font-mono" id="lbl-report-state">State / Region</label>
-                  <select id="report-region-select" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-2.5 py-1.5 text-white text-xs mt-0.5">
-                    <option value="sikkim">Sikkim</option>
-                    <option value="assam">Assam</option>
-                    <option value="meghalaya">Meghalaya</option>
-                    <option value="arunachal">Arunachal Pradesh</option>
-                    <option value="manipur">Manipur</option>
-                    <option value="mizoram">Mizoram</option>
-                    <option value="nagaland">Nagaland</option>
-                    <option value="tripura">Tripura</option>
-                  </select>
-                </div>
-                <div>
-                  <label class="text-[10px] text-zinc-400 font-mono" id="lbl-report-landmark">Nearest Landmark</label>
-                  <input type="text" id="report-landmark" placeholder="e.g. Near Gaon Mandir" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-2.5 py-1.5 text-white text-xs mt-0.5 placeholder:text-zinc-500">
-                </div>
-              </div>
-            </div>
-            <p class="text-[10px] text-amber-400/90 mt-1 flex items-center space-x-1">
-              <i data-lucide="shield-check" class="w-3 h-3 text-amber-400 inline shrink-0"></i>
-              <span id="txt-report-verification-notice">DEOC Admin verifies your report before publishing live to alert all citizens.</span>
-            </p>
-          </div>
-
-          <!-- Hazard Classification -->
-          <div>
-            <label class="text-[11px] font-mono uppercase text-zinc-400" data-i18n="field_report.hazard_type_label">What problem do you see? *</label>
-            <select id="report-hazard-type" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-2.5 py-2 text-white text-xs mt-1">
-              <option value="Blocked Highway / Rockfall">🪨 Rocks / Boulders Fallen on Road</option>
-              <option value="Slope Slump / Mudflow">🌊 Mudslide / Flowing Mud & Debris</option>
-              <option value="Tension Crack Widening">💥 Ground / Road Cracking</option>
-              <option value="Sinking Road Embankment">🚧 Road Sinking / Retaining Wall Damage</option>
-              <option value="Flash Flood Debris Flow / Culvert Jam">⚠️ Flash Flood / Culvert Overflow</option>
-              <option value="Fallen Tree / Powerline">🌲 Fallen Tree / Power Pole</option>
-            </select>
-          </div>
-
-          <!-- Severity Level -->
-          <div>
-            <label class="text-[11px] font-mono uppercase text-zinc-400" data-i18n="field_report.severity_label">Danger Level *</label>
-            <select id="report-severity" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-2.5 py-2 text-white text-xs mt-1">
-              <option value="CRITICAL">🚨 Dangerous / Road Completely Blocked</option>
-              <option value="MODERATE">⚠️ Moderate / Single Lane or Partial Block</option>
-              <option value="ADVISORY">ℹ️ Minor / Early Warning Sign (Passable)</option>
-            </select>
-          </div>
-
-          <!-- Description -->
-          <div>
-            <label class="text-[11px] font-mono uppercase text-zinc-400">Observation Details</label>
-            <textarea id="report-desc" rows="2" placeholder="Describe landmark and ground movements observed..." class="w-full bg-zinc-900 border border-zinc-700 rounded-xl p-2 text-white text-xs mt-1"></textarea>
-          </div>
-
-          
-          <!-- Game-Changer 3: Time-Series Crack Propagation Visualizer & Auto Evacuation -->
-          <div class="shadcn-card rounded-2xl p-4 border-2 border-rose-500/60 bg-gradient-to-br from-rose-950/30 via-zinc-950 to-zinc-900 space-y-3 shadow-xl">
-            <div class="flex items-center justify-between flex-wrap gap-1">
-              <div class="flex items-center space-x-2">
-                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
-                <h3 class="font-black text-xs uppercase tracking-wider text-rose-400">DIGITAL IMAGE CORRELATION (DIC) CRACK DISPLACEMENT</h3>
-              </div>
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-950 text-rose-300 border border-rose-800 font-bold">OPTICAL FLOW Δw</span>
-            </div>
-
-            <p class="text-[11px] text-zinc-300 leading-relaxed">
-              <b class="text-white">Temporal Pair Comparison:</b> Automatically correlates two field photos taken at identical GPS coordinates 24 hours apart to calculate physical crack displacement.
-              <span class="text-rose-400 font-bold">If Δw &ge; 2.0 mm in 24h, the system automatically escalates to IMMEDIATE EVACUATION without human review.</span>
-            </p>
-
-            <!-- Dual Photo Comparison Frame -->
-            <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
-              <div class="p-2 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-1">
-                <div class="flex justify-between items-center text-zinc-400">
-                  <span>DAY 1: BASELINE</span>
-                  <span class="text-emerald-400">24h Ago</span>
-                </div>
-                <div class="w-full h-24 bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800 relative overflow-hidden">
-                  <svg viewBox="0 0 100 60" class="w-full h-full text-zinc-700">
-                    <path d="M 10 30 Q 35 32 50 28 T 90 31" fill="none" stroke="#64748b" stroke-width="2"/>
-                  </svg>
-                  <span class="absolute bottom-1 right-2 text-[9px] bg-black/70 px-1.5 py-0.5 rounded text-zinc-300">Crack: 1.2 mm</span>
-                </div>
-                <div class="text-[9px] text-zinc-400 truncate">GPS: 27.3389°N, 88.6065°E</div>
-              </div>
-
-              <div class="p-2 bg-zinc-900/90 rounded-xl border border-zinc-800 space-y-1">
-                <div class="flex justify-between items-center text-zinc-400">
-                  <span>DAY 2: CURRENT SCAN</span>
-                  <span class="text-rose-400 animate-pulse">LIVE VERIFIED</span>
-                </div>
-                <div class="w-full h-24 bg-zinc-950 rounded-lg flex items-center justify-center border border-zinc-800 relative overflow-hidden" id="crack-visualizer-box">
-                  <svg viewBox="0 0 100 60" class="w-full h-full">
-                    <path id="crack-svg-path" d="M 10 30 Q 35 34 50 26 T 90 32" fill="none" stroke="#ef4444" stroke-width="5"/>
-                  </svg>
-                  <span class="absolute bottom-1 right-2 text-[9px] bg-red-950/80 px-1.5 py-0.5 rounded text-red-300 font-bold" id="crack-visualizer-badge">Widened: +2.6 mm</span>
-                </div>
-                <div class="text-[9px] text-emerald-400 truncate">&check; Identical GPS Confirmed (&Delta; &lt; 5m)</div>
-              </div>
-            </div>
-
-            <!-- Displacement Simulation Slider -->
-            <div class="p-2.5 bg-zinc-900/80 rounded-xl border border-zinc-800 space-y-1 font-mono text-xs">
-              <div class="flex justify-between items-center text-[10px]">
-                <span class="text-zinc-400">Simulate Measured Crack Displacement (Δw):</span>
-                <b class="text-rose-400 text-xs font-bold" id="crack-slider-val">2.6 mm / 24h</b>
-              </div>
-              <input type="range" id="crack-displacement-slider" min="0.2" max="5.0" step="0.1" value="2.6" oninput="onCrackDisplacementChange(this.value)" class="w-full accent-rose-500">
-              <div class="flex justify-between text-[9px] text-zinc-500">
-                <span>0.2 mm (Elastic)</span>
-                <span class="text-rose-400 font-bold">2.0 mm CRITICAL TRIGGER</span>
-                <span>5.0 mm (Rupture)</span>
-              </div>
-            </div>
-
-            <!-- Automated Evacuation Trigger Alert -->
-            <div id="crack-auto-evac-alert" class="p-3 bg-red-950/80 rounded-xl border-2 border-red-500 space-y-1.5 emergency-strobe text-white font-mono text-xs">
-              <div class="flex items-center space-x-2">
-                <i data-lucide="alert-triangle" class="w-4 h-4 text-white animate-ping shrink-0"></i>
-                <b class="text-xs tracking-wider uppercase">🚨 AUTOMATED IMMEDIATE EVACUATION ESCALATION ACTIVE</b>
-              </div>
-              <p class="text-[10px] text-red-100 leading-snug" id="crack-auto-evac-desc">
-                Optical Flow detected crack widening of <b>2.60 mm within 24 hours</b> (&ge; 2.0 mm life-safety threshold). Automated evacuation protocol triggered without human review delay. Downslope settlements ordered to evacuate immediately!
-              </p>
-              <div class="text-[9px] text-amber-200 bg-black/40 p-1.5 rounded-lg border border-red-800">
-                &check; Sovereign Broadcast Dispatched &bull; NDRF & District Collectorate Notified &bull; Siren Activated
-              </div>
-            </div>
-          </div>
-
-          <!-- AI Optical Flow Scan Action Button -->
-          <div class="pt-1">
-            <button onclick="testAiCrackScan()" type="button" class="w-full py-1.5 bg-zinc-800 hover:bg-zinc-700 text-amber-400 border border-zinc-700 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5">
-              <i data-lucide="scan" class="w-3.5 h-3.5"></i>
-              <span>Test AI Optical Flow Crack Scan (Edge TinyML)</span>
+          <div class="flex items-center space-x-1.5 bg-zinc-900 px-2 py-0.5 rounded-lg border border-zinc-700">
+            <button onclick="playPauseRadarPlayback()" class="text-white hover:text-sky-400 p-0.5" title="Play / Pause Time-Lapse">
+              <i data-lucide="play" id="icon-radar-play" class="w-3 h-3 fill-current"></i>
             </button>
-            <div id="ai-scan-result" class="hidden mt-2 p-2 bg-zinc-950 rounded-lg border border-zinc-800 text-[11px] font-mono text-zinc-300"></div>
+            <input type="range" id="radar-time-slider" min="0" max="12" value="12" oninput="onRadarSliderChange(this.value)" class="w-20 sm:w-28 accent-sky-400 cursor-pointer">
+            <span id="radar-hud-time" class="text-sky-400 font-bold text-[10px] w-14 text-right">Latest IST</span>
           </div>
-
-          <!-- Submit Button -->
-          <button onclick="submitCitizenFieldReport()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-amber-400 text-black font-extrabold text-xs rounded-xl shadow-lg shadow-amber-500/20 transition flex items-center justify-center space-x-1.5">
-            <i data-lucide="send" class="w-4 h-4"></i>
-            <span id="btn-txt-submit-report">SUBMIT HAZARD REPORT FOR VERIFICATION</span>
+          <button onclick="openZoomEarthDirect()" class="px-2 py-0.5 bg-sky-500/20 hover:bg-sky-500/40 text-sky-200 border border-sky-400/50 rounded-lg text-[10px] font-extrabold flex items-center space-x-1 transition" title="Open in Zoom Earth">
+            <i data-lucide="external-link" class="w-2.5 h-2.5 text-sky-400"></i>
+            <span>Zoom Earth</span>
           </button>
-
         </div>
 
-      </div>
+        <!-- Leaflet Map Element -->
+        <div id="map-citizen" class="flex-1 w-full h-full bg-[#05070c]"></div>
 
-      <!-- Sub-Tab Container 3: Arterial Road Status & Active Landslides -->
-      <div id="cit-pane-roads" class="hidden flex-1 overflow-y-auto p-4 pb-4 space-y-4">
-        
-        <!-- Road Connectivity Status Matrix with Search Filter -->
-        <div class="shadcn-card rounded-2xl p-4 space-y-2.5">
-          <!-- Instant Search Filter -->
-          <div class="relative">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5"></i>
-            <input type="text" id="filter-roads-input" oninput="filterRoadsList(this.value)" placeholder="Filter arterial roads (e.g. NH-10, Haflong, Sela, blocked)..." class="w-full bg-zinc-950 border border-zinc-800 focus:border-cyan-500 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder:text-zinc-500 outline-none transition font-mono">
+        <!-- Friendly Legend -->
+        <div class="absolute bottom-3 left-3 z-[1000] shadcn-card rounded-xl p-2 hidden sm:flex items-center space-x-3 text-xs font-semibold">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+            <span>Safe Route</span>
           </div>
-
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-1.5">
-              <i data-lucide="git-commit" class="w-4 h-4 text-cyan-400"></i>
-              <h3 class="font-extrabold text-xs text-white" id="txt-roads-matrix-title">Arterial Road Connectivity Status Matrix</h3>
-              <span class="info-btn" onclick="showInlineInfo(event, 'user_road_conditions')" title="Road Conditions Info">i</span>
-            </div>
-            <span class="text-[10px] font-mono text-cyan-400" id="cit-roads-header-time">Updated: 08 Sep 2026 • 21:25 IST</span>
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-500 pulsing-radar"></span>
+            <span>Danger Zone</span>
           </div>
-          <div id="citizen-roads-matrix" class="space-y-2 text-xs font-mono">
-            <!-- Populated by app.js -->
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-sky-500"></span>
+            <span>Relief Shelter</span>
           </div>
-        </div>
-
-        <!-- Active Landslides with GPS -->
-        <div class="shadcn-card rounded-2xl p-4 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-1.5">
-              <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
-              <h3 class="font-extrabold text-xs text-white" id="txt-active-landslides-title">Active Landslide Alerts with Exact GPS</h3>
-              <span class="info-btn" onclick="showInlineInfo(event, 'realtime_landslides')" title="Active Alerts Info">i</span>
-            </div>
-            <span class="text-[10px] font-mono text-amber-400" id="cit-landslides-header-time">Updated: 08 Sep 2026 • 21:30 IST</span>
-          </div>
-          <div id="citizen-landslides-list" class="space-y-2 text-xs font-mono">
-            <!-- Populated by app.js -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Sub-Tab Container 4: Safe Emergency Relief Shelters -->
-      <div id="cit-pane-shelters" class="hidden flex-1 overflow-y-auto p-4 pb-4 space-y-4">
-        
-        <div class="shadcn-card rounded-2xl p-4 space-y-2.5">
-          <!-- Instant Search Filter -->
-          <div class="relative">
-            <i data-lucide="search" class="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-2.5"></i>
-            <input type="text" id="filter-shelters-input" oninput="filterSheltersList(this.value)" placeholder="Filter shelters by school, village, or capacity..." class="w-full bg-zinc-950 border border-zinc-800 focus:border-emerald-500 rounded-xl pl-9 pr-3 py-1.5 text-xs text-white placeholder:text-zinc-500 outline-none transition font-mono">
-          </div>
-
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-1.5">
-              <i data-lucide="home" class="w-4 h-4 text-emerald-400"></i>
-              <h3 class="font-extrabold text-xs text-white" id="txt-safe-shelters-title">Safe Emergency Relief Shelters Nearby</h3>
-              <span class="info-btn" onclick="showInlineInfo(event, 'user_evac_shelters')" title="Shelters Info">i</span>
-            </div>
-            <span class="text-[10px] font-mono text-emerald-400" id="cit-shelters-header-time">Audited: 08 Sep 2026 • 18:00 IST</span>
-          </div>
-          <div class="space-y-2 text-xs font-mono" id="citizen-shelters-list">
-            <!-- Populated by app.js -->
+          <div class="flex items-center space-x-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <span>Critical Infra</span>
           </div>
         </div>
 
@@ -1638,10 +1914,6 @@
           <button onclick="changeBaseMap('satellite', 'admin')" id="btn-sat-adm" class="px-2.5 py-1 rounded-lg text-xs font-semibold bg-zinc-800 text-white transition">Satellite Topo</button>
           <button onclick="changeBaseMap('terrain', 'admin')" id="btn-ter-adm" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">CartoDEM Relief</button>
           <button onclick="changeBaseMap('dark', 'admin')" id="btn-dark-adm" class="px-2.5 py-1 rounded-lg text-xs font-semibold text-zinc-400 hover:text-white transition">Tactical Dark</button>
-          <button onclick="open3dTerrainModal('nh10')" class="px-2.5 py-1 rounded-lg text-xs font-bold text-cyan-400 bg-cyan-950/60 border border-cyan-500/40 hover:bg-cyan-900/80 hover:text-white transition flex items-center space-x-1" title="Launch 3D Mountain Digital Twin & Google Earth 3D">
-            <i data-lucide="box" class="w-3.5 h-3.5"></i>
-            <span>3D Twin & Google Earth</span>
-          </button>
         </div>
 
         <!-- ISRO VEDAS Satellite Data Layer Controls -->
@@ -1748,9 +2020,15 @@
           <span class="text-amber-300 font-bold font-mono">DEOC COMMAND SESSION ACTIVE</span>
           <span class="text-[10px] text-zinc-400 font-mono hidden sm:inline">| Date & Time: <b class="text-amber-400" id="adm-session-updated-time">08 Sep 2026 • 21:30:08 IST</b></span>
         </div>
-        <button onclick="logoutAdmin()" class="text-[11px] text-zinc-400 hover:text-red-400 font-mono underline">
-          Log Out Admin
-        </button>
+        <div class="flex items-center space-x-2 ml-auto">
+          <button onclick="toggleAdminPanelFullscreen()" id="btn-admin-fullscreen" class="px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-700/80 text-zinc-300 hover:text-amber-400 font-mono text-[11px] flex items-center space-x-1.5 transition" title="Toggle Fullscreen Panel">
+            <i data-lucide="maximize-2" id="icon-admin-fullscreen" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span id="txt-admin-fullscreen">Full Screen</span>
+          </button>
+          <button onclick="logoutAdmin()" class="text-[11px] text-zinc-400 hover:text-red-400 font-mono underline">
+            Log Out Admin
+          </button>
+        </div>
       </div>
 
       <!-- Segmented Admin Tabs (6 Tabs) -->
@@ -2302,6 +2580,40 @@
       <!-- Admin Tab 3: Emergency Broadcast Dispatcher (CAP-IN v1.2 & IMD Weather Broadcast) -->
       <div id="adm-tab-content-broadcast" class="hidden flex-1 overflow-y-auto p-4 space-y-3.5">
 
+        <!-- Live Active Broadcast Status Banner & Stand-Down Controller -->
+        <div id="adm-active-broadcast-banner" class="shadcn-card rounded-2xl p-4 border-l-4 border-emerald-500 space-y-2.5 shadow-lg">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+              <span id="adm-broadcast-pulse" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="adm-broadcast-state-title" class="text-xs font-black uppercase tracking-wider text-emerald-400">
+                LIVE IMD SYNOPTIC NOWCAST STREAM
+              </span>
+            </div>
+            <span id="adm-broadcast-level-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-extrabold">
+              ADVISORY
+            </span>
+          </div>
+
+          <div class="bg-black/60 p-2.5 rounded-xl border border-zinc-800/80 text-xs">
+            <div class="font-bold text-white text-xs" id="adm-broadcast-active-title">Regional Meteorological Observation Bulletin</div>
+            <p class="text-[11px] text-zinc-400 mt-1 leading-relaxed" id="adm-broadcast-active-text">Continuous Doppler radar telemetry active. Monsoon airmass inflow monitored across mountain highway corridors.</p>
+            <div class="mt-2 flex flex-wrap gap-2 text-[10px] font-mono text-zinc-300">
+              <span>Region: <b id="adm-broadcast-active-region" class="text-amber-400">ALL NER</b></span>
+              <span>• Rain 24h: <b id="adm-broadcast-active-rain" class="text-cyan-400">35 - 55 mm</b></span>
+              <span>• Flood Risk: <b id="adm-broadcast-active-flood" class="text-emerald-400">NORMAL</b></span>
+              <span>• Dispatched: <b id="adm-broadcast-active-time" class="text-zinc-400">Live Stream</b></span>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-1">
+            <span class="text-[10px] text-zinc-400 font-mono">Status: <span id="adm-broadcast-status-label" class="text-zinc-300 font-bold">Synchronized with Citizen Mobile PWA & Siren audio</span></span>
+            <button onclick="standDownWeatherBroadcast()" id="btn-broadcast-stand-down" class="hidden px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 rounded-xl text-[11px] font-bold text-zinc-200 transition flex items-center space-x-1.5">
+              <i data-lucide="rotate-ccw" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Stand Down Broadcast / Revert</span>
+            </button>
+          </div>
+        </div>
+
         <!-- IMD Severe Weather Broadcast Dispatcher (Problem Statement 26001 Requirement) -->
         <div class="shadcn-card rounded-2xl p-4 border-l-4 border-red-500 space-y-3 shadow-lg">
           <div class="flex items-center justify-between">
@@ -2396,13 +2708,13 @@
 
           <div>
             <label class="text-[10px] font-mono uppercase text-zinc-400">Target Geographical Sector</label>
-            <input type="text" id="adm-target-corridor" value="NH-10 Mile 42-46, East Sikkim" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-1.5 text-white font-mono text-xs mt-0.5">
+            <input type="text" id="adm-target-corridor" oninput="updateCapXmlPreview()" value="NH-10 Mile 42-46, East Sikkim" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-1.5 text-white font-mono text-xs mt-0.5">
           </div>
 
           <div class="grid grid-cols-2 gap-2">
             <div>
               <label class="text-[10px] font-mono uppercase text-zinc-400">Severity</label>
-              <select id="adm-severity-select" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-2.5 py-1.5 text-white text-xs mt-0.5">
+              <select id="adm-severity-select" onchange="updateCapXmlPreview()" class="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-2.5 py-1.5 text-white text-xs mt-0.5">
                 <option value="Extreme">Extreme (Evacuate)</option>
                 <option value="Severe">Severe (Red Warning)</option>
                 <option value="Moderate">Moderate (Watch)</option>
@@ -2421,6 +2733,35 @@
             <i data-lucide="radio" class="w-4 h-4"></i>
             <span>DISPATCH EMERGENCY BROADCAST NOW</span>
           </button>
+
+          <!-- OASIS CAP-IN v1.2 Transmission Receipt Container -->
+          <div id="admin-cap-receipt" class="hidden shadcn-card rounded-2xl p-3.5 space-y-2 border-l-4 border-emerald-500">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono font-bold text-emerald-400 flex items-center space-x-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>TRANSMISSION RECEIPT • 200 TRANSMITTED</span>
+              </span>
+              <span id="cap-receipt-id" class="text-[9px] font-mono text-zinc-400">urn:oasis:names:tc:emergency:cap:1.2:...</span>
+            </div>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px] font-mono">
+              <div class="bg-black/70 p-2 rounded-lg border border-zinc-800">
+                <span class="text-zinc-500 block">NDMA SACHET</span>
+                <span id="cap-stat-sachet" class="text-emerald-400 font-bold">DELIVERED</span>
+              </div>
+              <div class="bg-black/70 p-2 rounded-lg border border-zinc-800">
+                <span class="text-zinc-500 block">C-DAC SMS PUSH</span>
+                <span id="cap-stat-sms" class="text-cyan-400 font-bold">4,200 QUEUED</span>
+              </div>
+              <div class="bg-black/70 p-2 rounded-lg border border-zinc-800">
+                <span class="text-zinc-500 block">IVR SIREN CALL</span>
+                <span id="cap-stat-ivr" class="text-amber-400 font-bold">CONNECTED</span>
+              </div>
+              <div class="bg-black/70 p-2 rounded-lg border border-zinc-800">
+                <span class="text-zinc-500 block">CITIZEN PWA</span>
+                <span id="cap-stat-sync" class="text-emerald-400 font-bold">SYNCHRONIZED</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Live XML Output -->
@@ -2625,7 +2966,7 @@
     </div>
     <div class="text-[11px] text-zinc-300 leading-relaxed font-sans" id="inline-info-desc"></div>
     <div class="pt-1 flex justify-between items-center text-[10px] text-zinc-500 border-t border-zinc-800/60">
-      <span class="font-mono text-zinc-400">MDoNER EWS • Data Date: <b class="text-zinc-300" id="inline-info-date">08 Sep 2026 • 21:30 IST</b></span>
+      <span class="font-mono text-zinc-400">NER LandGuard • Data Date: <b class="text-zinc-300" id="inline-info-date">08 Sep 2026 • 21:30 IST</b></span>
       <button type="button" onclick="closeInlineInfo()" class="text-amber-400 hover:underline font-semibold">Got it</button>
     </div>
   </div>
@@ -2755,274 +3096,5 @@
   <script>
     if (window.lucide) lucide.createIcons();
   </script>
-
-  <!-- =================================================================================== -->
-  <!-- 3D MOUNTAIN TERRAIN DIGITAL TWIN & GOOGLE EARTH 3D TOPOGRAPHIC MODAL -->
-  <!-- =================================================================================== -->
-  <div id="modal-3d-terrain" class="hidden fixed inset-0 z-[3500] bg-black/90 backdrop-blur-md flex items-center justify-center p-2 sm:p-4">
-    <div class="relative w-full max-w-6xl h-[92vh] bg-[#070a12] border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl flex flex-col">
-      
-      <!-- 3D Header Bar with Dual View Mode Tabs -->
-      <div class="p-3 sm:p-4 bg-zinc-950/95 border-b border-zinc-800/80 flex items-center justify-between z-20 shrink-0 flex-wrap gap-2">
-        <div class="flex items-center space-x-2.5">
-          <div class="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-black">
-            <i data-lucide="box" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <div class="flex items-center space-x-2">
-              <h3 class="font-extrabold text-sm text-white" id="modal-3d-title">NH-10 Singtam Gorge & Mile 44 Slump (Sikkim)</h3>
-              <span class="px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800 font-mono text-[10px] font-bold hidden sm:inline">LIVE AI FEED</span>
-              <span class="px-1.5 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800 font-mono text-[9px] font-bold hidden md:inline">8 NER CORRIDORS</span>
-            </div>
-            <p class="text-[11px] text-zinc-400 font-mono" id="modal-3d-subtitle">Coupled XGBoost + LSTM Multi-Hazard Digital Twin • Google Earth 3D Topographic Integration</p>
-          </div>
-        </div>
-
-        <!-- Center: Dual Mode Switcher (3D WebGL vs Google Earth 3D) -->
-        <div class="flex items-center bg-zinc-900/90 p-1 rounded-2xl border border-zinc-800">
-          <button onclick="switch3dViewMode('webgl')" id="btn-tab-3d-webgl" class="px-3 py-1.5 rounded-xl bg-cyan-600 text-white text-xs font-black transition shadow-lg shadow-cyan-500/25 flex items-center space-x-1.5 border border-cyan-400/50">
-            <i data-lucide="mountain" class="w-3.5 h-3.5"></i>
-            <span>3D WebGL Twin</span>
-          </button>
-          <button onclick="switch3dViewMode('google_earth')" id="btn-tab-3d-gearth" class="px-3 py-1.5 rounded-xl text-zinc-400 hover:text-white text-xs font-bold transition flex items-center space-x-1.5">
-            <i data-lucide="globe" class="w-3.5 h-3.5"></i>
-            <span>Google Earth 3D</span>
-          </button>
-        </div>
-
-        <!-- Right Controls -->
-        <div class="flex items-center space-x-2 ml-auto flex-wrap gap-1">
-          <!-- Drone Orbit Flyover Button -->
-          <button onclick="toggleDroneOrbit()" id="btn-3d-drone-orbit" class="px-2.5 py-1.5 rounded-xl bg-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold transition border border-zinc-700 flex items-center space-x-1" title="Cinematic 360° Drone Flyover Orbit">
-            <i data-lucide="crosshair" class="w-3.5 h-3.5 text-cyan-400"></i>
-            <span class="hidden sm:inline">Drone Flyover</span>
-          </button>
-
-          <!-- Live Stream Toggle (WeatherAndRadar.in) -->
-          <button onclick="toggle3dLiveRainStreaming()" id="btn-3d-live-stream" class="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs transition border border-zinc-700 flex items-center space-x-1.5" title="Stream live rainfall from WeatherAndRadar.in">
-            <span class="w-2 h-2 rounded-full bg-zinc-500"></span>
-            <span class="hidden sm:inline">LIVE STREAM: OFF</span>
-            <span class="sm:hidden">LIVE</span>
-          </button>
-
-          <!-- Snapshot Capture -->
-          <button onclick="capture3dSnapshot()" class="p-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white transition" title="Save PNG Snapshot">
-            <i data-lucide="camera" class="w-4 h-4"></i>
-          </button>
-
-          <!-- Fullscreen Toggle -->
-          <button onclick="toggle3dFullscreen()" class="p-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white transition" title="Toggle Fullscreen">
-            <i data-lucide="maximize" class="w-4 h-4"></i>
-          </button>
-
-          <button onclick="reset3dCamera()" class="p-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white transition" title="Reset Camera">
-            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-          </button>
-          <button onclick="close3dTerrainModal()" class="p-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-red-400 transition" title="Close 3D View">
-            <i data-lucide="x" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-      <!-- Secondary Ribbon: 8-State Corridor Preset Dropdown & Hazard Mode -->
-      <div class="px-3 sm:px-4 py-2 bg-zinc-950/80 border-b border-zinc-800/80 flex items-center justify-between z-10 shrink-0 flex-wrap gap-2">
-        <div class="flex items-center space-x-2 flex-wrap gap-1">
-          <span class="text-xs font-mono text-zinc-400 flex items-center space-x-1">
-            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-cyan-400"></i>
-            <span class="font-bold text-zinc-300">Corridor Preset:</span>
-          </span>
-          <select id="select-3d-preset" onchange="select3dPreset(this.value)" class="bg-zinc-900 text-zinc-200 border border-zinc-700 rounded-xl px-2.5 py-1 text-xs font-semibold focus:outline-none focus:border-cyan-500 shadow-inner">
-            <option value="nh10">🏔️ Sikkim • NH-10 Singtam Gorge & Mile 44 Slump</option>
-            <option value="sonapur">⛰️ Meghalaya • Sonapur Tunnel NH-6 Mudflow</option>
-            <option value="haflong">🚂 Assam • Haflong Hill Railway Sinking Formation</option>
-            <option value="sela">❄️ Arunachal • Sela Pass Trans-Himalaya BCT</option>
-            <option value="noney">🌉 Manipur • Noney Railway Bridge 164 Shear Zone</option>
-            <option value="hunthar">🏘️ Mizoram • Hunthar Sinking Ridge Aizawl</option>
-            <option value="paglapahar">🛣️ Nagaland • NH-29 Paglapahar Debris Corridor</option>
-            <option value="baramura">🌲 Tripura • NH-8 Baramura Soft Sandstone Cut</option>
-          </select>
-        </div>
-
-        <!-- Multi-Hazard Mode Switcher -->
-        <div class="flex items-center space-x-1 p-0.5 bg-zinc-900 rounded-xl border border-zinc-800 text-xs font-mono">
-          <button onclick="set3dHazardMode('all')" id="btn-3d-mode-all" class="px-2.5 py-1 rounded-lg bg-cyan-600 text-white font-bold text-xs transition shadow">All Hazards</button>
-          <button onclick="set3dHazardMode('landslide')" id="btn-3d-mode-landslide" class="px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white text-xs transition">🔴 Slide</button>
-          <button onclick="set3dHazardMode('flood')" id="btn-3d-mode-flood" class="px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white text-xs transition">🌊 Flood</button>
-          <button onclick="set3dHazardMode('erosion')" id="btn-3d-mode-erosion" class="px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white text-xs transition">🟤 Erosion</button>
-        </div>
-      </div>
-
-      <!-- VIEWPORT 1: Three.js 3D WebGL Canvas Viewport -->
-      <div id="canvas-3d-terrain-container" class="relative flex-1 w-full bg-[#06080f] overflow-hidden">
-        <!-- Overlay Navigation Helper Badge -->
-        <div class="absolute top-3 left-3 z-10 pointer-events-none p-2.5 bg-black/80 backdrop-blur-md rounded-2xl border border-zinc-800/80 text-[10px] font-mono text-zinc-300 space-y-0.5 shadow-xl">
-          <div class="text-cyan-400 font-bold flex items-center space-x-1.5">
-            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
-            <span>3D Orbit Controls:</span>
-          </div>
-          <div>Left Drag: Rotate 360° | Right Drag: Pan</div>
-          <div>Scroll / Pinch: Zoom Free Camera</div>
-        </div>
-
-        <!-- Live Real-Time Stream HUD Badge (WeatherAndRadar.in) -->
-        <div id="hud-3d-live-badge" class="hidden absolute top-16 left-3 z-10 p-2 sm:p-2.5 bg-emerald-950/90 border border-emerald-500/60 rounded-xl text-[11px] font-mono text-emerald-300 backdrop-blur-md shadow-xl flex items-center space-x-2">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="hud-3d-live-text">Streaming Live WeatherAndRadar.in & Ambee Telemetry</span>
-        </div>
-
-        <!-- Live AI Multi-Hazard Risk HUD: Risk = Hazard * Exposure -->
-        <div class="absolute bottom-3 left-3 z-10 p-3 bg-black/85 backdrop-blur-md rounded-2xl border border-zinc-800 text-xs font-mono text-zinc-300 space-y-1.5 max-w-[280px] sm:max-w-xs shadow-2xl">
-          <div class="flex items-center justify-between border-b border-zinc-800 pb-1">
-            <span class="text-cyan-400 font-bold flex items-center space-x-1.5">
-              <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-              <span>Risk Engine: R = H × DEI</span>
-            </span>
-            <span class="text-[9px] px-1.5 py-0.5 rounded bg-zinc-900 text-zinc-300 border border-zinc-700 font-bold">XGBoost+LSTM</span>
-          </div>
-          <div class="grid grid-cols-2 gap-1.5 text-[11px]">
-            <div>Hazard (H): <b class="text-amber-400 font-bold" id="hud-3d-hazard">0.892</b></div>
-            <div>Exposure (DEI): <b class="text-cyan-300 font-bold" id="hud-3d-dei">0.684</b></div>
-            <div class="col-span-2 pt-1 border-t border-zinc-800 flex items-center justify-between">
-              <span>Calculated Risk (R):</span>
-              <b class="text-rose-400 text-sm font-black font-mono" id="hud-3d-risk-score">0.610</b>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-1 text-[10px] text-zinc-400 pt-1 border-t border-zinc-800">
-            <div>Est. Volume: <b class="text-white" id="hud-3d-volume">16,400 m³</b></div>
-            <div>Runout Speed: <b class="text-red-400" id="hud-3d-speed">7.8 m/s</b></div>
-          </div>
-        </div>
-
-        <!-- 3D Legend Badge -->
-        <div class="absolute top-3 right-3 z-10 pointer-events-none p-2.5 bg-black/80 backdrop-blur-md rounded-2xl border border-zinc-800/80 text-[10px] font-mono space-y-1 shadow-xl">
-          <div class="flex items-center space-x-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-            <span class="text-zinc-200">Landslide Slip Wedge</span>
-          </div>
-          <div class="flex items-center space-x-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
-            <span class="text-zinc-200">Piezometer (Pore Water)</span>
-          </div>
-          <div class="flex items-center space-x-1.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-            <span class="text-zinc-200">Borehole Inclinometer</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- VIEWPORT 2: Google Earth 3D Topographic View Panel (Hidden by default) -->
-      <div id="view-3d-google-earth" class="hidden relative flex-1 w-full bg-[#05070d] overflow-y-auto flex flex-col p-3 sm:p-4 space-y-3">
-        <!-- Action Ribbon -->
-        <div class="flex items-center justify-between bg-zinc-950/90 border border-zinc-800 p-3 rounded-2xl flex-wrap gap-2">
-          <div class="flex items-center space-x-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping"></span>
-            <span class="font-extrabold text-sm text-white" id="gearth-corridor-title">Sikkim • NH-10 Singtam Gorge & Mile 44 Slump</span>
-            <span class="text-[11px] font-mono text-cyan-400 bg-cyan-950/70 border border-cyan-800 px-2 py-0.5 rounded-lg" id="gearth-coords">27.2345° N, 88.4987° E • Alt: 720m ASL</span>
-          </div>
-          <div class="flex items-center space-x-2 flex-wrap gap-1.5">
-            <button onclick="openGoogleEarthWeb()" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-extrabold text-xs transition shadow-lg shadow-blue-600/30 flex items-center space-x-1.5 border border-blue-400">
-              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-              <span>Launch Google Earth 3D Web</span>
-            </button>
-            <button onclick="downloadGeotechnicalKML()" class="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold text-xs transition border border-zinc-700 flex items-center space-x-1.5">
-              <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
-              <span>Download 3D KML</span>
-            </button>
-            <button onclick="copyGeotechCoords()" id="btn-copy-coords" class="px-2.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs font-semibold transition border border-zinc-700 flex items-center space-x-1">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-              <span>Copy GPS</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Main Split: High-Resolution Satellite Topo Map + Geotechnical Telemetry -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-[360px]">
-          <!-- Interactive Satellite Topographic Map -->
-          <div class="lg:col-span-8 bg-zinc-950 rounded-2xl border border-zinc-800 overflow-hidden relative min-h-[300px] flex flex-col">
-            <div id="gearth-satellite-map" class="w-full flex-1 min-h-[300px]"></div>
-            <div class="absolute bottom-2 left-2 z-[400] bg-black/80 backdrop-blur-md px-2.5 py-1 rounded-xl border border-zinc-800 text-[10px] font-mono text-zinc-300">
-              High-Resolution Satellite Orthoimagery • 3D Relief Contours Overlay • Esri / ISRO CartoDEM
-            </div>
-          </div>
-
-          <!-- Geotechnical Situational Awareness Card -->
-          <div class="lg:col-span-4 bg-zinc-950/90 rounded-2xl border border-zinc-800 p-3.5 flex flex-col justify-between space-y-3 font-mono text-xs text-zinc-300">
-            <div class="space-y-2.5">
-              <div class="flex items-center justify-between border-b border-zinc-800 pb-2">
-                <span class="text-cyan-400 font-bold flex items-center space-x-1.5">
-                  <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i>
-                  <span>Geotechnical Profile</span>
-                </span>
-                <span class="text-[10px] px-1.5 py-0.5 rounded bg-zinc-900 text-emerald-400 border border-zinc-800 font-bold" id="gearth-fs">FS = 0.84 (Critical)</span>
-              </div>
-
-              <div>
-                <span class="text-zinc-400 block text-[10px] uppercase font-bold">Lithological Bedrock:</span>
-                <span class="text-white font-semibold" id="gearth-bedrock">Daling Group Phyllite & Muscovite Schist</span>
-              </div>
-
-              <div>
-                <span class="text-zinc-400 block text-[10px] uppercase font-bold">Structural Foliation & Dip:</span>
-                <span class="text-amber-300" id="gearth-foliation">Dip 42° towards SW (Teesta River Gorge)</span>
-              </div>
-
-              <div>
-                <span class="text-zinc-400 block text-[10px] uppercase font-bold">InSAR LOS Subsidence (Sentinel-1 / NISAR):</span>
-                <span class="text-rose-400 font-bold" id="gearth-insar">-14.2 mm/yr (LOS Creep)</span>
-              </div>
-
-              <div>
-                <span class="text-zinc-400 block text-[10px] uppercase font-bold">Strategic Highway Lifeline:</span>
-                <span class="text-zinc-200" id="gearth-lifeline">NH-10 Sevoke-Gangtok (Single Point of Failure)</span>
-              </div>
-
-              <div>
-                <span class="text-zinc-400 block text-[10px] uppercase font-bold">Recommended Engineering Mitigation:</span>
-                <span class="text-emerald-300 text-[11px]" id="gearth-mitigation">Bored micropile walls, sub-horizontal drains, automated acoustic crack sensors</span>
-              </div>
-            </div>
-
-            <div class="pt-2 border-t border-zinc-800">
-              <button onclick="openGoogleEarthWeb()" class="w-full py-2 bg-blue-600/20 hover:bg-blue-600/35 text-blue-300 hover:text-white rounded-xl border border-blue-500/40 text-xs font-black transition flex items-center justify-center space-x-1.5 shadow-sm">
-                <i data-lucide="compass" class="w-4 h-4 text-blue-400"></i>
-                <span>Open in Google Earth 3D Photogrammetry</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 3D Simulation Controls Footer Bar (Shown in WebGL Mode) -->
-      <div id="footer-3d-sim-controls" class="p-3 sm:p-4 bg-zinc-950/90 border-t border-zinc-800 z-10 shrink-0 space-y-2">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-          <div class="flex items-center space-x-2">
-            <i data-lucide="sliders" class="w-4 h-4 text-cyan-400"></i>
-            <span class="text-xs font-extrabold text-white">Dynamic Precipitation & Pore Pressure Failure Simulation:</span>
-          </div>
-          <div id="val-3d-status" class="text-xs font-mono font-bold">
-            <span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-black">SLOPE SECURE & STABLE</span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center text-xs font-mono">
-          <div class="md:col-span-6 flex items-center space-x-3">
-            <span class="text-zinc-400 shrink-0">Simulate Rain:</span>
-            <input type="range" id="input-3d-rain" min="0" max="280" value="45" oninput="update3dSimulationFromSlider(this.value)" class="w-full accent-cyan-400 cursor-pointer">
-            <b class="text-cyan-400 w-16 text-right shrink-0" id="val-3d-rain">45 mm</b>
-          </div>
-          <div class="md:col-span-3 flex items-center justify-between p-2 bg-zinc-900 rounded-xl border border-zinc-800">
-            <span class="text-zinc-400">Pore Pressure (u):</span>
-            <b class="text-amber-400" id="val-3d-pore">12.0 kPa</b>
-          </div>
-          <div class="md:col-span-3 flex items-center justify-between p-2 bg-zinc-900 rounded-xl border border-zinc-800">
-            <span class="text-zinc-400">Factor of Safety (FS):</span>
-            <b class="text-emerald-400 text-base" id="val-3d-fs">1.59</b>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
 </body>
 </html>

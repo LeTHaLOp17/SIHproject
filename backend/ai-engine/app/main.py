@@ -3357,4 +3357,87 @@ CRITICAL_INFRASTRUCTURE_NETWORK = [
         "longitude": 94.1150,
         "status": "OPERATIONAL",
         "capacity_or_load": "Medium Twin Helipad • Concrete Hardstanding",
-        "vulnerability_notes": "Helicopter eva
+        "vulnerability_notes": "Helicopter evacuation hub for Kohima district emergencies.",
+        "emergency_contact": "NSDMA Control Room (1070 / +91 370 2291122)",
+        "updated_time_human": "Updated 19 mins ago",
+        "updated_by": "NSDMA & Assam Rifles"
+    },
+
+    # Tripura
+    {
+        "id": "INFRA-TRI-HOSP-01",
+        "name": "AGMC & GBP Hospital, Kunjaban, Agartala",
+        "type": "hospital",
+        "region": "tripura",
+        "state_name": "Tripura",
+        "latitude": 23.8610,
+        "longitude": 91.2940,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "800 Beds • Super-Speciality Cardiac & Trauma",
+        "vulnerability_notes": "State apex hospital with dedicated disaster surge contingency ward.",
+        "emergency_contact": "+91 381 2353344",
+        "updated_time_human": "Updated 12 mins ago",
+        "updated_by": "Tripura Disaster Management Authority"
+    },
+    {
+        "id": "INFRA-TRI-BRG-01",
+        "name": "Manu River Strategic Lifeline Bridge (NH-8 / NH-44)",
+        "type": "bridge",
+        "region": "tripura",
+        "state_name": "Tripura",
+        "latitude": 24.0150,
+        "longitude": 92.0120,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Class 70 Heavy Commercial Arterial",
+        "vulnerability_notes": "Critical corridor across Dhalai district into northern hills and Jampui.",
+        "emergency_contact": "Tripura PWD NH Division (+91 381 2325511)",
+        "updated_time_human": "Updated 17 mins ago",
+        "updated_by": "Tripura PWD"
+    },
+    {
+        "id": "INFRA-TRI-HELI-01",
+        "name": "Agartala State Disaster Response Helipad",
+        "type": "helipad",
+        "region": "tripura",
+        "state_name": "Tripura",
+        "latitude": 23.8820,
+        "longitude": 91.2410,
+        "status": "OPERATIONAL",
+        "capacity_or_load": "Civil Aviation & BSF Staging Base",
+        "vulnerability_notes": "Primary air bridge for Jampui Hills during monsoon landslides.",
+        "emergency_contact": "SEOC Agartala (+91 381 2418074)",
+        "updated_time_human": "Updated 22 mins ago",
+        "updated_by": "SEOC Tripura"
+    }
+]
+
+
+@app.get("/infrastructure/critical", tags=["Critical Infrastructure"])
+def get_critical_infrastructure(region: Optional[str] = "all"):
+    """
+    Returns critical GIS infrastructure: hospitals, single-point-of-failure bridges, and emergency helipads.
+    Supports regional filtering or all NER states.
+    """
+    if region and region.lower() != "all":
+        filtered = [item for item in CRITICAL_INFRASTRUCTURE_NETWORK if item["region"] == region.lower()]
+        return {
+            "status": "SUCCESS",
+            "region": region,
+            "total_items": len(filtered),
+            "infrastructure": filtered
+        }
+    return {
+        "status": "SUCCESS",
+        "region": "all",
+        "total_items": len(CRITICAL_INFRASTRUCTURE_NETWORK),
+        "infrastructure": CRITICAL_INFRASTRUCTURE_NETWORK
+    }
+
+
+# =========================================================================================
+# COMMUNITY SMS EARLY WARNING SUBSCRIPTION SYSTEM
+
+
+
+
+

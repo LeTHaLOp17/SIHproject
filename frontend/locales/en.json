@@ -1,9 +1,9 @@
 {
   "app": {
-    "title": "MDoNER EWS COMMAND",
-    "subtitle": "AI-Based Early Warning & Landslide Risk Monitoring Platform • North Eastern Region",
-    "portal_citizen": "Citizen Safety Portal",
-    "portal_admin": "DEOC Admin Portal",
+    "title": "NER LandGuard",
+    "subtitle": "North Eastern Region Landslide Warning & Mountain Safety",
+    "portal_citizen": "Citizen Portal",
+    "portal_admin": "DEOC Command",
     "admin_badge": "RESTRICTED ACCESS",
     "passcode_prompt": "Enter DEOC Security PIN (Default: 26001)",
     "offline_online": "Live Sync Active",
