@@ -93,11 +93,15 @@ def load_and_preprocess_ner_12000(filepath: str) -> Tuple[np.ndarray, np.ndarray
     # One-hot encode categorical variables
     df_encoded = pd.get_dummies(df, columns=['soil_type', 'land_cover', 'state'], drop_first=True)
 
+    if 'earthquake_magnitude' not in df.columns:
+        df['earthquake_magnitude'] = df['earthquake_mag'] if 'earthquake_mag' in df.columns else 0.0
+    df['earthquake_magnitude'] = df['earthquake_magnitude'].fillna(0.0).astype(float)
+
     base_features = [
         'slope_degree', 'aspect_degree', 'elevation_m', 'soil_moisture_pct', 'ndvi',
         'historical_landslides', 'distance_to_road_km', 'distance_to_river_km',
         'analytical_fs', 'pore_pressure_kpa', 'monsoon_intensity', 'saturation_ratio',
-        'road_toe_cut', 'river_undercut', 'JJAS', 'ANNUAL', 'MAM'
+        'road_toe_cut', 'river_undercut', 'JJAS', 'ANNUAL', 'MAM', 'earthquake_magnitude'
     ]
     dummy_cols = [c for c in df_encoded.columns if c.startswith(('soil_type_', 'land_cover_', 'state_'))]
     all_feature_cols = base_features + dummy_cols

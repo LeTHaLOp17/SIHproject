@@ -23,10 +23,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
 if __name__ == '__main__':
+    if sys.stdout.encoding != 'utf-8':
+        try:
+            sys.stdout.reconfigure(encoding='utf-8')
+        except Exception:
+            pass
     print("=" * 70)
-    print("🚀 MDoNER AI LANDSLIDE EARLY WARNING & MONITORING SYSTEM")
-    print(f"📡 Serving Web Command Center on: http://localhost:{PORT}")
-    print(f"📂 Serving directory: {DIRECTORY}")
+    print("MDoNER AI LANDSLIDE EARLY WARNING & MONITORING SYSTEM")
+    print(f"Serving Web Command Center on: http://localhost:{PORT}")
+    print(f"Serving directory: {DIRECTORY}")
     print("=" * 70)
     
     with socketserver.TCPServer(("", PORT), Handler) as httpd:

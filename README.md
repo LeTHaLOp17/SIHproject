@@ -18,21 +18,23 @@ The platform is trained on a **balanced 12,000-sample North East India landslide
 ## 📑 Table of Contents
 1. [Key Features Overview](#-key-features-overview)
 2. [Live Data & Radar API Comparison](#-live-data--radar-api-comparison)
-3. [AI & Physics Modeling Architecture](#-ai--physics-modeling-architecture)
-4. [Dual-Portal Interface](#-dual-portal-interface)
-5. [Prerequisites & System Requirements](#-prerequisites--system-requirements)
-6. [Step-by-Step Installation & Git Clone](#-step-by-step-installation--git-clone)
-7. [Running the Application](#-running-the-application)
-8. [API Endpoints Reference](#-api-endpoints-reference)
-9. [Mobile Responsiveness & Accessibility](#-mobile-responsiveness--accessibility)
-10. [Troubleshooting & FAQ](#-troubleshooting--faq)
+3. [Sovereign & Global Satellite Constellations (12 Systems • 20+ Active Spacecraft)](#-sovereign--global-satellite-constellations-12-systems--20-active-spacecraft)
+4. [AI & Physics Modeling Architecture](#-ai--physics-modeling-architecture)
+5. [3D Mountain Digital Twin & Google Earth 3D Topographic Integration](#-3d-mountain-digital-twin--google-earth-3d-topographic-integration)
+6. [Dual-Portal Interface](#-dual-portal-interface)
+7. [Prerequisites & System Requirements](#-prerequisites--system-requirements)
+8. [Step-by-Step Installation & Git Clone](#-step-by-step-installation--git-clone)
+9. [Running the Application](#-running-the-application)
+10. [API Endpoints Reference](#-api-endpoints-reference)
+11. [Mobile Responsiveness & Accessibility](#-mobile-responsiveness--accessibility)
+12. [Troubleshooting & FAQ](#-troubleshooting--faq)
 
 ---
 
 ## 🌟 Key Features Overview
 
 - **100% Real-Time Hazard Telemetry (Zero Dummy Data)**: Live disaster and squall incidents streamed directly from Ambee Disasters API across the Himalayan belt.
-- **3D Mountain Digital Twin (Three.js WebGL)**: Real-time interactive 3D terrain simulation with live rain particles, river gorges, landslide shear wedges, flash flood debris torrents, and soil erosion rills.
+- **3D Mountain Digital Twin (Three.js WebGL + Google Earth 3D)**: Real-time interactive 3D terrain simulation with live rain particles, river gorges, landslide shear wedges, flash flood debris torrents, soil erosion rills, and Google Earth 3D Topographic photogrammetric view with corridor presets.
 - **Live Stream Mode via WeatherAndRadar.in**: The 3D Digital Twin can stream live precipitation rates, 15-minute nowcast trends, temperature, and humidity directly from `https://www.weatherandradar.in/`.
 - **Live Doppler Weather Radar (Zoom Earth & IMD)**: Full animated time-lapse Doppler radar overlay on Leaflet GIS maps, powered by the RainViewer tile engine that aggregates IMD Doppler Radar stations across India.
 - **Coupled Disaster Risk Equation**: Dynamic risk monitoring computing:
@@ -78,6 +80,44 @@ Between **`mausam.imd.gov.in`** and **`rainviewer.com`**:
    - Provides an animated time series of the past 2 hours in 10-minute intervals, enabling fluid radar playback directly in Leaflet.
    - Free for open public access with zero CORS barriers.
    - **Conclusion**: RainViewer provides **IMD data in the modern Web GIS format**, making it the indisputable **best of the best**.
+
+---
+
+## 🛰️ Sovereign & Global Satellite Constellations (12 Systems • 20+ Active Spacecraft)
+
+The MDoNER Landslide Early Warning & Risk Platform ingests spaceborne telemetry from **12 dedicated satellite constellations and observing systems (encompassing more than 20 operational spacecraft)**. These satellites provide continuous, multi-spectral, microwave, and geostationary monitoring across the complex terrain of Northeast India:
+
+```
++---------------------------------------------------------------------------------------------------------+
+|                                SPACEBORNE EARTH OBSERVATION ARCHITECTURE                                 |
++------------------------------------+------------------------------------+-------------------------------+
+| 🛰️ MICROWAVE & SAR RADAR (InSAR)    | 🛰️ GEOSTATIONARY RAPID NOWCASTING  | 🛰️ HYDROMETEOROLOGICAL & OPTICAL
++------------------------------------+------------------------------------+-------------------------------+
+| • ISRO EOS-04 (RISAT-1A C-band)    | • ISRO INSAT-3D, 3DR, 3DS (15-min) | • ISRO Cartosat-1/2/3 CartoDEM|
+| • NASA-ISRO NISAR (Dual L+S band)  | • JMA Himawari-8/9 (10-min AHI)    | • ISRO Resourcesat-2/2A LISS4 |
+| • ESA Copernicus Sentinel-1A/1B    |                                    | • ISRO Oceansat-3 (EOS-06)    |
+| • NASA SMAP (L-band Soil Moisture) |                                    | • ESA Copernicus Sentinel-2A/B|
+|                                    |                                    | • NASA/JAXA GPM Core IMERG    |
+|                                    |                                    | • NASA/NOAA Suomi NPP / JPSS  |
++------------------------------------+------------------------------------+-------------------------------+
+```
+
+### Comprehensive Satellite Master Inventory
+
+| # | Satellite System / Mission | Space Agency | Key Sensors & Payloads | Retrieved Geophysical Parameter | Spatial / Temporal Resolution | Operational Role in MDoNER EWS |
+| :- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **1** | **ISRO Cartosat-1, 2 & 3** | **ISRO** (India) | Panchromatic Stereo Imager (PAN-Fore / PAN-Aft), High-Res Optical | Digital Elevation Model (**CartoDEM V3**), Slope gradient ($\beta$), Curvature ($\kappa$), Flow Accumulation | **0.25 m – 2.5 m** optical / **10 m – 30 m** DEM | Baseline geomorphological backbone for Mohr-Coulomb Factor of Safety ($FS$) and 3D digital terrain rendering. |
+| **2** | **ISRO EOS-04 (RISAT-1A)** | **ISRO** (India) | C-band Synthetic Aperture Radar (SAR) at 5.35 GHz (FRS-1, FRS-2, Circular Polarization) | All-weather microwave ground backscatter, soil moisture penetration, surface roughness | **3 m – 50 m** spatial / **12-day** repeat pass | Penetrates dense monsoon cloud cover and tropical rainforest canopy to detect fresh landslide scars and debris channels. |
+| **3** | **NASA-ISRO NISAR** | **ISRO / NASA** (Joint) | Dual-Frequency SweepSAR: **L-band** (24 cm wavelength, NASA) & **S-band** (9 cm wavelength, ISRO) | Line-of-Sight (LOS) hillslope surface creep velocity ($\pm 2\text{--}3\text{ mm/year}$), phase decorrelation | **3 m – 10 m** spatial / **12-day** joint repeat | Pre-failure slope creep detection along NH-10 (Sikkim) and Sonapur (Meghalaya), flagging millimeters of precursory movement weeks before collapse. |
+| **4** | **ISRO INSAT-3D, 3DR & 3DS** | **ISRO / IMD** (India) | 6-Channel Imager (VIS, SWIR, MIR, TIR-1, TIR-2, WV) & 19-Channel Atmospheric Sounder | Quantitative Precipitation Estimation (QPE), Cloud Top Temp (CTT), Outgoing Longwave Radiation (OLR) | **1 km** Visible, **4 km** Thermal IR / **15-minute** rapid cadence | Primary geostationary early warning for mesoscale cloudbursts, severe squall lines, and convective flash storm cells over the Himalayas. |
+| **5** | **ISRO Resourcesat-2 & 2A** | **ISRO** (India) | LISS-IV (5.8m high-resolution multispectral) & AWiFS (Advanced Wide Field Sensor) | Land Use / Land Cover (LULC), vegetation root cohesion index ($\tau_{\text{veg}}$), deforestation & jhum slash-and-burn scars | **5.8 m** (LISS-IV), **56 m** (AWiFS) / **5-day** revisit | Dynamically quantifies root reinforcement strength ($\tau_{\text{veg}}$) in the infinite slope stability equation. |
+| **6** | **ISRO Oceansat-3 (EOS-06)** | **ISRO** (India) | Ocean Color Monitor-3 (OCM-3) & Scanning Scatterometer (SCAT-3) | Bay of Bengal monsoonal water vapor flux, sea surface wind vectors, atmospheric precipitable water (PWV) | **360 m** OCM, **25 km** SCAT / **2-day** repeat | Predicts deep Bay of Bengal low-pressure depressions channeling moisture into the Meghalaya plateau 72–120 hours in advance. |
+| **7** | **ESA Copernicus Sentinel-1 (1A/1B)** | **ESA** (Europe) | C-band Synthetic Aperture Radar (C-SAR at 5.405 GHz) in Interferometric Wide (IW) mode | Persistent Scatterer Interferometry (PSI), DInSAR differential phase displacement ($\Delta \phi$), surface subsidence | **5 m $\times$ 20 m** spatial / **6-to-12 day** repeat | Ingested via ISRO VEDAS to measure continuous vertical and horizontal terrain displacement across high-risk settlement zones. |
+| **8** | **ESA Copernicus Sentinel-2 (2A/2B)** | **ESA** (Europe) | Multi-Spectral Instrument (MSI) across 13 spectral bands (VNIR to SWIR) | Normalized Difference Vegetation Index (**NDVI**), Moisture Stress Index (MSI), Bare-soil scar reflectance | **10 m** (RGB & NIR), **20 m** (SWIR) / **5-day** revisit | Provides real-time NDVI telemetry used directly in our AI engine ($D_4$: `ndvi`) and automated post-event scar mapping. |
+| **9** | **NASA / JAXA GPM Core Observatory** | **NASA / JAXA** (US/Japan) | Dual-Frequency Precipitation Radar (DPR: Ka/Ku bands) & GPM Microwave Imager (GMI) | **GPM IMERG** half-hourly calibrated precipitation rate (mm/h), 3-day and 7-day antecedent storm accumulation | **0.1° $\times$ 0.1° (~10 km)** / **30-minute** temporal cadence | Primary antecedent rainfall driver for the BiLSTM temporal network and dynamic slope pore-pressure accumulation models. |
+| **10** | **NASA SMAP (Soil Moisture Active Passive)** | **NASA** (US) | L-band Radiometer (1.41 GHz) | Volumetric Soil Moisture in top 5 cm ($m^3/m^3$), Soil Wetness Index (**SWI**), freeze/thaw transition state | **9 km** enhanced spatial / **2–3 day** revisit | Calibrates baseline antecedent saturation ($D_3$: `soil_moisture_pct`), indicating slope susceptibility before rain begins. |
+| **11** | **NASA / NOAA Suomi NPP & NOAA-20/21** | **NASA / NOAA** (US) | Visible Infrared Imaging Radiometer Suite (**VIIRS**) with Day/Night Band (DNB) | Nighttime settlement lighting, blackout detection, high-resolution thermal anomalies, cloud microphysics | **375 m** active hazard bands, **750 m** DNB / **Twice daily** | Immediately identifies village power grid outages and road blockages caused by nighttime landslides, updating the Demographic Exposure Index ($\text{DEI}$). |
+| **12** | **JMA Himawari-8 & Himawari-9** | **JMA** (Japan) | Advanced Himawari Imager (AHI, 16 spectral channels) | Auxiliary geostationary cloud tracking, upper-tropospheric water vapor motion vectors | **0.5 km – 2 km** / **10-minute** full-disk cadence | Secondary high-cadence convective backup for the Eastern Himalayas when INSAT scans are localized on peninsular cyclones. |
 
 ---
 
@@ -142,6 +182,49 @@ flowchart TD
 | **Temporal LSTM** | 24-step Storm Hyetograph | Dynamic Thresholding | Modeled precipitation spikes | Yes |
 | **Coupled Risk Engine** | $R = H \times \text{DEI}$ | High Priority Zones | 456 Corridors Identified | Yes |
 | **Alert Trigger Model** | GradientBoosted v4 | **Recall / ROC-AUC** | **97.66%** / **0.9958** | Yes ($>95\%$) |
+
+---
+
+## 🏔️ 3D Mountain Digital Twin & Google Earth 3D Topographic Integration
+
+The platform provides an immersive **3D Mountain Digital Twin** coupled with **Google Earth 3D Topographic View**, providing district authorities, geotechnical engineers, and disaster response teams with photorealistic spatial situational awareness.
+
+### 1. Three.js WebGL Interactive Physics Engine
+- **Procedural High-Relief Mountain Terrain**: Rendered with dynamic contour wireframing, river gorges, road cut corridors, and retaining structures.
+- **Physics-Driven Multi-Hazard Failure Simulation**:
+  - **Landslide Shear Wedge (Rotational Slip Surface)**: Displaces dynamically downward and outward when the Factor of Safety drops below critical equilibrium ($FS < 1.0$).
+  - **Flash Flood / Mudflow Torrent**: Dynamic particle cascades simulating saturated soil liquefaction and debris flow through gorge channels.
+  - **Soil Erosion Rills**: Gully incision geometry responding to surface runoff intensity.
+- **Virtual Geotechnical Instrumentation HUD**:
+  - **Vibrating Wire Piezometers**: Sub-surface pore-water pressure ($u$) monitoring points with color-coded safety warnings.
+  - **Borehole Inclinometers**: Measuring deep shear plane lateral displacement vectors ($\Delta d$).
+  - **Drone Flyover Orbit Mode**: Automated cinematic orbital camera sweeping the slope for aerial damage assessments.
+- **Live Precipitation Streaming**: Integrates with `WeatherAndRadar.in` to inject live 15-minute precipitation rates directly into the 3D physics simulator.
+
+### 2. Google Earth 3D Topographic View & Spatial Corridors
+District disaster commissioners can toggle instantly to **Google Earth 3D Topographic Satellite View**, featuring pre-configured 3D camera viewpoints and downloadable 3D Geotechnical KML layers across all 8 Northeast India disaster corridors:
+
+1. **NH-10 Sevoke–Gangtok / Singtam Gorge (Sikkim)**: `27.2345° N, 88.4987° E` (Active phyllite cut-slope slump)
+2. **NH-6 Sonapur Highway Tunnel (Meghalaya)**: `25.1128° N, 92.3619° E` (Limestone karst mudflow channel)
+3. **Haflong Railway Sinking Zone (Assam)**: `25.1683° N, 93.0182° E` (Disang shale embankment slip)
+4. **Sela Pass Trans-Himalayan Corridor (Arunachal Pradesh)**: `27.5050° N, 92.1039° E` (Permafrost freeze-thaw rockfall)
+5. **Noney Railway Pier 164 Sinking Escarpment (Manipur)**: `24.8167° N, 93.5975° E` (Deep-seated rotational failure)
+6. **Hunthar Sinking Fault Ridge / Aizawl (Mizoram)**: `23.7431° N, 92.7078° E` (Urban hill-town slope creep)
+7. **NH-29 Paglapahar Debris Sector (Nagaland)**: `25.7511° N, 93.7411° E` (Monsoon river undercutting)
+8. **NH-8 Baramura Hill Cut (Tripura)**: `23.8315° N, 91.4589° E` (Saturated sandstone shear collapse)
+
+---
+
+## 🔬 5D Geotechnical ML Pipeline (`ml-training/pipelines/train_5d_pipeline.py`)
+
+In addition to the 34-feature production model, the platform includes a focused **5-Dimensional (5D) ML Pipeline** trained on the core geo-environmental drivers:
+1. **$D_1$ Elevation ($z$)**: `elevation_m` (CartoDEM V3)
+2. **$D_2$ Slope ($\beta$)**: `slope_degree` (ISRO Cartosat / DEM)
+3. **$D_3$ Soil Moisture ($\theta$)**: `soil_moisture_pct` (NASA SMAP / ISRO VEDAS SWI)
+4. **$D_4$ NDVI**: `ndvi` (Sentinel-2 MSI 10m)
+5. **$D_5$ Annual Precipitation ($P_{\text{ann}}$)**: `ANNUAL` (IMD Grid / GPM IMERG)
+
+The pipeline generates 5 augmented dataset variations (`5D_Core`, `5D_Augmented`, `5D_Normalized`, `5D_Standardized`, `5D_PCA`) and benchmark models (Random Forest, Gradient Boosting, SVM), exporting weights to `backend/ai-engine/app/weights/landslide_rf_model_5d.pkl`.
 
 ---
 

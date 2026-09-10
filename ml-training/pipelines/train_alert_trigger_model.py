@@ -34,12 +34,14 @@ def load_multi_hazard_from_ner_12000(csv_path: str, n_samples=4000, random_seed=
         rain_24h = np.maximum(15.0, (jjas / 122.0) * np.random.uniform(1.2, 3.8, n_samples))
         elevation = sub['elevation_m'].values.astype(float)
         dist_road = sub['distance_to_road_km'].values.astype(float)
+        eq_mag = sub['earthquake_magnitude'].fillna(0.0).values.astype(float) if 'earthquake_magnitude' in sub.columns else np.zeros(n_samples)
     else:
         slope = np.random.uniform(18.0, 62.0, n_samples)
         rain_24h = np.random.exponential(scale=75.0, size=n_samples) + 15.0
         soil_moisture = np.clip(np.random.normal(loc=65.0, scale=18.0, size=n_samples), 25.0, 99.0)
         elevation = np.random.uniform(300.0, 3200.0, n_samples)
         dist_road = np.random.exponential(1.5, n_samples)
+        eq_mag = np.random.choice([0.0, 1.5, 4.2, 5.5], size=n_samples, p=[0.7, 0.15, 0.1, 0.05])
 
     insar_rate = -1.0 * np.abs(np.random.exponential(scale=18.0, size=n_samples))
     ambee_squall = (np.random.uniform(0, 1, n_samples) > 0.65).astype(float)
@@ -47,15 +49,16 @@ def load_multi_hazard_from_ner_12000(csv_path: str, n_samples=4000, random_seed=
     pop_density = np.clip(1200.0 / (dist_road + 0.3) + (3500.0 - elevation) * 0.1, 100.0, 1200.0)
     lithology_vuln = np.random.uniform(0.35, 0.98, n_samples)
 
-    # Physics-Informed Factor of Safety (FS)
+    # Physics-Informed Factor of Safety (FS) under seismic ground acceleration (kh)
+    kh = np.where(eq_mag >= 4.0, np.clip((eq_mag - 3.5) * 0.04, 0.02, 0.18), 0.0)
     pore_pressure = np.maximum(5.0, (rain_24h * 0.32) + (soil_moisture * 0.25))
     beta_rad = np.radians(slope)
     effective_friction = np.radians(28.0)
     cohesion = 14.0
     gamma_z = 18.5 * 2.5
 
-    driving_shear = gamma_z * np.sin(beta_rad) * np.cos(beta_rad)
-    resisting_strength = cohesion + np.maximum(2.0, (gamma_z * (np.cos(beta_rad)**2) - pore_pressure)) * np.tan(effective_friction)
+    driving_shear = gamma_z * (np.sin(beta_rad) + kh * np.cos(beta_rad)) * np.cos(beta_rad)
+    resisting_strength = cohesion + np.maximum(2.0, (gamma_z * (np.cos(beta_rad)**2) * (1.0 - kh * np.tan(beta_rad)) - pore_pressure)) * np.tan(effective_friction)
     fs = np.clip(resisting_strength / np.maximum(driving_shear, 1.0), 0.4, 3.5)
 
     # Composite Hazard Probability
@@ -66,7 +69,8 @@ def load_multi_hazard_from_ner_12000(csv_path: str, n_samples=4000, random_seed=
         (-insar_rate - 20.0) * 0.045 +
         ambee_squall * 1.85 +
         live_rain_rate * 0.08 +
-        lithology_vuln * 1.25 -
+        lithology_vuln * 1.25 +
+        np.maximum(0.0, eq_mag - 3.5) * 0.65 -
         (fs - 1.0) * 2.2
     )
     p_hazard = 1.0 / (1.0 + np.exp(-z))
@@ -75,12 +79,12 @@ def load_multi_hazard_from_ner_12000(csv_path: str, n_samples=4000, random_seed=
     dei = np.clip((pop_density / 1000.0) * 0.85 + (lithology_vuln * 0.35), 0.15, 0.98)
     risk = p_hazard * dei
 
-    # Life-Safety Target: Trigger Evacuation Order if FS < 1.05 or Risk >= 0.45 or (rain_24h > 140 and ambee_squall)
-    trigger_evacuation = ((fs < 1.05) | (risk >= 0.45) | ((rain_24h > 140) & (ambee_squall == 1))).astype(int)
+    # Life-Safety Target: Trigger Evacuation Order if FS < 1.05 or Risk >= 0.45 or severe earthquake (M >= 5.0)
+    trigger_evacuation = ((fs < 1.05) | (risk >= 0.45) | (eq_mag >= 5.0) | ((rain_24h > 140) & (ambee_squall == 1))).astype(int)
 
     X = np.column_stack([
         slope, rain_24h, soil_moisture, insar_rate,
-        ambee_squall, live_rain_rate, pop_density, lithology_vuln
+        ambee_squall, live_rain_rate, pop_density, lithology_vuln, eq_mag
     ])
     y = trigger_evacuation
 
@@ -134,7 +138,7 @@ def train_and_save_alert_model():
 
     feature_names = [
         "slope_deg", "rainfall_24h_mm", "soil_moisture_pct", "insar_subsidence_rate",
-        "live_ambee_squall_active", "weather_radar_rate_mm_h", "population_density_sq_km", "lithology_vulnerability"
+        "live_ambee_squall_active", "weather_radar_rate_mm_h", "population_density_sq_km", "lithology_vulnerability", "earthquake_magnitude"
     ]
     importances = dict(zip(feature_names, [round(float(v), 4) for v in clf.feature_importances_]))
 

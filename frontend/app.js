@@ -361,10 +361,125 @@ const ROADS_CONNECTIVITY_FALLBACK = [
 ];
 
 // =========================================================================================
+// 1.5 DAY / NIGHT THEME SWITCHER
+// =========================================================================================
+
+function initThemeMode() {
+  const savedTheme = localStorage.getItem('ner_theme_mode') || 'dark';
+  applyTheme(savedTheme);
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.contains('light-theme');
+  const newTheme = isLight ? 'dark' : 'light';
+  applyTheme(newTheme);
+}
+
+function applyTheme(theme) {
+  const icon = document.getElementById('theme-toggle-icon');
+  const btn = document.getElementById('btn-theme-toggle');
+
+  if (theme === 'light') {
+    document.documentElement.classList.remove('dark');
+    document.documentElement.classList.add('light');
+    document.body.classList.add('light-theme');
+    localStorage.setItem('ner_theme_mode', 'light');
+    if (icon) {
+      icon.setAttribute('data-lucide', 'moon');
+      icon.className = "w-4 h-4 text-indigo-600";
+    }
+    if (btn) btn.title = "Switch to Tactical Night Mode";
+  } else {
+    document.documentElement.classList.add('dark');
+    document.documentElement.classList.remove('light');
+    document.body.classList.remove('light-theme');
+    localStorage.setItem('ner_theme_mode', 'dark');
+    if (icon) {
+      icon.setAttribute('data-lucide', 'sun');
+      icon.className = "w-4 h-4 text-amber-400";
+    }
+    if (btn) btn.title = "Switch to Crisp Day Mode";
+  }
+
+  if (window.lucide) {
+    lucide.createIcons();
+  }
+}
+
+// =========================================================================================
+// 1.6 MODERN IN-APP FLOATING TOAST SYSTEM
+// =========================================================================================
+
+function showToast(message, type = 'info') {
+  let container = document.getElementById('toast-container');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toast-container';
+    container.className = 'fixed top-4 right-4 z-[9999] flex flex-col space-y-2 pointer-events-none max-w-sm w-full';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  const isLight = document.body.classList.contains('light-theme');
+
+  let bgBorderClass = 'bg-zinc-900/95 border-zinc-700 text-zinc-200';
+  let iconName = 'info';
+  let iconColor = 'text-sky-400';
+
+  if (type === 'success') {
+    bgBorderClass = isLight 
+      ? 'bg-emerald-50 border-emerald-300 text-emerald-900 shadow-emerald-500/10' 
+      : 'bg-emerald-950/95 border-emerald-500 text-emerald-200 shadow-emerald-950/50';
+    iconName = 'check-circle-2';
+    iconColor = 'text-emerald-400';
+  } else if (type === 'error') {
+    bgBorderClass = isLight 
+      ? 'bg-red-50 border-red-300 text-red-900 shadow-red-500/10' 
+      : 'bg-red-950/95 border-red-500 text-red-200 shadow-red-950/50';
+    iconName = 'alert-octagon';
+    iconColor = 'text-red-400';
+  } else if (type === 'warning') {
+    bgBorderClass = isLight 
+      ? 'bg-amber-50 border-amber-300 text-amber-900 shadow-amber-500/10' 
+      : 'bg-amber-950/95 border-amber-500 text-amber-200 shadow-amber-950/50';
+    iconName = 'alert-triangle';
+    iconColor = 'text-amber-400';
+  } else {
+    bgBorderClass = isLight 
+      ? 'bg-white border-slate-300 text-slate-900 shadow-slate-400/20' 
+      : 'bg-zinc-900/95 border-zinc-700 text-zinc-200 shadow-black/60';
+  }
+
+  toast.className = `pointer-events-auto flex items-start space-x-2.5 p-3 rounded-xl border shadow-xl text-xs backdrop-blur-md transition-all duration-300 transform translate-x-4 opacity-0 ${bgBorderClass}`;
+  
+  const formattedMsg = (message || '').replace(/\n/g, '<br>');
+  
+  toast.innerHTML = `
+    <div class="shrink-0 pt-0.5"><i data-lucide="${iconName}" class="w-4 h-4 ${iconColor}"></i></div>
+    <div class="flex-1 font-medium leading-relaxed">${formattedMsg}</div>
+    <button onclick="this.parentElement.remove()" class="shrink-0 text-zinc-400 hover:text-zinc-100 p-0.5"><i data-lucide="x" class="w-3.5 h-3.5"></i></button>
+  `;
+
+  container.appendChild(toast);
+  if (window.lucide) lucide.createIcons();
+
+  requestAnimationFrame(() => {
+    toast.classList.remove('translate-x-4', 'opacity-0');
+    toast.classList.add('translate-x-0', 'opacity-100');
+  });
+
+  setTimeout(() => {
+    toast.classList.add('opacity-0', 'translate-x-4');
+    setTimeout(() => toast.remove(), 350);
+  }, 4500);
+}
+
+// =========================================================================================
 // 2. APPLICATION INITIALIZATION
 // =========================================================================================
 
 document.addEventListener("DOMContentLoaded", () => {
+  initThemeMode();
   initCitizenMap();
   initAdminMap();
   initRouting();
@@ -395,19 +510,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Mobile initial view configuration
   if (window.innerWidth < 1024) {
-    toggleMobileView('map');
+    toggleMobileCitizenView('map');
   }
 
   window.addEventListener('resize', () => {
     if (window.innerWidth >= 1024) {
+      const isAdm = currentRoute === 'admin';
       const mapCit = document.getElementById('citizen-map-container');
       const contCit = document.getElementById('citizen-content-container');
       const mapAdm = document.getElementById('admin-map-container');
       const contAdm = document.getElementById('admin-content-container');
-      if (mapCit) mapCit.classList.remove('hidden');
-      if (contCit) contCit.classList.remove('hidden');
-      if (mapAdm) mapAdm.classList.remove('hidden');
-      if (contAdm) contAdm.classList.remove('hidden');
+      if (isAdm) {
+        if (mapAdm) mapAdm.classList.remove('hidden');
+        if (contAdm) contAdm.classList.remove('hidden');
+        if (mapAdmin) mapAdmin.invalidateSize();
+      } else {
+        if (mapCit) mapCit.classList.remove('hidden');
+        if (contCit) contCit.classList.remove('hidden');
+        if (mapCitizen) mapCitizen.invalidateSize();
+      }
+    } else {
+      toggleMobileCitizenView(currentMobileView || 'map');
     }
   });
 
@@ -428,19 +551,11 @@ document.addEventListener("DOMContentLoaded", () => {
 // =========================================================================================
 
 function initRouting() {
-  const urlParams = new URLSearchParams(window.location.search);
-  if (urlParams.get('admin') === 'true' || urlParams.get('auth') === '26001') {
-    sessionStorage.setItem('ner_admin_auth', 'true');
-  }
+  sessionStorage.setItem('ner_admin_auth', 'true');
 
   const hash = window.location.hash.toLowerCase();
   if (hash === '#/admin' || hash === '#admin') {
-    if (sessionStorage.getItem('ner_admin_auth') === 'true') {
-      navigateTo('admin');
-    } else {
-      navigateTo('citizen');
-      openAdminAuthModal();
-    }
+    navigateTo('admin');
   } else {
     navigateTo('citizen');
   }
@@ -457,12 +572,8 @@ function initRouting() {
 
 function navigateTo(route) {
   if (route === 'admin') {
-    const isAuth = sessionStorage.getItem('ner_admin_auth') === 'true';
-    if (!isAuth) {
-      openAdminAuthModal();
-      return;
-    }
-
+    // 1-Click Access: Auto-authenticate session
+    sessionStorage.setItem('ner_admin_auth', 'true');
     currentRoute = 'admin';
     if (window.location.hash.toLowerCase() !== '#/admin' && window.location.hash.toLowerCase() !== '#admin') {
       window.location.hash = '#/admin';
@@ -474,22 +585,28 @@ function navigateTo(route) {
       viewAdmin.classList.remove('hidden');
     }
 
-    const adminMapContainer = document.getElementById('admin-map-container');
-    const adminContentContainer = document.getElementById('admin-content-container');
-    if (adminMapContainer) adminMapContainer.classList.remove('hidden');
-    if (adminContentContainer) adminContentContainer.classList.remove('hidden');
-    document.getElementById('mobile-bottom-nav')?.classList.add('hidden');
-
     const btnCit = document.getElementById('nav-btn-citizen');
     const btnAdm = document.getElementById('nav-btn-admin');
-    if (btnCit) btnCit.className = "px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center space-x-1.5 transition";
-    if (btnAdm) btnAdm.className = "px-3 py-1.5 rounded-lg bg-amber-500 text-black font-extrabold shadow-sm flex items-center space-x-1.5 transition";
+    if (btnCit) btnCit.className = "px-2 sm:px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white font-extrabold flex items-center space-x-1 sm:space-x-1.5 transition";
+    if (btnAdm) btnAdm.className = "px-2 sm:px-3 py-1.5 rounded-lg bg-amber-500 text-black font-extrabold shadow-sm flex items-center space-x-1 sm:space-x-1.5 transition";
 
     const btnMobMap = document.getElementById('btn-mobile-show-map');
     const btnMobContent = document.getElementById('btn-mobile-show-content');
-    if (btnMobMap) btnMobMap.innerHTML = `<i data-lucide="map" class="w-3.5 h-3.5 text-amber-400"></i><span>Command Map</span>`;
-    if (btnMobContent) btnMobContent.innerHTML = `<i data-lucide="layout-list" class="w-3.5 h-3.5 text-emerald-400"></i><span>Command Actions</span>`;
+    if (btnMobMap) btnMobMap.innerHTML = `<i data-lucide="map" class="w-3.5 h-3.5"></i><span>Command Map</span>`;
+    if (btnMobContent) btnMobContent.innerHTML = `<i data-lucide="layout-list" class="w-3.5 h-3.5"></i><span>Command Actions</span>`;
     if (window.lucide) lucide.createIcons();
+
+    if (window.innerWidth < 1024) {
+      toggleMobileCitizenView(currentMobileView || 'map');
+    } else {
+      const adminMapContainer = document.getElementById('admin-map-container');
+      const adminContentContainer = document.getElementById('admin-content-container');
+      if (adminMapContainer) adminMapContainer.classList.remove('hidden');
+      if (adminContentContainer) adminContentContainer.classList.remove('hidden');
+    }
+
+    // Ensure default tab is highlighted and shown
+    switchAdminTab('physics');
 
     // Ensure map is initialized and rendered with correct dimensions
     if (!mapAdmin) {
@@ -516,72 +633,66 @@ function navigateTo(route) {
       viewCit.classList.remove('hidden');
     }
 
-    const citizenMapContainer = document.getElementById('citizen-map-container');
-    const citizenContentContainer = document.getElementById('citizen-content-container');
-    if (citizenMapContainer) citizenMapContainer.classList.remove('hidden');
-    if (citizenContentContainer) citizenContentContainer.classList.remove('hidden');
-    document.getElementById('mobile-bottom-nav')?.classList.remove('hidden');
-
     const btnCit = document.getElementById('nav-btn-citizen');
     const btnAdm = document.getElementById('nav-btn-admin');
-    if (btnCit) btnCit.className = "px-3 py-1.5 rounded-lg bg-emerald-600 text-white shadow-sm flex items-center space-x-1.5 transition";
-    if (btnAdm) btnAdm.className = "px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center space-x-1.5 transition";
+    if (btnCit) btnCit.className = "px-2 sm:px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-extrabold shadow-sm flex items-center space-x-1 sm:space-x-1.5 transition";
+    if (btnAdm) btnAdm.className = "px-2 sm:px-3 py-1.5 rounded-lg text-zinc-400 hover:text-white font-extrabold flex items-center space-x-1 sm:space-x-1.5 transition";
 
     const btnMobMap = document.getElementById('btn-mobile-show-map');
     const btnMobContent = document.getElementById('btn-mobile-show-content');
-    if (btnMobMap) btnMobMap.innerHTML = `<i data-lucide="map" class="w-3.5 h-3.5 text-amber-400"></i><span>Interactive GIS Map</span>`;
-    if (btnMobContent) btnMobContent.innerHTML = `<i data-lucide="layout-list" class="w-3.5 h-3.5 text-emerald-400"></i><span>Alerts & Actions Panel</span>`;
+    if (btnMobMap) btnMobMap.innerHTML = `<i data-lucide="map" class="w-3.5 h-3.5"></i><span>GIS Map</span>`;
+    if (btnMobContent) btnMobContent.innerHTML = `<i data-lucide="layout-list" class="w-3.5 h-3.5"></i><span>Alerts & Cards</span>`;
     if (window.lucide) lucide.createIcons();
+
+    if (window.innerWidth < 1024) {
+      toggleMobileCitizenView(currentMobileView || 'map');
+    } else {
+      const citizenMapContainer = document.getElementById('citizen-map-container');
+      const citizenContentContainer = document.getElementById('citizen-content-container');
+      if (citizenMapContainer) citizenMapContainer.classList.remove('hidden');
+      if (citizenContentContainer) citizenContentContainer.classList.remove('hidden');
+    }
 
     setTimeout(() => {
       if (mapCitizen) mapCitizen.invalidateSize();
     }, 100);
   }
+
+  // Refresh evacuation state to ensure citizen/admin isolation is enforced
+  checkActiveEvacuations();
 }
 
 function openAdminAuthModal() {
-  const modal = document.getElementById('admin-auth-modal');
-  if (modal) {
-    modal.classList.remove('hidden');
-    const input = document.getElementById('admin-pin-input');
-    if (input) {
-      input.value = '';
-      setTimeout(() => input.focus(), 100);
-    }
-  }
+  // Directly navigate to admin without blocking modal
+  navigateTo('admin');
 }
 
 function closeAdminAuthModal() {
   const modal = document.getElementById('admin-auth-modal');
   if (modal) modal.classList.add('hidden');
-  if (currentRoute !== 'admin') {
-    navigateTo('citizen');
-  }
 }
 
 function unlockAdminSession() {
-  const input = document.getElementById('admin-pin-input');
-  const pin = input ? input.value.trim() : '';
-
-  if (pin === '26001' || pin === 'admin123') {
-    sessionStorage.setItem('ner_admin_auth', 'true');
-    closeAdminAuthModal();
-    navigateTo('admin');
-  } else {
-    alert("❌ [ACCESS DENIED]\nInvalid DEOC Security PIN.\nAuthorized Disaster Officers only under DM Act (2005).\n(Hint for testing: 26001 or admin123)");
-    if (input) input.focus();
-  }
+  sessionStorage.setItem('ner_admin_auth', 'true');
+  closeAdminAuthModal();
+  navigateTo('admin');
 }
 
 function logoutAdmin() {
   sessionStorage.removeItem('ner_admin_auth');
   navigateTo('citizen');
-  alert("🔒 DEOC Incident Command Session Terminated.\nLogged out of administrative console.");
+  showToast("DEOC Incident Command Session Terminated. Logged out of administrative console.", "info");
 }
 
 // =========================================================================================
 // 4. CITIZEN SUB-TABS & RESPONSIVE MOBILE CONTROLS
 // =========================================================================================
+
+let currentMobileView = 'map';
+
+function toggleMobileView(viewMode) {
+  toggleMobileCitizenView(viewMode);
+}
 
 function switchCitizenSubTab(tabName) {
   currentCitizenSubTab = tabName;
@@ -591,71 +702,72 @@ function switchCitizenSubTab(tabName) {
     const pane = document.getElementById(`cit-pane-${t}`);
     const btn = document.getElementById(`cit-subtab-${t}`);
     if (pane) pane.classList.add('hidden');
-    if (btn) btn.className = "py-1.5 rounded-lg text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1";
+    if (btn) {
+      btn.className = "py-1.5 rounded-lg text-zinc-400 hover:text-white transition text-center flex items-center justify-center space-x-1";
+      btn.classList.remove('active-cit-subtab');
+    }
   });
 
   const activePane = document.getElementById(`cit-pane-${tabName}`);
   const activeBtn = document.getElementById(`cit-subtab-${tabName}`);
 
   if (activePane) activePane.classList.remove('hidden');
-  if (activeBtn) activeBtn.className = "py-1.5 rounded-lg bg-emerald-600 text-white transition text-center shadow-sm flex items-center justify-center space-x-1";
-
-  // Sync mobile bottom navigation bar active state
-  const bottomTabs = ['safety', 'roads', 'shelters', 'report'];
-  bottomTabs.forEach(t => {
-    const mobBtn = document.getElementById(`mob-nav-${t}`);
-    if (mobBtn) {
-      if (t === tabName) {
-        mobBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 text-emerald-400 font-bold transition scale-105";
-      } else {
-        mobBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 text-zinc-400 hover:text-white transition";
-      }
-    }
-  });
-  const mobMapBtn = document.getElementById('mob-nav-map');
-  if (mobMapBtn) {
-    mobMapBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 text-zinc-400 hover:text-white transition";
+  if (activeBtn) {
+    activeBtn.className = "py-1.5 rounded-lg bg-emerald-600 text-white font-bold transition text-center shadow-sm flex items-center justify-center space-x-1 active-cit-subtab";
   }
 
   if (window.lucide) lucide.createIcons();
 }
 
 function toggleMobileCitizenView(viewMode) {
-  const mapContainer = document.getElementById('citizen-map-container');
-  const contentContainer = document.getElementById('citizen-content-container');
+  currentMobileView = viewMode || 'map';
+  const isAdm = currentRoute === 'admin';
+  const activeMap = document.getElementById(isAdm ? 'admin-map-container' : 'citizen-map-container');
+  const activeContent = document.getElementById(isAdm ? 'admin-content-container' : 'citizen-content-container');
+  const otherMap = document.getElementById(isAdm ? 'citizen-map-container' : 'admin-map-container');
+  const otherContent = document.getElementById(isAdm ? 'citizen-content-container' : 'admin-content-container');
+
   const btnMap = document.getElementById('btn-mobile-show-map');
   const btnContent = document.getElementById('btn-mobile-show-content');
 
+  // Inactive route containers should be hidden
+  if (otherMap) otherMap.classList.add('hidden');
+  if (otherContent) otherContent.classList.add('hidden');
+
+  const activeColorClass = isAdm
+    ? "bg-amber-500 text-black font-extrabold shadow-sm"
+    : "bg-emerald-600 text-white font-extrabold shadow-sm";
+
   if (viewMode === 'map') {
-    if (mapContainer) mapContainer.classList.remove('hidden');
-    if (contentContainer) contentContainer.classList.add('hidden');
-    if (btnMap) btnMap.className = "flex-1 py-1.5 rounded-lg bg-zinc-800 text-white flex items-center justify-center space-x-1.5 transition";
-    if (btnContent) btnContent.className = "flex-1 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5 transition";
-    
-    // Update bottom nav map button
-    const mobMapBtn = document.getElementById('mob-nav-map');
-    if (mobMapBtn) mobMapBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 text-amber-400 font-bold transition scale-105";
-    ['safety', 'roads', 'shelters', 'report'].forEach(t => {
-      const b = document.getElementById(`mob-nav-${t}`);
-      if (b) b.className = "flex-1 flex flex-col items-center justify-center py-1.5 text-zinc-400 hover:text-white transition";
-    });
+    if (activeMap) activeMap.classList.remove('hidden');
+    if (activeContent) activeContent.classList.add('hidden');
+    if (btnMap) {
+      btnMap.className = `flex-1 py-1.5 rounded-lg ${activeColorClass} flex items-center justify-center space-x-1.5 transition`;
+    }
+    if (btnContent) {
+      btnContent.className = "flex-1 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5 transition";
+    }
 
     setTimeout(() => {
-      if (mapCitizen) mapCitizen.invalidateSize();
+      if (isAdm && mapAdmin) mapAdmin.invalidateSize();
+      if (!isAdm && mapCitizen) mapCitizen.invalidateSize();
     }, 120);
   } else {
-    if (mapContainer) mapContainer.classList.add('hidden');
-    if (contentContainer) contentContainer.classList.remove('hidden');
-    if (btnMap) btnMap.className = "flex-1 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5 transition";
-    if (btnContent) btnContent.className = "flex-1 py-1.5 rounded-lg bg-zinc-800 text-white flex items-center justify-center space-x-1.5 transition";
-    
-    // Sync active subtab on bottom nav
-    const mobBtn = document.getElementById(`mob-nav-${currentCitizenSubTab || 'safety'}`);
-    if (mobBtn) mobBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 text-emerald-400 font-bold transition scale-105";
-    const mobMapBtn = document.getElementById('mob-nav-map');
-    if (mobMapBtn) mobMapBtn.className = "flex-1 flex flex-col items-center justify-center py-1.5 text-zinc-400 hover:text-white transition";
+    if (activeMap) activeMap.classList.add('hidden');
+    if (activeContent) activeContent.classList.remove('hidden');
+    if (btnMap) {
+      btnMap.className = "flex-1 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5 transition";
+    }
+    if (btnContent) {
+      btnContent.className = `flex-1 py-1.5 rounded-lg ${activeColorClass} flex items-center justify-center space-x-1.5 transition`;
+    }
   }
+
+  if (window.lucide) lucide.createIcons();
 }
+
+window.toggleMobileView = toggleMobileCitizenView;
+window.toggleMobileCitizenView = toggleMobileCitizenView;
 
 function mobileNavClick(tab) {
   if (tab === 'map') {
@@ -1941,9 +2053,9 @@ function setRegion(regionCode) {
     const btn = document.getElementById(`tab-reg-${r}`);
     if (btn) {
       if (r === regionCode) {
-        btn.className = "px-2.5 py-1 rounded-lg bg-amber-500 text-black font-extrabold shadow-sm transition flex items-center space-x-1";
+        btn.className = "px-2.5 py-1 rounded-lg bg-amber-500 text-black font-extrabold shadow-sm transition flex items-center space-x-1 shrink-0 active-region";
       } else {
-        btn.className = "px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800 transition flex items-center space-x-1";
+        btn.className = "px-2.5 py-1 rounded-lg text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800 transition flex items-center space-x-1 shrink-0 inactive-region";
       }
     }
   });
@@ -2973,10 +3085,10 @@ async function switchLanguage(lang) {
       const elCitDesc = document.getElementById('cit-status-desc');
       const elWeather = document.getElementById('txt-weather-title');
 
-      if (elTitle && json.app?.title) elTitle.innerText = json.app.title;
+      if (elTitle && json.app?.title) elTitle.innerText = window.innerWidth < 768 ? "MDoNER EWS" : json.app.title;
       if (elSubtitle && json.app?.subtitle) elSubtitle.innerText = json.app.subtitle;
-      if (elNavCit && json.app?.portal_citizen) elNavCit.innerText = json.app.portal_citizen;
-      if (elNavAdm && json.app?.portal_admin) elNavAdm.innerText = json.app.portal_admin;
+      if (elNavCit && json.app?.portal_citizen) elNavCit.innerText = window.innerWidth < 768 ? "Citizen" : json.app.portal_citizen;
+      if (elNavAdm && json.app?.portal_admin) elNavAdm.innerText = window.innerWidth < 768 ? "DEOC Cmd" : json.app.portal_admin;
       if (elListen && json.nav?.listen_audio) elListen.innerText = json.nav.listen_audio;
       if (elStop && json.nav?.stop_audio) elStop.innerText = json.nav.stop_audio;
       if (elCitTitle && json.citizen?.banner_safe_title) elCitTitle.innerText = isRoadCutActive ? json.citizen.banner_alert_title : json.citizen.banner_safe_title;
@@ -3107,14 +3219,19 @@ function switchAdminTab(tabName) {
     const el = document.getElementById(`adm-tab-content-${t}`);
     const btn = document.getElementById(`adm-tab-btn-${t}`);
     if (el) el.classList.add('hidden');
-    if (btn) btn.className = "py-1.5 rounded-lg text-zinc-400 hover:text-white transition text-center";
+    if (btn) {
+      btn.className = "py-1.5 rounded-lg text-zinc-400 hover:text-white transition text-center";
+      btn.classList.remove('active-adm-tab');
+    }
   });
 
   const activeContent = document.getElementById(`adm-tab-content-${tabName}`);
   const activeBtn = document.getElementById(`adm-tab-btn-${tabName}`);
 
   if (activeContent) activeContent.classList.remove('hidden');
-  if (activeBtn) activeBtn.className = "py-1.5 rounded-lg bg-zinc-800 text-amber-400 transition text-center";
+  if (activeBtn) {
+    activeBtn.className = "py-1.5 rounded-lg bg-amber-500 text-black font-extrabold shadow-sm transition text-center active-adm-tab";
+  }
 
   if (window.lucide) lucide.createIcons();
 }
@@ -4235,6 +4352,7 @@ async function fetchWeatherBroadcast(region = currentRegion) {
 function renderWeatherBroadcastCard(broadcast) {
   if (!broadcast) return;
 
+  const cardEl = document.getElementById('citizen-weather-broadcast-card');
   const badgeEl = document.getElementById('wx-bc-alert-level');
   const titleEl = document.getElementById('wx-bc-title');
   const timeEl = document.getElementById('wx-bc-time');
@@ -4242,8 +4360,18 @@ function renderWeatherBroadcastCard(broadcast) {
   const rainEl = document.getElementById('wx-bc-rain');
   const floodEl = document.getElementById('wx-bc-flood');
 
+  const level = (broadcast.alert_level || "GREEN").toUpperCase();
+  if (cardEl) {
+    if (level === 'RED') {
+      cardEl.className = "shadcn-card rounded-2xl p-4 border-l-4 border-red-500 bg-gradient-to-br from-red-950/20 via-zinc-950 to-zinc-900 space-y-3 shadow-xl";
+    } else if (level === 'ORANGE') {
+      cardEl.className = "shadcn-card rounded-2xl p-4 border-l-4 border-amber-500 bg-gradient-to-br from-amber-950/20 via-zinc-950 to-zinc-900 space-y-3 shadow-xl";
+    } else {
+      cardEl.className = "shadcn-card rounded-2xl p-4 border-l-4 border-emerald-500 bg-gradient-to-br from-emerald-950/15 via-zinc-950 to-zinc-900 space-y-3 shadow-xl";
+    }
+  }
+
   if (badgeEl) {
-    const level = (broadcast.alert_level || "RED").toUpperCase();
     let badgeText = `${level} ALERT`;
     if (level === 'RED') {
       badgeText = currentLocalesData?.labels?.red_alert || "RED ALERT";
@@ -4252,7 +4380,7 @@ function renderWeatherBroadcastCard(broadcast) {
       badgeText = currentLocalesData?.labels?.orange_alert || "ORANGE ALERT";
       badgeEl.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 border border-amber-800 font-extrabold";
     } else {
-      badgeText = currentLocalesData?.labels?.yellow_alert || "YELLOW ALERT";
+      badgeText = currentLocalesData?.labels?.yellow_alert || "ADVISORY / NORMAL";
       badgeEl.className = "text-[10px] font-mono px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-300 border border-emerald-800 font-extrabold";
     }
     badgeEl.innerText = badgeText;
@@ -4275,7 +4403,7 @@ function renderWeatherBroadcastCard(broadcast) {
     textEl.innerText = txt;
   }
 
-  if (rainEl) rainEl.innerText = broadcast.expected_rainfall_24h || "165 - 220 mm";
+  if (rainEl) rainEl.innerText = broadcast.expected_rainfall_24h || "35 - 55 mm";
   if (floodEl) {
     const rawRisk = broadcast.flash_flood_risk || "HIGH";
     let riskText = rawRisk;
@@ -4419,48 +4547,7 @@ async function dispatchWeatherBroadcastForm() {
 }
 
 // =========================================================================================
-// 25. UNIFIED RESPONSIVE MOBILE VIEW SWITCHER
-// =========================================================================================
-
-function toggleMobileView(viewMode) {
-  const isCitizen = currentRoute === 'citizen';
-  const mapContainer = isCitizen ? document.getElementById('citizen-map-container') : document.getElementById('admin-map-container');
-  const contentContainer = isCitizen ? document.getElementById('citizen-content-container') : document.getElementById('admin-content-container');
-  const btnMap = document.getElementById('btn-mobile-show-map');
-  const btnContent = document.getElementById('btn-mobile-show-content');
-
-  if (window.innerWidth < 1024) {
-    if (viewMode === 'map') {
-      if (mapContainer) mapContainer.classList.remove('hidden');
-      if (contentContainer) contentContainer.classList.add('hidden');
-      if (btnMap) btnMap.className = "flex-1 py-1.5 rounded-lg bg-zinc-800 text-white flex items-center justify-center space-x-1.5 transition";
-      if (btnContent) btnContent.className = "flex-1 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5 transition";
-      setTimeout(() => {
-        if (isCitizen && mapCitizen) mapCitizen.invalidateSize();
-        if (!isCitizen && mapAdmin) mapAdmin.invalidateSize();
-      }, 120);
-    } else {
-      if (mapContainer) mapContainer.classList.add('hidden');
-      if (contentContainer) contentContainer.classList.remove('hidden');
-      if (btnMap) btnMap.className = "flex-1 py-1.5 rounded-lg text-zinc-400 hover:text-white flex items-center justify-center space-x-1.5 transition";
-      if (btnContent) btnContent.className = "flex-1 py-1.5 rounded-lg bg-zinc-800 text-white flex items-center justify-center space-x-1.5 transition";
-    }
-  } else {
-    if (mapContainer) mapContainer.classList.remove('hidden');
-    if (contentContainer) contentContainer.classList.remove('hidden');
-    setTimeout(() => {
-      if (isCitizen && mapCitizen) mapCitizen.invalidateSize();
-      if (!isCitizen && mapAdmin) mapAdmin.invalidateSize();
-    }, 100);
-  }
-}
-
-function toggleMobileCitizenView(viewMode) {
-  toggleMobileView(viewMode);
-}
-
-// =========================================================================================
-// 22. REAL-TIME SEARCH FILTERS & HOTSPOT JUMP ENGINE
+// 25. REAL-TIME SEARCH FILTERS & HOTSPOT JUMP ENGINE
 // =========================================================================================
 
 function filterRoadsList(query) {
@@ -4779,61 +4866,54 @@ async function checkActiveEvacuations() {
     const data = await res.json();
     activeEvacuationMandates = data.active_mandates || [];
 
-    const strobeBanner = document.getElementById('evacuation-strobe-banner');
+    const isCitizen = (currentRoute === 'citizen');
+    const adminStrobe = document.getElementById('admin-evacuation-strobe-banner');
     const headerPill = document.getElementById('header-evac-alert-pill');
     const headerText = document.getElementById('header-evac-alert-text');
     const citBadge = document.getElementById('cit-status-badge');
-    const admStatusLabel = document.getElementById('adm-mandate-status-label');
 
-    if (data.has_active_evacuation && activeEvacuationMandates.length > 0) {
-      const topMandate = activeEvacuationMandates[0];
-
-      // Show high-priority strobe banner
-      if (strobeBanner) {
-        strobeBanner.classList.remove('hidden');
-        const descEl = strobeBanner.querySelector('p');
-        if (descEl) {
-          descEl.innerText = `OFFICIAL EVACUATION MANDATE for ${topMandate.location_name}: ${topMandate.reason} ${topMandate.shelter_action}`;
-        }
-      }
-
-      // Show header alert pill
-      if (headerPill) {
-        headerPill.classList.remove('hidden');
-        headerPill.classList.add('flex');
-        if (headerText) headerText.innerText = `EVACUATION: ${topMandate.location_name.split(' ')[0]}`;
-      }
-
-      // Update Citizen Hero Card
-      if (citBadge) {
-        citBadge.className = "text-xs font-black font-mono uppercase tracking-wider text-rose-500 animate-pulse";
-        citBadge.innerText = `🚨 OFFICIAL EVACUATION ORDER ACTIVE (${topMandate.location_name})`;
-      }
-
-      // If this is a newly received mandate, trigger vocal voice warning
-      if (activeEvacuationMandates.length > lastKnownEvacCount) {
-        synthesizeSpeech(`Attention all citizens. Emergency evacuation mandate issued by Disaster Operations for ${topMandate.location_name}. Please proceed immediately to designated relief shelters.`);
-      }
-
-      // Update Admin status label
-      if (admStatusLabel) {
-        admStatusLabel.innerHTML = `<span class="text-rose-400 font-bold">ACTIVE:</span> ${topMandate.location_name} (Issued ${topMandate.issued_time_human})`;
-      }
-
-    } else {
-      // Stand down / Normal
-      if (strobeBanner) strobeBanner.classList.add('hidden');
+    // CITIZEN SAFETY PORTAL: Strict isolation - NEVER display evacuation alarms, banners, or sirens to citizens
+    if (isCitizen) {
+      if (adminStrobe) adminStrobe.classList.add('hidden');
       if (headerPill) {
         headerPill.classList.add('hidden');
         headerPill.classList.remove('flex');
       }
-      if (citBadge && !citBadge.innerText.includes('CRITICAL')) {
+      if (citBadge && citBadge.innerText.includes('EVACUATION')) {
         citBadge.className = "text-xs font-black font-mono uppercase tracking-wider text-emerald-400";
         citBadge.innerText = "SLOPE STABILITY NORMAL & SECURE";
       }
-      if (admStatusLabel) {
-        admStatusLabel.innerText = "No active evacuation mandates currently issued.";
+      return;
+    }
+
+    // DEOC ADMIN PORTAL: Incident command interface for evacuation oversight & authorization
+    if (data.has_active_evacuation && activeEvacuationMandates.length > 0) {
+      // Show Admin-only strobe banner
+      if (adminStrobe) {
+        adminStrobe.classList.remove('hidden');
+        const descEl = document.getElementById('admin-evac-banner-desc');
+        if (descEl) {
+          descEl.innerText = `${activeEvacuationMandates.length} Sector Mandate(s) Active: ${activeEvacuationMandates.map(m => m.location_name).join('; ')}`;
+        }
       }
+
+      // Show Admin header alert pill
+      if (headerPill) {
+        headerPill.classList.remove('hidden');
+        headerPill.classList.add('flex');
+        if (headerText) headerText.innerText = `ADMIN: ${activeEvacuationMandates.length} EVAC MANDATE(S)`;
+      }
+
+      renderAdminActiveMandatesList();
+
+    } else {
+      // Stand down / Normal state in Admin view
+      if (adminStrobe) adminStrobe.classList.add('hidden');
+      if (headerPill) {
+        headerPill.classList.add('hidden');
+        headerPill.classList.remove('flex');
+      }
+      renderAdminActiveMandatesList();
     }
 
     lastKnownEvacCount = activeEvacuationMandates.length;
@@ -4843,52 +4923,114 @@ async function checkActiveEvacuations() {
   }
 }
 
+function renderAdminActiveMandatesList() {
+  const listEl = document.getElementById('adm-active-mandates-list');
+  if (!listEl) return;
+
+  if (!activeEvacuationMandates || activeEvacuationMandates.length === 0) {
+    listEl.innerHTML = `
+      <div class="p-2.5 bg-black/50 rounded-xl border border-zinc-800 text-zinc-400 flex items-center justify-between">
+        <span>Status: <b class="text-zinc-200" id="adm-mandate-status-label">No active evacuation mandates currently issued. All slopes standard.</b></span>
+      </div>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = activeEvacuationMandates.map(m => {
+    const isApproved = m.approved || m.status === 'SOVEREIGN_AUTHORIZED';
+    const statusBadge = isApproved 
+      ? `<span class="px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-600 font-bold">SOVEREIGN AUTHORIZED</span>`
+      : `<span class="px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-600 font-bold animate-pulse">PENDING AUTHORIZATION</span>`;
+
+    return `
+      <div class="p-3 bg-zinc-950/90 rounded-xl border ${isApproved ? 'border-emerald-500/60' : 'border-red-500/70'} space-y-2 shadow-md">
+        <div class="flex items-center justify-between flex-wrap gap-1">
+          <div class="flex items-center space-x-2">
+            <span class="w-2.5 h-2.5 rounded-full ${isApproved ? 'bg-emerald-400' : 'bg-red-500 animate-ping'}"></span>
+            <span class="font-extrabold text-white text-xs">${m.location_name}</span>
+          </div>
+          ${statusBadge}
+        </div>
+        <div class="text-zinc-300 text-[10px] space-y-0.5 leading-relaxed font-mono">
+          <div><span class="text-zinc-500 font-semibold">Reason:</span> ${m.reason}</div>
+          <div><span class="text-zinc-500 font-semibold">Action:</span> ${m.shelter_action}</div>
+          <div><span class="text-zinc-500 font-semibold">Authority:</span> <span class="text-amber-400 font-bold">${m.issued_by}</span> • ${m.issued_time_human || 'Active'}</div>
+        </div>
+        <div class="flex items-center space-x-2 pt-1 font-sans">
+          ${!isApproved ? `
+            <button onclick="approveAdminEvacuation('${m.sector_id}')" class="flex-1 py-1.5 px-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition flex items-center justify-center space-x-1 border border-emerald-400 shadow-sm text-[11px]" title="Authorize and dispatch sovereign evacuation mandate">
+              <i data-lucide="check" class="w-3.5 h-3.5"></i>
+              <span>Approve Mandate</span>
+            </button>
+          ` : `
+            <div class="flex-1 py-1 px-2 text-center text-emerald-400 font-mono text-[10px] font-bold bg-emerald-950/40 rounded border border-emerald-800/60">
+              ✓ Officially Authorized Sovereign Order
+            </div>
+          `}
+          <button onclick="dismissAdminEvacuation('${m.sector_id}')" class="py-1.5 px-2.5 bg-red-950 hover:bg-red-900 text-red-300 font-bold rounded-lg transition flex items-center justify-center space-x-1 border border-red-800 text-[11px]" title="Stand down and cancel evacuation mandate">
+            <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            <span>Dismiss Order</span>
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if (window.lucide) lucide.createIcons();
+}
+
+async function approveAdminEvacuation(sectorId) {
+  try {
+    const res = await fetch(`${API_BASE}/alerts/evacuate/approve?sector_id=${encodeURIComponent(sectorId)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      showToast(`✓ [DEOC AUTHORIZATION CONFIRMED] ${data.message}`, "success");
+      await checkActiveEvacuations();
+    } else {
+      showToast("Failed to approve evacuation mandate.", "error");
+    }
+  } catch (e) {
+    showToast(`Error approving mandate: ${e.message}`, "error");
+  }
+}
+
+async function dismissAdminEvacuation(sectorId) {
+  try {
+    const res = await fetch(`${API_BASE}/alerts/evacuate/cancel?sector_id=${encodeURIComponent(sectorId)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      showToast(`✓ [EVACUATION MANDATE DISMISSED] ${data.message}`, "info");
+      await checkActiveEvacuations();
+    } else {
+      showToast("Failed to dismiss evacuation mandate.", "error");
+    }
+  } catch (e) {
+    showToast(`Error dismissing mandate: ${e.message}`, "error");
+  }
+}
+
 // -----------------------------------------------------------------------------------------
 // AI PREDICTED HAZARD ALERT ENGINE (Fused across all datasets)
 
 function renderAiHazardCard(alerts) {
+  const card = document.getElementById('cit-ai-hazard-card');
+  // Strict Citizen Safety Isolation: Emergency evacuation alerts are restricted to DEOC Admin Portal
+  if (card) {
+    card.classList.add('hidden');
+  }
+
   if (!alerts || alerts.length === 0) return;
   const a = alerts[0];
-  const card = document.getElementById('cit-ai-hazard-card');
-  const badge = document.getElementById('cit-ai-hazard-badge');
-  const prob = document.getElementById('cit-ai-hazard-prob');
-  const title = document.getElementById('cit-ai-hazard-title');
-  const desc = document.getElementById('cit-ai-hazard-desc');
-  const action = document.getElementById('cit-ai-hazard-action');
-  const horizon = document.getElementById('cit-ai-hazard-horizon');
-  const loc = document.getElementById('cit-ai-hazard-location');
   const admAiRec = document.getElementById('adm-ai-rec-text');
+  const locText = a.sector_name || "Sector";
 
-  if (card) card.classList.remove('hidden');
-
-  const lang = currentLanguage || 'en';
-  const probLabel = currentLocalesData?.labels?.probability || "PROBABILITY";
-  const actionPrefix = currentLocalesData?.labels?.action_prefix || "Action:";
-
-  let badgeText = `AI PREDICTED ${a.risk_level}`;
-  if (a.risk_level === 'CRITICAL' && currentLocalesData?.labels?.red_alert) {
-    badgeText = currentLocalesData.labels.status_danger || "CRITICAL HAZARD ALERT";
-  } else if (currentLocalesData?.labels?.orange_alert) {
-    badgeText = currentLocalesData.labels.orange_alert;
-  }
-  if (badge) badge.innerText = badgeText;
-  if (prob) prob.innerText = `${a.probability_pct}% ${probLabel}`;
-
-  const titleText = a[`predicted_hazard_${lang}`] || tDynamic(a.predicted_hazard);
-  if (title) title.innerText = titleText;
-
-  const descText = a[`citizen_plain_text_${lang}`] || tDynamic(a.citizen_plain_text);
-  if (desc) desc.innerText = descText;
-
-  const shelterText = a[`recommended_shelter_${lang}`] || tDynamic(a.recommended_shelter);
-  if (action) action.innerText = `${actionPrefix} ${shelterText}`;
-
-  const horizonText = a[`time_horizon_${lang}`] || tDynamic(a.time_horizon);
-  if (horizon) horizon.innerText = horizonText;
-
-  const locText = a[`sector_name_${lang}`] || tDynamic(a.sector_name);
-  if (loc) loc.innerText = locText;
-
+  // Tactical recommendation fed exclusively to DEOC Incident Commander
   if (admAiRec) {
     admAiRec.innerHTML = `
       <b class="text-amber-300">${locText}</b>: ${a.admin_recommendation}
@@ -4924,6 +5066,10 @@ const SECTOR_METADATA = {
   haflong: { name: "Haflong-Jatinga Hill Section (NH-27 & Railway)", region: "assam", shelter: "Haflong Town Multi-Purpose Relief Hall" },
   sonapur: { name: "Sonapur Tunnel Portal (NH-6)", region: "meghalaya", shelter: "Khliehriat Government Higher Secondary School" },
   sela: { name: "Sela Pass Ridge Corridor", region: "arunachal", shelter: "Dirang Sub-Divisional Emergency Shelter" },
+  noney: { name: "Noney Hill Section (Tupul-Imphal Railway/NH-37)", region: "manipur", shelter: "Noney Sub-Division Community Crisis Shelter" },
+  hunthar: { name: "Hunthar Veng Slope (Aizawl North Corridor)", region: "mizoram", shelter: "Aizawl North Higher Secondary Relief Hall" },
+  paglapahar: { name: "Paglapahar Sinking Zone (Dimapur-Kohima NH-29)", region: "nagaland", shelter: "Chumukedima Emergency Transit Camp" },
+  jampui: { name: "Jampui Hills Ridge (Vanghmun-Kanchanpur)", region: "tripura", shelter: "Vanghmun Model School Community Shelter" },
   all: { name: "ALL REGIONAL SECTORS (Mass Emergency Evacuation)", region: "all", shelter: "All designated district relief camps" }
 };
 
@@ -4958,36 +5104,20 @@ async function dispatchAdminLocationEvacuation() {
     });
 
     if (res.ok) {
-      alert(`🚨 [OFFICIAL EVACUATION MANDATE DISPATCHED]\n\nLocation: ${meta.name}\nAction: ${meta.shelter}\n\nAll citizen dashboards in this sector have been issued immediate emergency evacuation alarms.`);
+      showToast(`🚨 [OFFICIAL EVACUATION MANDATE DISPATCHED] Location: ${meta.name} • Action: ${meta.shelter}`, "warning");
       await checkActiveEvacuations();
     } else {
-      alert("Failed to dispatch evacuation mandate. Check network connection.");
+      showToast("Failed to dispatch evacuation mandate. Check network connection.", "error");
     }
   } catch (e) {
-    alert(`Error dispatching mandate: ${e.message}`);
+    showToast(`Error dispatching mandate: ${e.message}`, "error");
   }
 }
 
 async function cancelAdminLocationEvacuation() {
   const select = document.getElementById('adm-evac-sector-select');
   const sectorKey = select ? select.value : 'nh10';
-  const meta = SECTOR_METADATA[sectorKey] || SECTOR_METADATA.nh10;
-
-  try {
-    const res = await fetch(`${API_BASE}/alerts/evacuate/cancel?sector_id=${sectorKey}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
-    });
-
-    if (res.ok) {
-      alert(`✓ [EVACUATION MANDATE STOOD DOWN]\n\nEvacuation order for ${meta.name} has been officially cancelled. Slopes return to standard monitoring.`);
-      await checkActiveEvacuations();
-    } else {
-      alert(`No active evacuation mandate was found for ${meta.name}.`);
-    }
-  } catch (e) {
-    alert(`Error cancelling mandate: ${e.message}`);
-  }
+  await dismissAdminEvacuation(sectorKey);
 }
 
 
